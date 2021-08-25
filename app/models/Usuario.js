@@ -6,8 +6,8 @@ export const TipoUsuario = {
 export class Usuario {
   id;
   login;
-  senha;
   tipo;
   nome;
   dataNascimento;
+  turmaLista;
 }

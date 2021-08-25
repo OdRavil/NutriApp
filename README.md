@@ -19,3 +19,7 @@ npx react-native start
 npx react-native run-android
 
 ```
+
+## Migration Dev
+
+Após configurado o arquivo de configurações do firebase, executar `node ./app/db/migration.js` para popular a base de dados de testes.
