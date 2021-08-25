@@ -3,9 +3,16 @@ export const TipoUsuario = {
   PROFESSOR: 2,
 };
 
+export const Sexo = {
+  MASCULINO: 'M',
+  FEMININO: 'F',
+};
+
 export class Usuario {
   id;
   login;
+  email;
+  sexo;
   tipo;
   nome;
   dataNascimento;
