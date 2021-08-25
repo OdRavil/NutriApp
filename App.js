@@ -1,7 +1,4 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
  * @format
  * @flow strict-local
  */
@@ -25,6 +22,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {Configuracao} from './app/pages/Configuracao';
 
 const Section = ({children, title}): Node => {
   const isDarkMode = useColorScheme() === 'dark';
