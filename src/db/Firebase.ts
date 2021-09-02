@@ -1,5 +1,8 @@
+import { firebaseApp } from "../utils/Firebase";
 import firebase from "firebase/app";
 import "firebase/firestore";
+
+firebaseApp();
 
 const firebaseDatabase = firebase.firestore();
 

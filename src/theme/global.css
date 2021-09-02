@@ -1,0 +1,19 @@
+ion-tab-bar {
+  border: 0 !important;
+  margin-top: -1px;
+}
+
+ion-card-title,
+ion-list-header,
+ion-title {
+  font-family: "Nunito" !important;
+}
+
+.ion-color-cultured {
+  --ion-color-base: var(--ion-color-cultured);
+  --ion-color-base-rgb: var(--ion-color-cultured-rgb);
+  --ion-color-contrast: var(--ion-color-cultured-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-cultured-contrast-rgb);
+  --ion-color-shade: var(--ion-color-cultured-shade);
+  --ion-color-tint: var(--ion-color-cultured-tint);
+}
