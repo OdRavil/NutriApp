@@ -1,0 +1,7 @@
+{
+  "name": "lambda",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}

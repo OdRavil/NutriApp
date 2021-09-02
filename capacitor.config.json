@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "lambda",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}
