@@ -8,33 +8,21 @@ export abstract class FirebaseService<
 > {
   abstract getCollection(): string;
 
-  pushData(objToSubmit: T) {
+  pushData(objToSubmit: Partial<T>) {
     return firebaseDatabase
       .collection(this.getCollection())
       .add(objToSubmit)
       .then((doc) => doc.id);
   }
 
-  updateData(id: string, objToSubmit: T) {
+  updateData(id: string, objToSubmit: Partial<T>) {
     return firebaseDatabase
       .collection(this.getCollection())
       .doc(id)
       .update(objToSubmit);
   }
-  arrayUnion(id: string, field: string, obj: T) {
-    return firebaseDatabase
-      .collection(this.getCollection())
-      .doc(id)
-      .update({ [field]: firebase.firestore.FieldValue.arrayUnion(obj) });
-  }
-  arrayRemove(id: string, field: string, obj: T) {
-    return firebaseDatabase
-      .collection(this.getCollection())
-      .doc(id)
-      .update({ [field]: firebase.firestore.FieldValue.arrayRemove(obj) });
-  }
 
   remove(id: string) {
-    return firebaseDatabase.collection(this.getCollection()).doc(id).delete(); //TODO: Terminar
+    return firebaseDatabase.collection(this.getCollection()).doc(id).delete();
   }
 }
