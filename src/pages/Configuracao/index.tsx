@@ -8,6 +8,7 @@ import {
   IonInput,
   IonItem,
   IonList,
+  IonLoading,
   IonPage,
   IonSelect,
   IonSelectOption,
@@ -27,8 +28,9 @@ import { useState } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "./index.css";
+import { RouteComponentProps } from "react-router";
 
-const Configuracao: React.FC = () => {
+const Configuracao: React.FC<RouteComponentProps> = (props) => {
   //TODO: Pegar ID do storage
   const uid = "C1CW8Z7Qx22ZAuz2iGT1";
   //TODO: Pegar Usuário do Storage
@@ -44,17 +46,23 @@ const Configuracao: React.FC = () => {
   };
 
   const [login, setLogin] = useState<string>(usuario.login);
-  const [senha, setSenha] = useState<string>(); //TODO: Nova senha no auth
   const [email, setEmail] = useState<string>(usuario.email);
   const [sexo, setSexo] = useState<string>(usuario.sexo);
   const [nome, setNome] = useState<string>(usuario.nome);
   const [dataNascimento, setDataNascimento] = useState<string>(
     usuario.dataNascimento.toDate().toISOString()
   );
+  const [showLoading, setShowLoading] = useState<boolean>(false);
 
   const mudarSenha = () => {}; //TODO: Mudar senha
 
-  const sair = () => {}; //TODO: Deslogar do app
+  const sair = () => {
+    setShowLoading(true);
+    localStorage.clear();
+    console.log(props);
+    props.history.push("/");
+    setShowLoading(false);
+  };
 
   const salvar = () => {
     const usuario = {
@@ -78,6 +86,10 @@ const Configuracao: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen scrollY={false}>
+        <IonLoading
+          isOpen={showLoading}
+          onDidDismiss={() => setShowLoading(false)}
+        />
         <IonCard>
           <IonList>
             <IonItem className="item-config" lines="none">
