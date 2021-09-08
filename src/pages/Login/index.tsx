@@ -1,7 +1,7 @@
 import { IonButton, IonContent, IonHeader, IonInput, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { useState } from 'react';
 import { loginUser } from '../../utils/Firebase';
-import './Login.css';
+import './index.css';
 
 const Login: React.FC = () => {
 
@@ -23,10 +23,12 @@ const Login: React.FC = () => {
       <IonContent className="ion-padding">
         <IonInput 
           placeholder="E-mail"
+          type="email"
           onIonChange={(e: any) => setEmail(e.target.value)}
         />
         <IonInput 
           placeholder="Password" 
+          type="password"
           onIonChange={(e: any) => setPassword(e.target.value)}
         />
         <IonButton onClick={login}>Login</IonButton>

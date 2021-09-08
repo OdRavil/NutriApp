@@ -34,9 +34,8 @@ import "./theme/variables.css";
 import "./theme/fonts.css";
 import "./theme/global.css";
 
-import { firebaseApp } from "./utils/Firebase";
+import "./utils/Firebase";
 import Router from "./routes";
-firebaseApp();
 
 const App: React.FC = () => (
   <IonApp>
