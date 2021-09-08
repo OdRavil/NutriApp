@@ -1,17 +1,18 @@
-import {
-  IonButton,
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonLabel,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-} from "@ionic/react";
-import { logIn } from "ionicons/icons";
-import "./index.css";
+import { IonButton, IonContent, IonHeader, IonInput, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { useState } from 'react';
+import { loginUser } from '../../utils/Firebase';
+import './Login.css';
 
 const Login: React.FC = () => {
+
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  async function login(){
+    const res = await loginUser(email, password)
+    console.log(`${res ? 'login success' : 'login filed'}`)
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -19,11 +20,16 @@ const Login: React.FC = () => {
           <IonTitle>Login</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
-        <IonButton href="/private">
-          <IonIcon icon={logIn} />
-          <IonLabel>Login</IonLabel>
-        </IonButton>
+      <IonContent className="ion-padding">
+        <IonInput 
+          placeholder="E-mail"
+          onIonChange={(e: any) => setEmail(e.target.value)}
+        />
+        <IonInput 
+          placeholder="Password" 
+          onIonChange={(e: any) => setPassword(e.target.value)}
+        />
+        <IonButton onClick={login}>Login</IonButton>
       </IonContent>
     </IonPage>
   );

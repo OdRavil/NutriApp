@@ -11,8 +11,7 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { ellipse, square, triangle } from 'ionicons/icons';
-import Login from './pages/login/Login'
-import { IonApp } from "@ionic/react";
+import Login from './pages/Login'
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
