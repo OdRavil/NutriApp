@@ -18,8 +18,8 @@ export const Tabs: React.FC = () => {
     <IonTabs>
       <IonRouterOutlet>
         <Redirect exact path="/private" to="/private/home" />
-        <Route exact path="/private/home" component={Home} />
-        <Route exact path="/private/configuracao" component={Configuracao} />
+        <Route exact={true} path="/private/home" component={Home} />
+        <Route exact={true} path="/private/configuracao" component={Configuracao} />
       </IonRouterOutlet>
       <IonTabBar slot="bottom">
         <IonTabButton tab="home" href="/private/home">

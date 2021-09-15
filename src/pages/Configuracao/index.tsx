@@ -54,8 +54,6 @@ const Configuracao: React.FC<RouteComponentProps> = (props) => {
   );
   const [showLoading, setShowLoading] = useState<boolean>(false);
 
-  const mudarSenha = () => {}; //TODO: Mudar senha
-
   const sair = () => {
     setShowLoading(true);
     localStorage.clear();
@@ -75,6 +73,7 @@ const Configuracao: React.FC<RouteComponentProps> = (props) => {
       tipo: TipoUsuario.ALUNO,
       email: email,
     };
+    //TODO: Atualizar email
     new UsuarioService().updateData(uid, usuario);
   };
 
@@ -154,9 +153,7 @@ const Configuracao: React.FC<RouteComponentProps> = (props) => {
           <IonButton
             color="primary"
             expand="block"
-            onClick={() => {
-              mudarSenha();
-            }}
+            routerLink="/mudar-senha"
           >
             Mudar senha
           </IonButton>

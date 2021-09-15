@@ -4,15 +4,17 @@ import { IonReactRouter } from "@ionic/react-router";
 import { Redirect, Route } from "react-router";
 import { Tabs } from "./Tabs";
 import Login from "../pages/Login";
+import MudarSenha from "../pages/Configuracao/MudarSenha";
 
 const Router: React.FC = () => (
   <IonReactRouter>
     <IonSplitPane contentId="main">
       <IonRouterOutlet id="main">
-        <Route path="/" exact>
+        <Route exact path="/">
           <Redirect to="/login" />
         </Route>
         <Route path="/login" component={Login} />
+        <Route path="/mudar-senha" component={MudarSenha} />
         <Route path="/private" component={Tabs} />
       </IonRouterOutlet>
     </IonSplitPane>
