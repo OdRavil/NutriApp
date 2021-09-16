@@ -13,6 +13,7 @@ import { home, settings } from "ionicons/icons";
 import Home from "../pages/Home";
 import Configuracao from "../pages/Configuracao";
 import CadastroAluno from "../pages/CadastroAluno"
+import PrimeiroAcesso from "../pages/PrimeiroAcesso";
 
 export const Tabs: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ export const Tabs: React.FC = () => {
         <Route exact path="/private/home" component={Home} />
         <Route exact path="/private/configuracao" component={Configuracao} />
         <Route exact path="/private/cadastroaluno" component={CadastroAluno}/>
+        <Route exact path="/private/primeiroacesso" component={PrimeiroAcesso}/>
       </IonRouterOutlet>
       <IonTabBar slot="bottom">
         <IonTabButton tab="home" href="/private/home">
@@ -35,6 +37,10 @@ export const Tabs: React.FC = () => {
         <IonTabButton tab="cadastro-aluno" href="/private/cadastroaluno">
           <IonIcon icon={home} />
           <IonLabel>CadastroAluno</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="primeiro-acesso" href="/private/primeiroacesso">
+          <IonIcon icon={home} />
+          <IonLabel>PrimeiroAcesso</IonLabel>
         </IonTabButton>
       </IonTabBar>
       
