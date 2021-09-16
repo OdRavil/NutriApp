@@ -1,78 +1,156 @@
 import {
   IonButton,
+  IonButtons,
   IonCard,
   IonContent,
-  IonDatetime,
   IonHeader,
   IonIcon,
   IonInput,
   IonItem,
+  IonLabel,
   IonList,
-  IonLoading,
   IonPage,
-  IonSelect,
-  IonSelectOption,
   IonTitle,
+  IonToast,
   IonToolbar,
 } from "@ionic/react";
 import {
-  calendarOutline,
+  chevronBack,
+  keyOutline,
   mailOutline,
-  maleFemaleOutline,
-  manOutline,
   personOutline,
 } from "ionicons/icons";
-import { Sexo, TipoUsuario } from "../../models/Usuario";
 import UsuarioService from "../../services/UsuarioService";
 import { useState } from "react";
-import firebase from "firebase/app";
-import "firebase/firestore";
-import "./index.css";
 import { RouteComponentProps } from "react-router";
+import "./index.css";
+import firebase from "firebase/app";
+import "firebase/auth";
+import Usuario from "../../models/Usuario";
+import { loginUser } from "../../utils/Firebase";
+
+const usuarioService = new UsuarioService();
 
 const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
+  const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
+  const [showErrorBox, setShowErrorBox] = useState<boolean>(false);
+  const [mensagemSuccessBox, setMensagemSuccessBox] = useState<string>("");
+  const [showSuccessBox, setShowSuccessBox] = useState<boolean>(false);
+  const [showFinalizarCadastro, setFinalizarCadastro] =
+    useState<boolean>(false);
+  const [usuario, setUsuario] = useState<Usuario>();
+  const [login, setLogin] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [senha, setSenha] = useState<string>("");
 
-  const sair = () => {
-  localStorage.clear();
-  console.log(props);
-  props.history.push("/");
+  const mostrarMensagemSucesso = (mensagem: string) => {
+    setMensagemSuccessBox(mensagem);
+    setShowSuccessBox(true);
   };
 
-  const [login, setLogin] = useState<string>();
-  const [email, setEmail] = useState<string>();
-  const [senha, setSenha] = useState<string>();
+  const mostrarMensagemErro = (mensagem: string) => {
+    setMensagemErrorBox(mensagem);
+    setShowErrorBox(true);
+  };
 
- const salvar = async() => {
-
-  const user = await new UsuarioService().getUserByEmail(email!);
-
-  if (!user) {
-    //TODO
-  } else {
-    const usuario = {
-    
-    login: login,
-    email: email,
-    senha: senha
+  const acessar = async () => {
+    if (!usuario) return;
+    if (!login || login.trim().length === 0) {
+      mostrarMensagemErro("Login não preenchido.");
+      return;
     }
-    new UsuarioService().updateData(user.id, usuario);
-    };
-    
+    if (!senha || senha.trim().length === 0) {
+      mostrarMensagemErro("Senha não preenchida.");
+      return;
+    }
+    if (senha.trim().length < 6) {
+      mostrarMensagemErro("Senha deve ter no mínimo 6 caracteres.");
+      return;
+    }
+
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, senha)
+      .then((credentials) => {
+        if (!credentials.user) {
+          mostrarMensagemErro(
+            "Erro ao cadastrar usuário.\nUsuário não cadastrado no Autenticador."
+          );
+        }
+        usuarioService
+          .updateData(usuario.id!, {
+            uid_auth: credentials.user!.uid,
+            login,
+            primeiroAcesso: false,
+          })
+          .then(async () => {
+            const res = await loginUser(email, senha);
+            if (!res) {
+              mostrarMensagemErro("Não foi possível logar usuário.");
+              return;
+            }
+            mostrarMensagemSucesso("Informações atualizadas.");
+            clear();
+            props.history.push("private/home");
+          })
+          .catch((error) => console.error(error));
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const verificarEmail = async () => {
+    if (!email || email.trim().length === 0) {
+      mostrarMensagemErro("E-mail não preenchido.");
+      return;
+    }
+    const user = await usuarioService.getUsuarioPorEmail(email!);
+    if (!user) {
+      mostrarMensagemErro("E-mail não encontrado.");
+      return;
+    }
+    if (!user.primeiroAcesso) {
+      mostrarMensagemSucesso("Usuário já cadastrado.");
+      return;
+    }
+    setUsuario(user);
+    setFinalizarCadastro(true);
+  };
+
+  const voltar = () => {
+    clear();
+    props.history.goBack();
+  };
+
+  const clear = () => {
+    setEmail("");
+    setLogin("");
+    setSenha("");
+    setFinalizarCadastro(false);
   };
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Configuração</IonTitle>
+          <IonButtons slot="start">
+            <IonButton
+              onClick={() => {
+                voltar();
+              }}
+            >
+              <IonIcon slot="icon-only" icon={chevronBack} />
+            </IonButton>
+          </IonButtons>
+          <IonTitle></IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen scrollY={false}>
         <IonCard>
-          <IonList>
-            <IonItem className="item-config" lines="none">
+          <IonList lines="none">
+            <IonItem className="item-config">
               <IonIcon className="icon-config" icon={mailOutline} />
               <IonInput
+                disabled={showFinalizarCadastro}
                 className="input-config"
                 value={email}
                 onIonChange={(e) => setEmail(e.detail.value!)}
@@ -80,26 +158,31 @@ const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
                 type="email"
               ></IonInput>
             </IonItem>
-            <IonItem className="item-config" lines="none">
-              <IonIcon className="icon-config" icon={personOutline} />
-              <IonInput
-                className="input-config"
-                value={login}
-                onIonChange={(e) => setLogin(e.detail.value!)}
-                placeholder="Login"
-                type="text"
-              ></IonInput>
-            </IonItem>
-            <IonItem className="item-config" lines="none">
-              <IonIcon className="icon-config" icon={mailOutline} />
-              <IonInput
-                className="input-config"
-                value={senha}
-                onIonChange={(e) => setSenha(e.detail.value!)}
-                placeholder="Senha"
-                type="password"
-              ></IonInput>
-            </IonItem>
+            <div className={showFinalizarCadastro ? "" : "ion-hide"}>
+              <IonItem className="item-config">
+                <IonLabel>Finalize seu cadastro</IonLabel>
+              </IonItem>
+              <IonItem className="item-config">
+                <IonIcon className="icon-config" icon={personOutline} />
+                <IonInput
+                  className="input-config"
+                  value={login}
+                  onIonChange={(e) => setLogin(e.detail.value!)}
+                  placeholder="Login"
+                  type="text"
+                ></IonInput>
+              </IonItem>
+              <IonItem className="item-config">
+                <IonIcon className="icon-config" icon={keyOutline} />
+                <IonInput
+                  className="input-config"
+                  value={senha}
+                  onIonChange={(e) => setSenha(e.detail.value!)}
+                  placeholder="Senha"
+                  type="password"
+                ></IonInput>
+              </IonItem>
+            </div>
           </IonList>
         </IonCard>
         <IonCard>
@@ -107,24 +190,33 @@ const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
             color="primary"
             expand="block"
             onClick={() => {
-              salvar();
+              if (showFinalizarCadastro) {
+                acessar();
+              } else {
+                verificarEmail();
+              }
             }}
           >
-            Salvar
+            {showFinalizarCadastro ? "Acessar" : "Buscar"}
           </IonButton>
         </IonCard>
-      </IonContent>
-      <IonCard>
-        <IonButton
+        <IonToast
+          isOpen={showErrorBox}
+          onDidDismiss={() => setShowErrorBox(false)}
+          message={mensagemErrorBox}
+          duration={1000}
+          position="top"
           color="danger"
-          expand="block"
-          onClick={() => {
-            sair();
-          }}
-        >
-          Sair
-        </IonButton>
-      </IonCard>
+        />
+
+        <IonToast
+          isOpen={showSuccessBox}
+          onDidDismiss={() => setShowSuccessBox(false)}
+          message={mensagemSuccessBox}
+          duration={700}
+          color="success"
+        />
+      </IonContent>
     </IonPage>
   );
 };

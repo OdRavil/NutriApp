@@ -25,6 +25,6 @@ export function loginUser(email: string, password: string) {
       });
   } catch (e) {
     console.log(e)
-    return false
+    return Promise.resolve(false)
   }
 }

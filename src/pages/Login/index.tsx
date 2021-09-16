@@ -31,6 +31,7 @@ const Login: React.FC = () => {
           onIonChange={(e: any) => setPassword(e.target.value)}
         />
         <IonButton onClick={login}>Login</IonButton>
+        <IonButton routerLink="/primeiro-acesso">Primeiro acesso?</IonButton>
       </IonContent>
     </IonPage>
   );

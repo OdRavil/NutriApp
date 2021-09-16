@@ -1,7 +1,6 @@
-import firebase from "firebase/app";
-import "firebase/firestore";
+import BaseModel from "./BaseModel";
 
-export default interface Turma extends firebase.firestore.DocumentData {
+export default interface Turma extends BaseModel {
   codigo: string;
   descricao: string;
   usuariosLista: Array<string>;
