@@ -10,7 +10,6 @@ const Login: React.FC = () => {
 
   async function login(){
     const res = await loginUser(email, password)
-    console.log(`${res ? 'login success' : 'login filed'}`)
   }
 
   return (
