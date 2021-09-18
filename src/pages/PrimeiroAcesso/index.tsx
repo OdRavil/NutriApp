@@ -84,8 +84,8 @@ const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
             primeiroAcesso: false,
           })
           .then(async () => {
-            const res = await loginUser(email, senha);
-            if (!res) {
+            const credentials = await loginUser(email, senha);
+            if (!credentials.user) {
               mostrarMensagemErro("Não foi possível logar usuário.");
               return;
             }

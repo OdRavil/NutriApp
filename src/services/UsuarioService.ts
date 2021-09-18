@@ -15,4 +15,14 @@ export default class UsuarioService extends FirebaseService<Usuario> {
         return doc.docs[0].data();
       });
   }
+
+  getUsuarioPorUidAuth(uid: string) {
+    return this.getCollectionRef()
+      .where("uid_auth", "==", uid)
+      .get()
+      .then((doc) => {
+        if (doc.empty) return undefined;
+        return doc.docs[0].data();
+      });
+  }
 }
