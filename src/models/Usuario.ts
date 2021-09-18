@@ -1,5 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
+import BaseModel from "./BaseModel";
 
 export enum TipoUsuario {
   ALUNO = 1,
@@ -11,12 +12,14 @@ export enum Sexo {
   FEMININO = "F",
 }
 
-export default interface Usuario extends firebase.firestore.DocumentData {
-  login: string;
-  email: string;
-  sexo: Sexo;
-  tipo: TipoUsuario;
+export default interface Usuario extends BaseModel {
+  uid_auth?: string;
   nome: string;
-  dataNascimento: firebase.firestore.Timestamp;
+  email: string;
+  login?: string;
+  sexo?: Sexo;
+  tipo: TipoUsuario;
+  dataNascimento?: firebase.firestore.Timestamp;
   turmaLista: Array<string>;
+  primeiroAcesso: boolean;
 }

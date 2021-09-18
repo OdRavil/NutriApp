@@ -39,11 +39,12 @@ import Router from "./routes";
 
 const App: React.FC = () => (
   <IonApp>
-    <IonReactRouter>
+    <Router />
+    {/* <IonReactRouter>
     <IonRouterOutlet>
       <Route path="/" component={Login} exact />
       </IonRouterOutlet>
-    </IonReactRouter>
+    </IonReactRouter> */}
   </IonApp>
 );
 

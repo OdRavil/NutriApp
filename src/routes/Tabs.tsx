@@ -12,6 +12,8 @@ import { home, settings } from "ionicons/icons";
 
 import Home from "../pages/Home";
 import Configuracao from "../pages/Configuracao";
+import CadastroAluno from "../pages/CadastroAluno"
+import PrimeiroAcesso from "../pages/PrimeiroAcesso";
 
 export const Tabs: React.FC = () => {
   return (
@@ -31,6 +33,7 @@ export const Tabs: React.FC = () => {
           <IonLabel>Configurações</IonLabel>
         </IonTabButton>
       </IonTabBar>
+      
     </IonTabs>
   );
 };

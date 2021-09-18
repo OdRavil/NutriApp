@@ -10,7 +10,6 @@ const Login: React.FC = () => {
 
   async function login(){
     const res = await loginUser(email, password)
-    console.log(`${res ? 'login success' : 'login filed'}`)
   }
 
   return (
@@ -32,6 +31,7 @@ const Login: React.FC = () => {
           onIonChange={(e: any) => setPassword(e.target.value)}
         />
         <IonButton onClick={login}>Login</IonButton>
+        <IonButton routerLink="/primeiro-acesso">Primeiro acesso?</IonButton>
       </IonContent>
     </IonPage>
   );
