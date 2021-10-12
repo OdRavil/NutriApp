@@ -40,6 +40,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
           props.history.push("private/home");
         })
         .catch((error) => {
+          console.error(error);
           mostrarMensagemErro(error);
         });
     } finally {

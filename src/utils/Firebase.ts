@@ -28,7 +28,7 @@ export async function loginUser(
           if (!credentials.user)
             throw new Error("Não foi possível logar usuário.");
           const uid = credentials.user.uid;
-          const user = await new UsuarioService().getUsuarioPorUidAuth(uid);
+          const user = await new UsuarioService().getById(uid);
           if (!user) throw new Error("Não foi possível logar usuário.");
           localStorage.setItem("user", user.id!);
           localStorage.setItem("user_type", user.tipo.toString());

@@ -39,7 +39,6 @@ const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
   const [showFinalizarCadastro, setFinalizarCadastro] =
     useState<boolean>(false);
   const [usuario, setUsuario] = useState<Usuario>();
-  const [login, setLogin] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [senha, setSenha] = useState<string>("");
 
@@ -55,10 +54,6 @@ const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
 
   const acessar = async () => {
     if (!usuario) return;
-    if (!login || login.trim().length === 0) {
-      mostrarMensagemErro("Login não preenchido.");
-      return;
-    }
     if (!senha || senha.trim().length === 0) {
       mostrarMensagemErro("Senha não preenchida.");
       return;
@@ -77,12 +72,9 @@ const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
             "Erro ao cadastrar usuário.\nUsuário não cadastrado no Autenticador."
           );
         }
+        const id = credentials.user!.uid;
         usuarioService
-          .updateData(usuario.id!, {
-            uid_auth: credentials.user!.uid,
-            login,
-            primeiroAcesso: false,
-          })
+          .registrarUsuario(id, usuario)
           .then(async () => {
             const credentials = await loginUser(email, senha);
             if (!credentials.user) {
@@ -108,10 +100,6 @@ const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
       mostrarMensagemErro("E-mail não encontrado.");
       return;
     }
-    if (!user.primeiroAcesso) {
-      mostrarMensagemSucesso("Usuário já cadastrado.");
-      return;
-    }
     setUsuario(user);
     setFinalizarCadastro(true);
   };
@@ -123,7 +111,6 @@ const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
 
   const clear = () => {
     setEmail("");
-    setLogin("");
     setSenha("");
     setFinalizarCadastro(false);
   };
@@ -161,16 +148,6 @@ const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
             <div className={showFinalizarCadastro ? "" : "ion-hide"}>
               <IonItem className="item-config">
                 <IonLabel>Finalize seu cadastro</IonLabel>
-              </IonItem>
-              <IonItem className="item-config">
-                <IonIcon className="icon-config" icon={personOutline} />
-                <IonInput
-                  className="input-config"
-                  value={login}
-                  onIonChange={(e) => setLogin(e.detail.value!)}
-                  placeholder="Login"
-                  type="text"
-                ></IonInput>
               </IonItem>
               <IonItem className="item-config">
                 <IonIcon className="icon-config" icon={keyOutline} />

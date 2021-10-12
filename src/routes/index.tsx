@@ -6,7 +6,6 @@ import { Tabs } from "./Tabs";
 import Login from "../pages/Login";
 import MudarSenha from "../pages/Configuracao/MudarSenha";
 import PrimeiroAcesso from "../pages/PrimeiroAcesso";
-import CadastroAluno from "../pages/CadastroAluno";
 
 const Router: React.FC = () => (
   <IonReactRouter>
@@ -19,7 +18,6 @@ const Router: React.FC = () => (
         <Route path="/mudar-senha" component={MudarSenha} />
         <Route path="/primeiro-acesso" component={PrimeiroAcesso} />
         <Route path="/private" component={Tabs} />
-        <Route path="/private/cadastro-aluno" component={CadastroAluno} />
       </IonRouterOutlet>
     </IonSplitPane>
   </IonReactRouter>

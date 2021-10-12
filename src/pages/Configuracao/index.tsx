@@ -36,7 +36,6 @@ import { getCurrentUser } from "../../utils/Firebase";
 export interface ConfiguracaoProps {}
 export interface ConfiguracaoState {
   usuario?: Usuario;
-  loginAtual: string;
   emailAtual: string;
   sexoAtual: Sexo;
   nomeAtual: string;
@@ -44,7 +43,6 @@ export interface ConfiguracaoState {
   mensagemToastErro: string;
   showToastErro: boolean;
   showToastSucesso: boolean;
-  login: string;
   email: string;
   sexo: Sexo;
   nome: string;
@@ -62,7 +60,6 @@ class Configuracao extends React.Component<
   constructor(props: RouteComponentProps<ConfiguracaoProps>) {
     super(props);
     this.state = {
-      loginAtual: "",
       emailAtual: "",
       sexoAtual: Sexo.MASCULINO,
       nomeAtual: "",
@@ -70,7 +67,6 @@ class Configuracao extends React.Component<
       mensagemToastErro: "",
       showToastErro: false,
       showToastSucesso: false,
-      login: "",
       email: "",
       sexo: Sexo.MASCULINO,
       nome: "",
@@ -91,8 +87,6 @@ class Configuracao extends React.Component<
       if (!usuario) return;
       this.setState({
         showLoading: false,
-        login: usuario.login || "",
-        loginAtual: usuario.login || "",
         email: usuario.email || "",
         emailAtual: usuario.email || "",
         sexo: usuario.sexo || Sexo.MASCULINO,
@@ -124,8 +118,6 @@ class Configuracao extends React.Component<
 
   private getDadosParaAtualizar() {
     const data: any = {};
-    this.state.loginAtual !== this.state.login &&
-      (data["login"] = this.state.login);
     this.state.emailAtual !== this.state.email &&
       (data["email"] = this.state.email);
     this.state.sexoAtual !== this.state.sexo &&
@@ -206,24 +198,6 @@ class Configuracao extends React.Component<
           <IonCard>
             <IonList>
               <IonItem className="item-config" lines="none">
-                <IonIcon className="icon-config" icon={personOutline} />
-                <IonInput
-                  className="input-config"
-                  value={this.state.login}
-                  color={this.state.loginInvalido ? "danger" : "default"}
-                  onIonChange={(e) => {
-                    const value = e.detail.value!;
-                    this.setState({
-                      login: value,
-                      loginInvalido: !value || value.length === 0,
-                    });
-                  }}
-                  placeholder="Login"
-                  type="text"
-                  disabled={this.state.bloquearPagina}
-                ></IonInput>
-              </IonItem>
-              <IonItem className="item-config" lines="none">
                 <IonIcon className="icon-config" icon={mailOutline} />
                 <IonInput
                   className="input-config"
@@ -256,7 +230,7 @@ class Configuracao extends React.Component<
                   disabled={this.state.bloquearPagina}
                 >
                   <IonSelectOption value={Sexo.FEMININO}>
-                    Femenino
+                    Feminino
                   </IonSelectOption>
                   <IonSelectOption value={Sexo.MASCULINO}>
                     Masculino
