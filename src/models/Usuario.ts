@@ -19,4 +19,5 @@ export default interface Usuario extends BaseModel {
   sexo?: Sexo;
   tipo: TipoUsuario;
   dataNascimento?: firebase.firestore.Timestamp;
+  listaEscola?: string[];
 }
