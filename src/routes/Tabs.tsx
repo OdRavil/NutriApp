@@ -15,6 +15,7 @@ import Configuracao from "../pages/Configuracao";
 import CadastroUsuario from "../pages/CadastroUsuario";
 import CadastroEscola from "../pages/CadastroEscola";
 import CadastroTurma from "../pages/CadastroTurma";
+import CadastroAluno from "../pages/CadastroAluno";
 
 export const Tabs: React.FC = () => {
   return (
@@ -42,6 +43,11 @@ export const Tabs: React.FC = () => {
           path="/private/cadastro-turma"
           component={CadastroTurma}
         />
+        <Route
+          exact={true}
+          path="/private/cadastro-aluno"
+          component={CadastroAluno}
+        />
       </IonRouterOutlet>
       <IonTabBar slot="bottom">
         <IonTabButton tab="home" href="/private/home">
@@ -63,6 +69,10 @@ export const Tabs: React.FC = () => {
         <IonTabButton tab="cadastro-turma" href="/private/cadastro-turma">
           <IonIcon icon={person} />
           <IonLabel>Cadastro de Turma</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="cadastro-aluno" href="/private/cadastro-aluno">
+          <IonIcon icon={person} />
+          <IonLabel>Cadastro de Aluno</IonLabel>
         </IonTabButton>
       </IonTabBar>
     </IonTabs>
