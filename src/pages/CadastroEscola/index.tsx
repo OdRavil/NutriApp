@@ -21,7 +21,7 @@ const CadastroEscola: React.FC<RouteComponentProps> = (props) => {
   const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
   const [showErrorBox, setShowErrorBox] = useState<boolean>(false);
   const [showSuccessBox, setShowSuccessBox] = useState<boolean>(false);
-  const [nome, setCodigo] = useState<string>("");
+  const [nome, setNome] = useState<string>("");
   const [descricao, setDescricao] = useState<string>("");
 
   const cadastrar = async () => {
@@ -40,7 +40,7 @@ const CadastroEscola: React.FC<RouteComponentProps> = (props) => {
         descricao: descricao.trim(),
       };
       await new EscolaService().pushData(escola);
-      setCodigo("");
+      setNome("");
       setDescricao("");
       setShowSuccessBox(true);
     } catch (error) {
@@ -69,7 +69,7 @@ const CadastroEscola: React.FC<RouteComponentProps> = (props) => {
                 className="input-config"
                 value={nome}
                 placeholder="Nome"
-                onIonChange={(e) => setCodigo(e.detail.value!)}
+                onIonChange={(e) => setNome(e.detail.value!)}
               />
             </IonItem>
             <IonItem>
