@@ -1,0 +1,45 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": ["plugin:react/recommended", "airbnb", "prettier"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["react", "@typescript-eslint", "prettier"],
+  "rules": {
+    "linebreak-style": "off",
+    "quotes": ["error", "double"],
+    "import/extensions": ["error", "never"],
+    "import/no-unresolved": "off",
+    "react/jsx-filename-extension": [
+      "warn",
+      { "extensions": [".ts", ".tsx", ".js", ".jsx"] }
+    ],
+    "react/react-in-jsx-scope": "off",
+    "react/destructuring-assignment": "off",
+    "no-param-reassign": "off",
+    "import/prefer-default-export": "warn",
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "global-require": "warn",
+    "no-await-in-loop": "warn",
+    "class-methods-use-this": "off",
+    "no-unused-expressions": "off",
+    "no-nested-ternary": "warn",
+    "max-classes-per-file": "off",
+    "camelcase": "off",
+    "no-shadow": "off",
+    "no-unused-vars": "off",
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-shadow": ["error"],
+    "@typescript-eslint/no-unused-vars": ["error"],
+    "@typescript-eslint/no-use-before-define": ["error"]
+  }
+}

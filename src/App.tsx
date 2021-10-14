@@ -1,17 +1,5 @@
-
-import { Redirect, Route } from 'react-router-dom';
-import {
-  IonApp,
-  IonIcon,
-  IonLabel,
-  IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonTabs,
-} from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, square, triangle } from 'ionicons/icons';
-import Login from './pages/Login'
+import { IonApp } from "@ionic/react";
+import React from "react";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -38,14 +26,9 @@ import "./utils/Firebase";
 import Router from "./routes";
 
 const App: React.FC = () => (
-  <IonApp>
-    <Router />
-    {/* <IonReactRouter>
-    <IonRouterOutlet>
-      <Route path="/" component={Login} exact />
-      </IonRouterOutlet>
-    </IonReactRouter> */}
-  </IonApp>
+	<IonApp>
+		<Router />
+	</IonApp>
 );
 
 export default App;
