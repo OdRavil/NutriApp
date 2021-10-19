@@ -1,15 +1,45 @@
+/* eslint-disable import/extensions */
 import firebase from "firebase/app";
-import config from "./firebase.json";
+import Usuario from "../models/Usuario";
+import UsuarioService from "../services/UsuarioService";
 
-var _firebaseApp: firebase.app.App;
-export const firebaseApp = (): firebase.app.App => {
-  if (firebase.apps.length == 0) {
-    console.log("Criando novo App firebase");
-    _firebaseApp = firebase.initializeApp(config);
-  }
-  if (firebase.apps.length > 0 && !_firebaseApp) {
-    console.log("Reusando App firebase");
-    _firebaseApp = firebase.apps[0];
-  }
-  return _firebaseApp;
+require("firebase/auth");
+
+const config = require("./firebase.json");
+
+export const initFirebaseApp = (): void => {
+	if (firebase.apps.length === 0) {
+		firebase.initializeApp(config);
+	}
 };
+
+initFirebaseApp();
+
+export async function loginUser(
+	email: string,
+	password: string
+): Promise<firebase.auth.UserCredential> {
+	return firebase
+		.auth()
+		.setPersistence(firebase.auth.Auth.Persistence.SESSION)
+		.then(() =>
+			firebase
+				.auth()
+				.signInWithEmailAndPassword(email, password)
+				.then(async (credentials) => {
+					if (!credentials.user) throw new Error("Não foi possível logar usuário.");
+					const { uid } = credentials.user;
+					const user = await new UsuarioService().getById(uid);
+					if (!user) throw new Error("Não foi possível logar usuário.");
+					localStorage.setItem("user", user.id!);
+					localStorage.setItem("user_type", user.tipo.toString());
+					return credentials;
+				})
+		);
+}
+
+export async function getCurrentUser(): Promise<Usuario | undefined> {
+	const id = localStorage.getItem("user");
+	if (!id) return Promise.resolve(undefined);
+	return new UsuarioService().getById(id);
+}

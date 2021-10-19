@@ -1,4 +1,5 @@
 import { IonApp } from "@ionic/react";
+import React from "react";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -21,14 +22,13 @@ import "./theme/variables.css";
 import "./theme/fonts.css";
 import "./theme/global.css";
 
-import { firebaseApp } from "./utils/Firebase";
+import "./utils/Firebase";
 import Router from "./routes";
-firebaseApp();
 
 const App: React.FC = () => (
-  <IonApp>
-    <Router />
-  </IonApp>
+	<IonApp>
+		<Router />
+	</IonApp>
 );
 
 export default App;

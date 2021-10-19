@@ -1,22 +1,23 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
+import BaseModel from "./BaseModel";
 
 export enum TipoUsuario {
-  ALUNO = 1,
-  PROFESSOR = 2,
+	ADMINISTRADOR = "ADMINISTRADOR",
+	NUTRICIONISTA = "NUTRICIONISTA",
+	PROFESSOR = "PROFESSOR",
 }
 
 export enum Sexo {
-  MASCULINO = "M",
-  FEMININO = "F",
+	MASCULINO = "M",
+	FEMININO = "F",
 }
 
-export default interface Usuario extends firebase.firestore.DocumentData {
-  login: string;
-  email: string;
-  sexo: Sexo;
-  tipo: TipoUsuario;
-  nome: string;
-  dataNascimento: firebase.firestore.Timestamp;
-  turmaLista: Array<string>;
+export default interface Usuario extends BaseModel {
+	nome: string;
+	email: string;
+	sexo?: Sexo;
+	tipo: TipoUsuario;
+	dataNascimento?: firebase.firestore.Timestamp;
+	listaEscola?: string[];
 }

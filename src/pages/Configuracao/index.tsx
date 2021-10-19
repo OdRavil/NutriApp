@@ -1,191 +1,289 @@
 import {
-  IonButton,
-  IonCard,
-  IonContent,
-  IonDatetime,
-  IonHeader,
-  IonIcon,
-  IonInput,
-  IonItem,
-  IonList,
-  IonLoading,
-  IonPage,
-  IonSelect,
-  IonSelectOption,
-  IonTitle,
-  IonToolbar,
+	IonButton,
+	IonCard,
+	IonContent,
+	IonDatetime,
+	IonHeader,
+	IonIcon,
+	IonInput,
+	IonItem,
+	IonList,
+	IonLoading,
+	IonPage,
+	IonSelect,
+	IonSelectOption,
+	IonTitle,
+	IonToast,
+	IonToolbar,
 } from "@ionic/react";
 import {
-  calendarOutline,
-  mailOutline,
-  maleFemaleOutline,
-  manOutline,
-  personOutline,
+	calendarOutline,
+	mailOutline,
+	maleFemaleOutline,
+	manOutline,
 } from "ionicons/icons";
-import { Sexo, TipoUsuario } from "../../models/Usuario";
-import UsuarioService from "../../services/UsuarioService";
-import { useState } from "react";
+import React from "react";
+import { RouteComponentProps } from "react-router";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "./index.css";
-import { RouteComponentProps } from "react-router";
+import { Sexo } from "../../models/Usuario";
+import UsuarioService from "../../services/UsuarioService";
+import { validarEmail } from "../../utils/string";
+import { getCurrentUser } from "../../utils/Firebase";
 
-const Configuracao: React.FC<RouteComponentProps> = (props) => {
-  //TODO: Pegar ID do storage
-  const uid = "C1CW8Z7Qx22ZAuz2iGT1";
-  //TODO: Pegar Usuário do Storage
-  const usuario = {
-    dataNascimento: firebase.firestore.Timestamp.fromDate(
-      new Date("1998-09-02T02:08:06.557Z")
-    ),
-    nome: "José Carvalho",
-    login: "jose.carvalho",
-    sexo: Sexo.MASCULINO,
-    tipo: TipoUsuario.ALUNO,
-    email: "jose.carvalho@teste.com",
-  };
+export interface ConfiguracaoProps {}
+export interface ConfiguracaoState {
+	emailAtual: string;
+	sexoAtual: Sexo;
+	nomeAtual: string;
+	dataNascimentoAtual: string;
+	mensagemToastErro: string;
+	showToastErro: boolean;
+	showToastSucesso: boolean;
+	email: string;
+	sexo: Sexo;
+	nome: string;
+	dataNascimento: string;
+	showLoading: boolean;
+	loginInvalido: boolean;
+	emailInvalido: boolean;
+	nomeInvalido: boolean;
+	bloquearPagina: boolean;
+}
+class Configuracao extends React.Component<
+	RouteComponentProps<ConfiguracaoProps>,
+	ConfiguracaoState
+> {
+	constructor(props: RouteComponentProps<ConfiguracaoProps>) {
+		super(props);
+		this.state = {
+			emailAtual: "",
+			sexoAtual: Sexo.MASCULINO,
+			nomeAtual: "",
+			dataNascimentoAtual: "",
+			mensagemToastErro: "",
+			showToastErro: false,
+			showToastSucesso: false,
+			email: "",
+			sexo: Sexo.MASCULINO,
+			nome: "",
+			dataNascimento: "",
+			showLoading: true,
+			loginInvalido: false,
+			emailInvalido: false,
+			nomeInvalido: false,
+			bloquearPagina: false,
+		};
+	}
 
-  const [login, setLogin] = useState<string>(usuario.login);
-  const [email, setEmail] = useState<string>(usuario.email);
-  const [sexo, setSexo] = useState<string>(usuario.sexo);
-  const [nome, setNome] = useState<string>(usuario.nome);
-  const [dataNascimento, setDataNascimento] = useState<string>(
-    usuario.dataNascimento.toDate().toISOString()
-  );
-  const [showLoading, setShowLoading] = useState<boolean>(false);
+	componentDidMount() {
+		getCurrentUser().then((usuario) => {
+			if (!usuario) return;
+			this.setState({
+				showLoading: false,
+				email: usuario.email || "",
+				emailAtual: usuario.email || "",
+				sexo: usuario.sexo || Sexo.MASCULINO,
+				sexoAtual: usuario.sexo || Sexo.MASCULINO,
+				nome: usuario.nome || "",
+				nomeAtual: usuario.nome || "",
+				dataNascimento: usuario.dataNascimento
+					? usuario.dataNascimento.toDate().toISOString()
+					: "",
+				dataNascimentoAtual: usuario.dataNascimento
+					? usuario.dataNascimento.toDate().toISOString()
+					: "",
+			});
+		});
+	}
 
-  const mudarSenha = () => {}; //TODO: Mudar senha
+	private getDadosParaAtualizar() {
+		const data: any = {};
+		this.state.emailAtual !== this.state.email && (data.email = this.state.email);
+		this.state.sexoAtual !== this.state.sexo && (data.sexo = this.state.sexo);
+		this.state.nomeAtual !== this.state.nome && (data.nome = this.state.nome);
+		this.state.dataNascimentoAtual !== this.state.dataNascimento &&
+			(data.dataNascimento = firebase.firestore.Timestamp.fromDate(
+				new Date(this.state.dataNascimento)
+			));
+		return [data, data.email];
+	}
 
-  const sair = () => {
-    setShowLoading(true);
-    localStorage.clear();
-    console.log(props);
-    props.history.push("/");
-    setShowLoading(false);
-  };
+	private async sair() {
+		this.setState({ showLoading: true });
+		await firebase
+			.auth()
+			.signOut()
+			.then(() => {
+				localStorage.clear();
+				this.props.history.push("/");
+			})
+			.catch(console.error);
+		this.setState({ showLoading: false });
+	}
 
-  const salvar = () => {
-    const usuario = {
-      dataNascimento: firebase.firestore.Timestamp.fromDate(
-        new Date(dataNascimento)
-      ),
-      nome: nome,
-      login: login,
-      sexo: sexo === "M" ? Sexo.MASCULINO : Sexo.FEMININO,
-      tipo: TipoUsuario.ALUNO,
-      email: email,
-    };
-    new UsuarioService().updateData(uid, usuario);
-  };
+	private readonly usuarioService = new UsuarioService();
 
-  return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Configuração</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen scrollY={false}>
-        <IonLoading
-          isOpen={showLoading}
-          onDidDismiss={() => setShowLoading(false)}
-        />
-        <IonCard>
-          <IonList>
-            <IonItem className="item-config" lines="none">
-              <IonIcon className="icon-config" icon={personOutline} />
-              <IonInput
-                className="input-config"
-                value={login}
-                onIonChange={(e) => setLogin(e.detail.value!)}
-                placeholder="Login"
-                type="text"
-              ></IonInput>
-            </IonItem>
-            <IonItem className="item-config" lines="none">
-              <IonIcon className="icon-config" icon={mailOutline} />
-              <IonInput
-                className="input-config"
-                value={email}
-                onIonChange={(e) => setEmail(e.detail.value!)}
-                placeholder="E-mail"
-                type="email"
-              ></IonInput>
-            </IonItem>
-          </IonList>
-        </IonCard>
-        <IonCard>
-          <IonList>
-            <IonItem className="item-config" lines="none">
-              <IonIcon className="icon-config" icon={maleFemaleOutline} />
-              <IonSelect
-                className="input-config"
-                value={sexo}
-                placeholder="Sexo"
-                onIonChange={(e) => setSexo(e.detail.value)}
-              >
-                <IonSelectOption value="F">Femenino</IonSelectOption>
-                <IonSelectOption value="M">Masculino</IonSelectOption>
-              </IonSelect>
-            </IonItem>
-            <IonItem className="item-config" lines="none">
-              <IonIcon className="icon-config" icon={manOutline} />
-              <IonInput
-                className="input-config"
-                value={nome}
-                onIonChange={(e) => setNome(e.detail.value!)}
-                placeholder="Nome"
-                type="text"
-              ></IonInput>
-            </IonItem>
-            <IonItem className="item-config" lines="none">
-              <IonIcon className="icon-config" icon={calendarOutline} />
-              <IonDatetime
-                value={dataNascimento}
-                onIonChange={(e) => setDataNascimento(e.detail.value!)}
-                displayFormat="DD/MM/YYYY"
-                className="input-config"
-                placeholder="Data de nascimento"
-              ></IonDatetime>
-            </IonItem>
-          </IonList>
-        </IonCard>
-        <IonCard>
-          <IonButton
-            color="primary"
-            expand="block"
-            onClick={() => {
-              mudarSenha();
-            }}
-          >
-            Mudar senha
-          </IonButton>
-        </IonCard>
-        <IonCard>
-          <IonButton
-            color="primary"
-            expand="block"
-            onClick={() => {
-              salvar();
-            }}
-          >
-            Salvar
-          </IonButton>
-        </IonCard>
-      </IonContent>
-      <IonCard>
-        <IonButton
-          color="danger"
-          expand="block"
-          onClick={() => {
-            sair();
-          }}
-        >
-          Sair
-        </IonButton>
-      </IonCard>
-    </IonPage>
-  );
-};
+	private permitirSalvar(): boolean {
+		return (
+			!this.state.loginInvalido &&
+			!this.state.nomeInvalido &&
+			!this.state.emailInvalido
+		);
+	}
+
+	private async salvar() {
+		try {
+			this.setState({ bloquearPagina: true });
+			this.setState({ showLoading: true });
+			const [data, email] = this.getDadosParaAtualizar();
+			if (email) {
+				try {
+					await firebase.auth().currentUser!.updateEmail(email);
+				} catch (error) {
+					console.log(error);
+					return;
+				}
+			}
+			const id = localStorage.getItem("user")!;
+			await this.usuarioService.updateData(id, data).catch(console.error);
+		} catch (error) {
+			console.error(error);
+		} finally {
+			this.setState({ showLoading: false });
+			this.setState({ bloquearPagina: false });
+		}
+	}
+
+	render() {
+		return (
+			<IonPage>
+				<IonHeader>
+					<IonToolbar>
+						<IonTitle>Configuração</IonTitle>
+					</IonToolbar>
+				</IonHeader>
+				<IonContent fullscreen scrollY={false}>
+					<IonToast
+						isOpen={this.state.showToastSucesso}
+						onDidDismiss={() => this.setState({ showToastSucesso: false })}
+						message="Configurações atualizadas!"
+						duration={600}
+					/>
+					<IonToast
+						isOpen={this.state.showToastErro}
+						onDidDismiss={() => this.setState({ showToastErro: false })}
+						message={this.state.mensagemToastErro}
+						duration={600}
+					/>
+					<IonLoading
+						isOpen={this.state.showLoading}
+						onDidDismiss={() => this.setState({ showLoading: false })}
+					/>
+					<IonCard>
+						<IonList>
+							<IonItem className="item-config" lines="none">
+								<IonIcon className="icon-config" icon={mailOutline} />
+								<IonInput
+									className="input-config"
+									color={this.state.emailInvalido ? "danger" : "default"}
+									value={this.state.email}
+									onIonChange={(e) => {
+										const value = e.detail.value!;
+										this.setState({
+											email: value,
+											emailInvalido: !value || value.length === 0 || !validarEmail(value),
+										});
+									}}
+									placeholder="E-mail"
+									type="email"
+									disabled={this.state.bloquearPagina}
+								/>
+							</IonItem>
+						</IonList>
+					</IonCard>
+					<IonCard>
+						<IonList>
+							<IonItem className="item-config" lines="none">
+								<IonIcon className="icon-config" icon={maleFemaleOutline} />
+								<IonSelect
+									className="input-config"
+									value={this.state.sexo}
+									placeholder="Sexo"
+									onIonChange={(e) => this.setState({ sexo: e.detail.value })}
+									disabled={this.state.bloquearPagina}
+								>
+									<IonSelectOption value={Sexo.FEMININO}>Feminino</IonSelectOption>
+									<IonSelectOption value={Sexo.MASCULINO}>Masculino</IonSelectOption>
+								</IonSelect>
+							</IonItem>
+							<IonItem className="item-config" lines="none">
+								<IonIcon className="icon-config" icon={manOutline} />
+								<IonInput
+									className="input-config"
+									color={this.state.nomeInvalido ? "danger" : "default"}
+									value={this.state.nome}
+									onIonChange={(e) => {
+										const value = e.detail.value!;
+										this.setState({
+											nome: value,
+											nomeInvalido: !value || value.length === 0,
+										});
+									}}
+									placeholder="Nome"
+									type="text"
+									disabled={this.state.bloquearPagina}
+								/>
+							</IonItem>
+							<IonItem className="item-config" lines="none">
+								<IonIcon className="icon-config" icon={calendarOutline} />
+								<IonDatetime
+									value={this.state.dataNascimento}
+									onIonChange={(e) => this.setState({ dataNascimento: e.detail.value! })}
+									displayFormat="DD/MM/YYYY"
+									className="input-config"
+									placeholder="Data de nascimento"
+									disabled={this.state.bloquearPagina}
+								/>
+							</IonItem>
+						</IonList>
+					</IonCard>
+					<IonCard>
+						<IonButton
+							color="primary"
+							expand="block"
+							routerLink="/mudar-senha"
+							disabled={this.state.bloquearPagina}
+						>
+							Mudar senha
+						</IonButton>
+					</IonCard>
+					<IonCard>
+						<IonButton
+							color="primary"
+							expand="block"
+							onClick={() => this.salvar()}
+							disabled={this.state.bloquearPagina || !this.permitirSalvar()}
+						>
+							Salvar
+						</IonButton>
+					</IonCard>
+				</IonContent>
+				<IonCard>
+					<IonButton
+						color="danger"
+						expand="block"
+						onClick={() => {
+							this.sair();
+						}}
+					>
+						Sair
+					</IonButton>
+				</IonCard>
+			</IonPage>
+		);
+	}
+}
 
 export default Configuracao;
