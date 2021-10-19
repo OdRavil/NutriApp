@@ -17,7 +17,7 @@ import CadastroEscola from "../pages/CadastroEscola";
 import CadastroTurma from "../pages/CadastroTurma";
 import CadastroAluno from "../pages/CadastroAluno";
 
-export const Tabs: React.FC = () => (
+const Tabs: React.FC = () => (
 	<IonTabs>
 		<IonRouterOutlet>
 			<Redirect exact path="/private" to="/private/home" />
@@ -56,3 +56,5 @@ export const Tabs: React.FC = () => (
 		</IonTabBar>
 	</IonTabs>
 );
+
+export default Tabs;

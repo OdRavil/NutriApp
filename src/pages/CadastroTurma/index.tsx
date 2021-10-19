@@ -17,14 +17,17 @@ import {
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router";
+import { useAuth } from "../../context/auth";
 import Escola from "../../models/Escola";
 import Turma from "../../models/Turma";
 import Usuario, { TipoUsuario } from "../../models/Usuario";
 import EscolaService from "../../services/EscolaService";
 import TurmaService from "../../services/TurmaService";
-import { getCurrentUser } from "../../utils/Firebase";
+import UsuarioService from "../../services/UsuarioService";
 
 const CadastroTurma: React.FC<RouteComponentProps> = () => {
+	const { auth } = useAuth();
+
 	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
 	const [showErrorBox, setShowErrorBox] = useState<boolean>(false);
 	const [showSuccessBox, setShowSuccessBox] = useState<boolean>(false);
@@ -98,8 +101,10 @@ const CadastroTurma: React.FC<RouteComponentProps> = () => {
 	};
 
 	useEffect(() => {
-		getCurrentUser().then((usuario) => carregarEscola(usuario!));
-	}, []);
+		new UsuarioService()
+			.getById(auth.user.id)
+			.then((usuario) => carregarEscola(usuario!));
+	}, [auth.user.id, carregarEscola]);
 
 	return (
 		<IonPage>
