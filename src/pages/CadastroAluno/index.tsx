@@ -29,11 +29,14 @@ import Aluno from "../../models/Aluno";
 import Usuario, { Sexo, TipoUsuario } from "../../models/Usuario";
 import AlunoService from "../../services/AlunoService";
 import "firebase/firestore";
-import { getCurrentUser } from "../../utils/Firebase";
 import TurmaService from "../../services/TurmaService";
 import Turma from "../../models/Turma";
+import UsuarioService from "../../services/UsuarioService";
+import { useAuth } from "../../context/auth";
 
 const CadastroAluno: React.FC<RouteComponentProps> = () => {
+	const { auth } = useAuth();
+
 	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
 	const [showErrorBox, setShowErrorBox] = useState<boolean>(false);
 	const [showSuccessBox, setShowSuccessBox] = useState<boolean>(false);
@@ -115,7 +118,9 @@ const CadastroAluno: React.FC<RouteComponentProps> = () => {
 	};
 
 	useEffect(() => {
-		getCurrentUser().then((usuario) => carregarTurma(usuario!));
+		new UsuarioService()
+			.getById(auth.user.id)
+			.then((usuario) => carregarTurma(usuario!));
 	}, []);
 
 	return (

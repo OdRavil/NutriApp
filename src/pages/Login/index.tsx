@@ -11,10 +11,12 @@ import {
 } from "@ionic/react";
 import React, { useState } from "react";
 import { RouteComponentProps } from "react-router";
-import { loginUser } from "../../utils/Firebase";
+import { useAuth } from "../../context/auth";
 import "./index.css";
 
 const Login: React.FC<RouteComponentProps> = (props) => {
+	const { login } = useAuth();
+
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
@@ -28,24 +30,21 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 		setShowErrorBox(true);
 	};
 
-	const login = async () => {
-		try {
-			setShowLoading(true);
-			await loginUser(email, password)
-				.then((credentials) => {
-					if (!credentials.user) {
-						mostrarMensagemErro("Não foi possível logar usuário.");
-						return;
-					}
-					props.history.push("private/home");
-				})
-				.catch((error) => {
-					console.error(error);
-					mostrarMensagemErro(error);
-				});
-		} finally {
-			setShowLoading(false);
-		}
+	const doLogin = async () => {
+		setShowLoading(true);
+		await login(email, password)
+			.then((authUser) => {
+				if (!authUser.user) {
+					mostrarMensagemErro("Não foi possível logar usuário.");
+					return;
+				}
+				props.history.replace("private/home");
+			})
+			.catch((error) => {
+				console.error(error);
+				mostrarMensagemErro(error);
+				setShowLoading(false);
+			});
 	};
 
 	return (
@@ -78,7 +77,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 					type="password"
 					onIonChange={(e: any) => setPassword(e.target.value)}
 				/>
-				<IonButton onClick={login}>Login</IonButton>
+				<IonButton onClick={doLogin}>Login</IonButton>
 				<IonButton routerLink="/primeiro-acesso">Primeiro acesso?</IonButton>
 			</IonContent>
 		</IonPage>

@@ -66,7 +66,7 @@ const MudarSenha: React.FC<RouteComponentProps> = (props) => {
 
 	useEffect(() => {
 		handleChanges();
-	}, [senhaAtual, novaSenha, novaSenhaConfirma]);
+	}, [senhaAtual, novaSenha, novaSenhaConfirma, handleChanges]);
 
 	const redefinir = () => {
 		const user = firebase.auth().currentUser!;

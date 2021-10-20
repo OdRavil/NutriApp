@@ -24,10 +24,13 @@ import "./theme/global.css";
 
 import "./utils/Firebase";
 import Router from "./routes";
+import { AuthProvider } from "./context/auth";
 
 const App: React.FC = () => (
 	<IonApp>
-		<Router />
+		<AuthProvider>
+			<Router />
+		</AuthProvider>
 	</IonApp>
 );
 
