@@ -2,6 +2,7 @@ import {
 	IonButton,
 	IonContent,
 	IonHeader,
+	IonImg,
 	IonInput,
 	IonLoading,
 	IonPage,
@@ -13,6 +14,7 @@ import React, { useState } from "react";
 import { RouteComponentProps } from "react-router";
 import { useAuth } from "../../context/auth";
 import "./index.css";
+import Image from '../../assets/login.jpg'
 
 const Login: React.FC<RouteComponentProps> = (props) => {
 	const { login } = useAuth();
@@ -47,41 +49,41 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 			});
 	};
 
-	return (
-		<IonPage>
-			<IonHeader>
-				<IonToolbar>
-					<IonTitle>Login</IonTitle>
-				</IonToolbar>
-			</IonHeader>
-			<IonContent className="ion-padding">
-				<IonLoading
-					isOpen={showLoading}
-					onDidDismiss={() => setShowLoading(false)}
-				/>
-				<IonToast
-					isOpen={showErrorBox}
-					onDidDismiss={() => setShowErrorBox(false)}
-					message={mensagemErrorBox}
-					duration={1000}
-					position="bottom"
-					color="danger"
-				/>
-				<IonInput
-					placeholder="E-mail"
-					type="email"
-					onIonChange={(e: any) => setEmail(e.target.value)}
-				/>
-				<IonInput
-					placeholder="Password"
-					type="password"
-					onIonChange={(e: any) => setPassword(e.target.value)}
-				/>
-				<IonButton onClick={doLogin}>Login</IonButton>
-				<IonButton routerLink="/primeiro-acesso">Primeiro acesso?</IonButton>
-			</IonContent>
-		</IonPage>
-	);
+  return (
+    <IonPage>
+      <IonImg className="i-l" />
+      <IonContent className="ion-padding c-f-l">
+        <IonLoading
+          isOpen={showLoading}
+          onDidDismiss={() => setShowLoading(false)}
+        />
+        <IonToast
+          isOpen={showErrorBox}
+          onDidDismiss={() => setShowErrorBox(false)}
+          message={mensagemErrorBox}
+          duration={1000}
+          position="bottom"
+          color="danger"
+        />
+        <IonInput
+          placeholder="E-mail"
+          type="email"
+          onIonChange={(e: any) => setEmail(e.target.value)}
+          className="i-s-l"
+        />
+        <IonInput
+          placeholder="Password"
+          type="password"
+          onIonChange={(e: any) => setPassword(e.target.value)}
+          className="i-s-l"
+        />
+        <IonContent>
+          <IonButton className="l-b-s" onClick={doLogin}>Login</IonButton>
+          <IonButton className="f-a-b-s" routerLink="/primeiro-acesso">Primeiro acesso?</IonButton>
+        </IonContent>
+      </IonContent>
+    </IonPage>
+  );
 };
 
 export default Login;
