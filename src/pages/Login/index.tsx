@@ -2,6 +2,7 @@ import {
   IonButton,
   IonContent,
   IonHeader,
+  IonImg,
   IonInput,
   IonLoading,
   IonPage,
@@ -13,6 +14,7 @@ import { useState } from "react";
 import { RouteComponentProps } from "react-router";
 import { loginUser } from "../../utils/Firebase";
 import "./index.css";
+import Image from '../../assets/login.jpg'
 
 const Login: React.FC<RouteComponentProps> = (props) => {
   const [email, setEmail] = useState("");
@@ -50,12 +52,8 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Login</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent className="ion-padding">
+      <IonImg className="i-l" />
+      <IonContent className="ion-padding c-f-l">
         <IonLoading
           isOpen={showLoading}
           onDidDismiss={() => setShowLoading(false)}
@@ -72,14 +70,18 @@ const Login: React.FC<RouteComponentProps> = (props) => {
           placeholder="E-mail"
           type="email"
           onIonChange={(e: any) => setEmail(e.target.value)}
+          className="i-s-l"
         />
         <IonInput
           placeholder="Password"
           type="password"
           onIonChange={(e: any) => setPassword(e.target.value)}
+          className="i-s-l"
         />
-        <IonButton onClick={login}>Login</IonButton>
-        <IonButton routerLink="/primeiro-acesso">Primeiro acesso?</IonButton>
+        <IonContent>
+          <IonButton className="l-b-s" onClick={login}>Login</IonButton>
+          <IonButton className="f-a-b-s" routerLink="/primeiro-acesso">Primeiro acesso?</IonButton>
+        </IonContent>
       </IonContent>
     </IonPage>
   );
