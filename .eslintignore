@@ -1,0 +1,8 @@
+*.test.jsx
+*.test.js
+*.test.tsx
+*.test.ts
+*.css
+*.png
+*.svg
+*.ttf

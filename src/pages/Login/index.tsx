@@ -1,54 +1,53 @@
 import {
-  IonButton,
-  IonContent,
-  IonHeader,
-  IonImg,
-  IonInput,
-  IonLoading,
-  IonPage,
-  IonTitle,
-  IonToast,
-  IonToolbar,
+	IonButton,
+	IonContent,
+	IonHeader,
+	IonImg,
+	IonInput,
+	IonLoading,
+	IonPage,
+	IonTitle,
+	IonToast,
+	IonToolbar,
 } from "@ionic/react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { RouteComponentProps } from "react-router";
-import { loginUser } from "../../utils/Firebase";
+import { useAuth } from "../../context/auth";
 import "./index.css";
 import Image from '../../assets/login.jpg'
 
 const Login: React.FC<RouteComponentProps> = (props) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+	const { login } = useAuth();
 
-  const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
-  const [showErrorBox, setShowErrorBox] = useState<boolean>(false);
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
 
-  const [showLoading, setShowLoading] = useState<boolean>(false);
+	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
+	const [showErrorBox, setShowErrorBox] = useState<boolean>(false);
 
-  const mostrarMensagemErro = (mensagem: string) => {
-    setMensagemErrorBox(mensagem);
-    setShowErrorBox(true);
-  };
+	const [showLoading, setShowLoading] = useState<boolean>(false);
 
-  const login = async () => {
-    try {
-      setShowLoading(true);
-      await loginUser(email, password)
-        .then((credentials) => {
-          if (!credentials.user) {
-            mostrarMensagemErro("Não foi possível logar usuário.");
-            return;
-          }
-          props.history.push("private/home");
-        })
-        .catch((error) => {
-          console.error(error);
-          mostrarMensagemErro(error);
-        });
-    } finally {
-      setShowLoading(false);
-    }
-  };
+	const mostrarMensagemErro = (mensagem: string) => {
+		setMensagemErrorBox(mensagem);
+		setShowErrorBox(true);
+	};
+
+	const doLogin = async () => {
+		setShowLoading(true);
+		await login(email, password)
+			.then((authUser) => {
+				if (!authUser.user) {
+					mostrarMensagemErro("Não foi possível logar usuário.");
+					return;
+				}
+				props.history.replace("private/home");
+			})
+			.catch((error) => {
+				console.error(error);
+				mostrarMensagemErro(error);
+				setShowLoading(false);
+			});
+	};
 
   return (
     <IonPage>
@@ -79,7 +78,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
           className="i-s-l"
         />
         <IonContent>
-          <IonButton className="l-b-s" onClick={login}>Login</IonButton>
+          <IonButton className="l-b-s" onClick={doLogin}>Login</IonButton>
           <IonButton className="f-a-b-s" routerLink="/primeiro-acesso">Primeiro acesso?</IonButton>
         </IonContent>
       </IonContent>
