@@ -1,4 +1,5 @@
 import {
+	IonButton,
 	IonContent,
 	IonHeader,
 	IonPage,
@@ -15,7 +16,9 @@ const Home: React.FC = () => (
 				<IonTitle>Home</IonTitle>
 			</IonToolbar>
 		</IonHeader>
-		<IonContent fullscreen />
+		<IonContent fullscreen>
+			<IonButton routerLink="/anamnese">Anamnese</IonButton>
+		</IonContent>
 	</IonPage>
 );
 

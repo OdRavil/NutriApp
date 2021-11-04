@@ -116,6 +116,7 @@ const Configuracao: React.FC<RouteComponentProps> = (props) => {
 					email: newUser.email,
 					nome: newUser.email,
 					tipo: newUser.tipo,
+					listaEscola: newUser.listaEscola || [],
 				},
 			});
 		} catch (error: any) {
