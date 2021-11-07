@@ -15,10 +15,12 @@ import {
 	IonLabel,
 	IonButtons,
 	IonIcon,
+	IonTextarea,
 } from "@ionic/react";
 import { chevronBack } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import { useAuth } from "../../context/auth";
 import Aluno from "../../models/Aluno";
 import AnamneseModel, {
@@ -46,25 +48,225 @@ const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
 	const [peso, setPeso] = useState<string>("0");
 	const [altura, setAltura] = useState<string>("0");
 	const [imc, setImc] = useState<string>("0");
+	const [questaoPossuiHabitoSaudavel, setQuestaoPossuiHabitoSaudavel] =
+		useState<string>("");
+	const [questaoPossuiDoenca, setQuestaoPossuiDoenca] = useState<string>("");
+
+	// DIABETES_METLITUS
+	const [
+		questaoPossuiPessoaComDiabetesNaFamilia,
+		setQuestaoPossuiPessoaComDiabetesNaFamilia,
+	] = useState<string>("");
+	const [
+		questaoQuantasVezesPorSemanaComeDoce,
+		setQuestaoQuantasVezesPorSemanaComeDoce,
+	] = useState<string>("");
+
+	// HIPERTENSAO
+	const [
+		questaoPossuiPessoaComProblemaDeCoracao,
+		setQuestaoPossuiPessoaComProblemaDeCoracao,
+	] = useState<string>("");
+	const [
+		questaoPossuiHabitoDeAlimentosComMuitoSal,
+		setQuestaoPossuiHabitoDeAlimentosComMuitoSal,
+	] = useState<string>("");
+
+	// OBESIDADE
+	const [
+		questaoPossuiHabitoDeBoaAlimentacao,
+		setQuestaoPossuiHabitoDeBoaAlimentacao,
+	] = useState<string>("");
+	const [questaoEscalaSaudavel, setQuestaoEscalaSaudavel] = useState<number>(0);
+	const [questaoOQueComeNoRecreio, setQuestaoOQueComeNoRecreio] =
+		useState<string>("");
+	const [
+		questaoQuantasVezesComeAlimentosFritos,
+		setQuestaoQuantasVezesComeAlimentosFritos,
+	] = useState<string>("");
 
 	const atualizar = () => {
-		if (!anamnese) return;
+		if (!anamnese || !aluno?.id) return;
 		try {
-			console.error("Atualizado");
-			anamnese.peso = Number(peso);
-			anamnese.altura = Number(altura);
-			anamnese.imc = Number(imc);
-			const anamneseService = new AnamneseService();
-			if (anamnese.id) {
-				anamneseService.updateData(anamnese.id, anamnese);
-			} else {
-				anamneseService.pushData(anamnese);
+			if (!aluno.dadosSaude) aluno.dadosSaude = {};
+
+			aluno.dadosSaude.peso = Number(peso);
+			aluno.dadosSaude.altura = Number(altura);
+			aluno.dadosSaude.imc = Number(imc);
+			aluno.dadosSaude.questaoPossuiHabitoSaudavel = questaoPossuiHabitoSaudavel;
+			aluno.dadosSaude.questaoPossuiDoenca = questaoPossuiDoenca;
+
+			if (anamnese.tipo === TipoAnamnese.DIABETES_METLITUS) {
+				anamnese.questaoPossuiPessoaComDiabetesNaFamilia =
+					questaoPossuiPessoaComDiabetesNaFamilia;
+				anamnese.questaoQuantasVezesPorSemanaComeDoce =
+					questaoQuantasVezesPorSemanaComeDoce;
 			}
+
+			if (anamnese.tipo === TipoAnamnese.HIPERTENSAO) {
+				anamnese.questaoPossuiPessoaComProblemaDeCoracao =
+					questaoPossuiPessoaComProblemaDeCoracao;
+				anamnese.questaoPossuiHabitoDeAlimentosComMuitoSal =
+					questaoPossuiHabitoDeAlimentosComMuitoSal;
+			}
+
+			if (anamnese.tipo === TipoAnamnese.OBESIDADE) {
+				anamnese.questaoPossuiHabitoDeBoaAlimentacao =
+					questaoPossuiHabitoDeBoaAlimentacao;
+				anamnese.questaoEscalaSaudavel = questaoEscalaSaudavel;
+				anamnese.questaoOQueComeNoRecreio = questaoOQueComeNoRecreio;
+				anamnese.questaoQuantasVezesComeAlimentosFritos =
+					questaoQuantasVezesComeAlimentosFritos;
+			}
+
+			const alunoService = new AlunoService();
+			const anamneseService = new AnamneseService();
+			const promises: Promise<any>[] = [];
+			promises.push(alunoService.updateData(aluno.id, aluno));
+			if (anamnese.id) {
+				promises.push(anamneseService.updateData(anamnese.id, anamnese));
+			} else {
+				promises.push(anamneseService.pushData(anamnese));
+			}
+			Promise.all(promises).then(() => setShowSuccessBox(true));
 		} catch (error) {
 			console.error(error);
 			setMensagemErrorBox("Erro no cadastro");
 		}
 	};
+
+	const perguntasTipoDiabetesMetlitus = () => (
+		<>
+			<IonItem className="item-config" lines="none">
+				<IonLabel>Tem alguma pessoa com diabetes na sua família?</IonLabel>
+			</IonItem>
+			<IonItem className="item-config">
+				<IonTextarea
+					className="input-config"
+					value={questaoPossuiPessoaComDiabetesNaFamilia}
+					onIonChange={(e) =>
+						setQuestaoPossuiPessoaComDiabetesNaFamilia(e.detail.value!)
+					}
+				/>
+			</IonItem>
+			<IonItem className="item-config" lines="none">
+				<IonLabel>Quantas vezes por semana você come doces?</IonLabel>
+			</IonItem>
+			<IonItem className="item-config">
+				<IonTextarea
+					className="input-config"
+					value={questaoQuantasVezesPorSemanaComeDoce}
+					onIonChange={(e) =>
+						setQuestaoQuantasVezesPorSemanaComeDoce(e.detail.value!)
+					}
+				/>
+			</IonItem>
+		</>
+	);
+
+	const perguntasTipoHipertensao = () => (
+		<>
+			<IonItem className="item-config" lines="none">
+				<IonLabel>Tem alguém na sua família com problemas no coração?</IonLabel>
+			</IonItem>
+			<IonItem className="item-config">
+				<IonTextarea
+					className="input-config"
+					value={questaoPossuiPessoaComProblemaDeCoracao}
+					onIonChange={(e) =>
+						setQuestaoPossuiPessoaComProblemaDeCoracao(e.detail.value!)
+					}
+				/>
+			</IonItem>
+			<IonItem className="item-config" lines="none">
+				<IonLabel>
+					Sua família tem o hábito de comer alimentos com muito sal?
+				</IonLabel>
+			</IonItem>
+			<IonItem className="item-config">
+				<IonTextarea
+					className="input-config"
+					value={questaoPossuiHabitoDeAlimentosComMuitoSal}
+					onIonChange={(e) =>
+						setQuestaoPossuiHabitoDeAlimentosComMuitoSal(e.detail.value!)
+					}
+				/>
+			</IonItem>
+		</>
+	);
+
+	const perguntasTipoObesidade = () => (
+		<>
+			<IonItem className="item-config" lines="none">
+				<IonLabel>Você tem o hábito de ter uma boa alimentação?</IonLabel>
+			</IonItem>
+			<IonItem className="item-config">
+				<IonTextarea
+					className="input-config"
+					value={questaoPossuiHabitoDeBoaAlimentacao}
+					onIonChange={(e) =>
+						setQuestaoPossuiHabitoDeBoaAlimentacao(e.detail.value!)
+					}
+				/>
+			</IonItem>
+			<IonItem className="item-config" lines="none">
+				<IonLabel>
+					Em uma escala de 0 a 10, quanto você se classificaria uma &quot;pessoa
+					saudável&quot;?
+				</IonLabel>
+				<IonSelect
+					className="input-config"
+					value={questaoEscalaSaudavel}
+					placeholder="Aluno"
+					onIonChange={(e) => setQuestaoEscalaSaudavel(e.detail.value)}
+				>
+					<IonSelectOption value={0}>{0}</IonSelectOption>
+					<IonSelectOption value={1}>{1}</IonSelectOption>
+					<IonSelectOption value={2}>{2}</IonSelectOption>
+					<IonSelectOption value={3}>{3}</IonSelectOption>
+					<IonSelectOption value={4}>{4}</IonSelectOption>
+					<IonSelectOption value={5}>{5}</IonSelectOption>
+					<IonSelectOption value={6}>{6}</IonSelectOption>
+					<IonSelectOption value={7}>{7}</IonSelectOption>
+					<IonSelectOption value={8}>{8}</IonSelectOption>
+					<IonSelectOption value={9}>{9}</IonSelectOption>
+					<IonSelectOption value={10}>{10}</IonSelectOption>
+				</IonSelect>
+			</IonItem>
+			<IonItem className="item-config" lines="none">
+				<IonLabel>O que você leva para comer na hora do recreio?</IonLabel>
+			</IonItem>
+			<IonItem className="item-config">
+				<IonTextarea
+					className="input-config"
+					value={questaoOQueComeNoRecreio}
+					onIonChange={(e) => setQuestaoOQueComeNoRecreio(e.detail.value!)}
+				/>
+			</IonItem>
+			<IonItem className="item-config" lines="none">
+				<IonLabel>Quantas vezes por semana você come alimentos fritos?</IonLabel>
+			</IonItem>
+			<IonItem className="item-config">
+				<IonTextarea
+					className="input-config"
+					value={questaoQuantasVezesComeAlimentosFritos}
+					onIonChange={(e) =>
+						setQuestaoQuantasVezesComeAlimentosFritos(e.detail.value!)
+					}
+				/>
+			</IonItem>
+		</>
+	);
+
+	useEffect(() => {
+		setPeso(aluno?.dadosSaude?.peso ? String(aluno?.dadosSaude.peso) : "0");
+		setAltura(aluno?.dadosSaude?.altura ? String(aluno?.dadosSaude.altura) : "0");
+
+		setQuestaoPossuiHabitoSaudavel(
+			aluno?.dadosSaude?.questaoPossuiHabitoSaudavel || ""
+		);
+		setQuestaoPossuiDoenca(aluno?.dadosSaude?.questaoPossuiDoenca || "");
+	}, [aluno]);
 
 	useEffect(() => {
 		if (typeof aluno === "undefined") {
@@ -85,8 +287,28 @@ const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
 	}, [aluno, tipoAnamnese]);
 
 	useEffect(() => {
-		setPeso(anamnese && anamnese.peso ? String(anamnese.peso) : "0");
-		setAltura(anamnese && anamnese.altura ? String(anamnese.altura) : "0");
+		setQuestaoPossuiPessoaComDiabetesNaFamilia(
+			anamnese?.questaoPossuiPessoaComDiabetesNaFamilia || ""
+		);
+		setQuestaoQuantasVezesPorSemanaComeDoce(
+			anamnese?.questaoQuantasVezesPorSemanaComeDoce || ""
+		);
+
+		setQuestaoPossuiPessoaComProblemaDeCoracao(
+			anamnese?.questaoPossuiPessoaComProblemaDeCoracao || ""
+		);
+		setQuestaoPossuiHabitoDeAlimentosComMuitoSal(
+			anamnese?.questaoPossuiHabitoDeAlimentosComMuitoSal || ""
+		);
+
+		setQuestaoPossuiHabitoDeBoaAlimentacao(
+			anamnese?.questaoPossuiHabitoDeBoaAlimentacao || ""
+		);
+		setQuestaoEscalaSaudavel(anamnese?.questaoEscalaSaudavel || 0);
+		setQuestaoOQueComeNoRecreio(anamnese?.questaoOQueComeNoRecreio || "");
+		setQuestaoQuantasVezesComeAlimentosFritos(
+			anamnese?.questaoQuantasVezesComeAlimentosFritos || ""
+		);
 	}, [anamnese]);
 
 	useEffect(() => {
@@ -98,12 +320,12 @@ const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
 
 	useEffect(() => {
 		const nPeso = Number(peso);
-		const nAltura = Number(altura);
+		const nAltura = Number(altura) / 100;
 		let nImc = nPeso / (nAltura * nAltura);
 		if (Number.isNaN(nImc) || !Number.isFinite(nImc)) {
 			nImc = 0;
 		}
-		setImc(String(nImc.toPrecision(4)));
+		setImc(nImc.toFixed(2).toString());
 	}, [peso, altura]);
 
 	return (
@@ -122,10 +344,10 @@ const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
 					<IonTitle>Anamnese</IonTitle>
 				</IonToolbar>
 			</IonHeader>
-			<IonContent fullscreen scrollY={false}>
+			<IonContent fullscreen>
 				<IonCard>
 					<IonList lines="none">
-						<IonItem className="item-config" lines="none">
+						<IonItem className="item-config">
 							<IonLabel className="icon-config">Aluno</IonLabel>
 							<IonSelect
 								disabled={showAnamnese}
@@ -140,7 +362,7 @@ const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
 									))}
 							</IonSelect>
 						</IonItem>
-						<IonItem className="item-config" lines="none">
+						<IonItem className="item-config">
 							<IonLabel className="icon-config">Anamnese</IonLabel>
 							<IonSelect
 								className="input-config"
@@ -159,10 +381,16 @@ const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
 								</IonSelectOption>
 							</IonSelect>
 						</IonItem>
-						<div className={showAnamnese ? "" : "ion-hide"}>
+					</IonList>
+				</IonCard>
+				{aluno && !anamnese && <LoadingSpinner />}
+				<div className={showAnamnese ? "" : "ion-hide"}>
+					<IonCard>
+						<IonList>
 							<IonItem>
-								<IonLabel className="icon-config">Peso</IonLabel>
+								<IonLabel className="icon-config">Peso(kg)</IonLabel>
 								<IonInput
+									slot="end"
 									className="input-config"
 									value={peso}
 									inputMode="decimal"
@@ -171,8 +399,9 @@ const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
 								/>
 							</IonItem>
 							<IonItem>
-								<IonLabel className="icon-config">Altura</IonLabel>
+								<IonLabel className="icon-config">Altura(cm)</IonLabel>
 								<IonInput
+									slot="end"
 									className="input-config"
 									value={altura}
 									inputMode="decimal"
@@ -182,11 +411,40 @@ const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
 							</IonItem>
 							<IonItem>
 								<IonLabel className="icon-config">IMC</IonLabel>
-								<IonLabel className="icon-config">{maskImc(imc)}</IonLabel>
+								<IonInput slot="end" value={maskImc(imc)} readonly />
 							</IonItem>
-						</div>
-					</IonList>
-				</IonCard>
+							<IonItem className="item-config" lines="none">
+								<IonLabel>Possui um hábito saudável? Se sim, qual?</IonLabel>
+							</IonItem>
+							<IonItem className="item-config">
+								<IonTextarea
+									className="input-config"
+									value={questaoPossuiHabitoSaudavel}
+									onIonChange={(e) => setQuestaoPossuiHabitoSaudavel(e.detail.value!)}
+								/>
+							</IonItem>
+							<IonItem className="item-config" lines="none">
+								<IonLabel>Possui alguma doença? Se sim, qual?</IonLabel>
+							</IonItem>
+							<IonItem className="item-config">
+								<IonTextarea
+									className="input-config"
+									value={questaoPossuiDoenca}
+									onIonChange={(e) => setQuestaoPossuiDoenca(e.detail.value!)}
+								/>
+							</IonItem>
+							{anamnese &&
+								anamnese.tipo === TipoAnamnese.DIABETES_METLITUS &&
+								perguntasTipoDiabetesMetlitus()}
+							{anamnese &&
+								anamnese.tipo === TipoAnamnese.HIPERTENSAO &&
+								perguntasTipoHipertensao()}
+							{anamnese &&
+								anamnese.tipo === TipoAnamnese.OBESIDADE &&
+								perguntasTipoObesidade()}
+						</IonList>
+					</IonCard>
+				</div>
 				<IonCard>
 					<IonButton
 						color="primary"
@@ -209,9 +467,10 @@ const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
 				<IonToast
 					isOpen={showSuccessBox}
 					onDidDismiss={() => setShowSuccessBox(false)}
-					message="Cadastrado com Sucesso."
+					message="Atualizado."
 					duration={700}
 					color="success"
+					position="top"
 				/>
 			</IonContent>
 		</IonPage>

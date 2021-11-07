@@ -1619,6 +1619,15 @@
     ionicons "^5.5.3"
     tslib "^2.1.0"
 
+"@ionic/core@^5.8.5":
+  version "5.8.5"
+  resolved "https://registry.yarnpkg.com/@ionic/core/-/core-5.8.5.tgz#c967fdfa6e554f63f90227c04d2821c758a680cb"
+  integrity sha512-KUT3kKcON606FBJBZcAZn2c62OfPhVR/LQO260FH3znUmpZbqD2/Zm1LOTCxluiG9H6UIe8TVo9n8BgsKxCygA==
+  dependencies:
+    "@stencil/core" "^2.4.0"
+    ionicons "^5.5.3"
+    tslib "^2.1.0"
+
 "@ionic/react-router@^5.5.0":
   version "5.8.4"
   resolved "https://registry.yarnpkg.com/@ionic/react-router/-/react-router-5.8.4.tgz#75ce2e7187fe8ba120128251387ec59b2a27fce0"
