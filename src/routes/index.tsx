@@ -7,6 +7,7 @@ import Login from "../pages/Login";
 import MudarSenha from "../pages/Configuracao/MudarSenha";
 import PrimeiroAcesso from "../pages/PrimeiroAcesso";
 import PrivateRoute from "./PrivateRoute";
+import ListagemAlunos from "../pages/ListagemAlunos";
 import Anamnese from "../pages/Anamnese";
 
 const Router: React.FC = () => (
@@ -21,6 +22,7 @@ const Router: React.FC = () => (
 				<PrivateRoute path="/anamnese" component={Anamnese} />
 				<PrivateRoute path="/mudar-senha" component={MudarSenha} />
 				<PrivateRoute path="/private" component={Tabs} />
+				<PrivateRoute path="/lista-alunos" component={ListagemAlunos} />
 			</IonRouterOutlet>
 		</IonSplitPane>
 	</IonReactRouter>

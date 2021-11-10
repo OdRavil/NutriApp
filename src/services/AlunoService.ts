@@ -15,6 +15,12 @@ export default class AlunoService extends FirebaseService<Aluno> {
 			.listarPorEscola(escolas)
 			.then((lista) => lista.map((item) => item.id!));
 		if (turmas.length === 0) return this.listar();
+  		return this.getCollectionRef()
+			.where("idTurma", "in", turmas)
+			.get()
+			.then((query) => query.docs.map((item) => item.data()));
+	}
+  listarPorTurma(turmas: string[]) {
 		return this.getCollectionRef()
 			.where("idTurma", "in", turmas)
 			.get()
