@@ -9,6 +9,11 @@ import PrimeiroAcesso from "../pages/PrimeiroAcesso";
 import PrivateRoute from "./PrivateRoute";
 import ListagemAlunos from "../pages/ListagemAlunos";
 import Anamnese from "../pages/Anamnese";
+import CadastroAluno from "../pages/CadastroAluno";
+import TelaAluno from "../pages/TelaAluno";
+import CadastroUsuario from "../pages/CadastroUsuario";
+import CadastroEscola from "../pages/CadastroEscola";
+import CadastroTurma from "../pages/CadastroTurma";
 
 const Router: React.FC = () => (
 	<IonReactRouter>
@@ -22,7 +27,16 @@ const Router: React.FC = () => (
 				<PrivateRoute path="/anamnese" component={Anamnese} />
 				<PrivateRoute path="/mudar-senha" component={MudarSenha} />
 				<PrivateRoute path="/private" component={Tabs} />
-				<PrivateRoute path="/lista-alunos" component={ListagemAlunos} />
+
+				<PrivateRoute path="/aluno/cadastrar" component={CadastroAluno} />
+				<PrivateRoute path="/aluno/listar" component={ListagemAlunos} />
+				<PrivateRoute path="/aluno/visualizar/:idAluno" component={TelaAluno} />
+
+				<PrivateRoute path="/usuario/cadastrar" component={CadastroUsuario} />
+
+				<PrivateRoute path="/escola/cadastrar" component={CadastroEscola} />
+
+				<PrivateRoute path="/turma/cadastrar" component={CadastroTurma} />
 			</IonRouterOutlet>
 		</IonSplitPane>
 	</IonReactRouter>

@@ -14,8 +14,11 @@ import {
 	IonSelect,
 	IonSelectOption,
 	IonLoading,
+	IonButtons,
+	IonIcon,
 } from "@ionic/react";
-import React, { useEffect, useState } from "react";
+import { chevronBack } from "ionicons/icons";
+import React, { useCallback, useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import { useAuth } from "../../context/auth";
 import Escola from "../../models/Escola";
@@ -25,7 +28,7 @@ import EscolaService from "../../services/EscolaService";
 import TurmaService from "../../services/TurmaService";
 import UsuarioService from "../../services/UsuarioService";
 
-const CadastroTurma: React.FC<RouteComponentProps> = () => {
+const CadastroTurma: React.FC<RouteComponentProps> = (props) => {
 	const { auth } = useAuth();
 
 	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
@@ -41,7 +44,7 @@ const CadastroTurma: React.FC<RouteComponentProps> = () => {
 		setShowErrorBox(true);
 	};
 
-	const carregarEscola = async (usuario: Usuario) => {
+	const carregarEscola = useCallback(async (usuario: Usuario) => {
 		if (usuario.tipo === TipoUsuario.ADMINISTRADOR) {
 			new EscolaService().listar().then((escolas) => {
 				setEscolaLista(escolas);
@@ -67,7 +70,7 @@ const CadastroTurma: React.FC<RouteComponentProps> = () => {
 				}
 			});
 		}
-	};
+	}, []);
 
 	const cadastrar = async () => {
 		if (!codigo || codigo.trim().length === 0) {
@@ -101,15 +104,25 @@ const CadastroTurma: React.FC<RouteComponentProps> = () => {
 	};
 
 	useEffect(() => {
+		if (!auth?.user?.id) return;
 		new UsuarioService()
 			.getById(auth.user.id)
 			.then((usuario) => carregarEscola(usuario!));
-	}, [auth.user.id, carregarEscola]);
+	}, [auth?.user?.id, carregarEscola]);
 
 	return (
 		<IonPage>
 			<IonHeader>
 				<IonToolbar>
+					<IonButtons slot="start">
+						<IonIcon
+							icon={chevronBack}
+							size="large"
+							onClick={() => {
+								props.history.goBack();
+							}}
+						/>
+					</IonButtons>
 					<IonTitle>Cadastro de Turma</IonTitle>
 				</IonToolbar>
 			</IonHeader>

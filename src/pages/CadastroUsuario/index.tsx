@@ -14,11 +14,13 @@ import {
 	IonSelect,
 	IonSelectOption,
 	IonDatetime,
+	IonButtons,
 } from "@ionic/react";
 import React, { useState } from "react";
 import { RouteComponentProps } from "react-router";
 import {
 	calendarOutline,
+	chevronBack,
 	mailOutline,
 	maleFemaleOutline,
 	peopleOutline,
@@ -29,7 +31,7 @@ import Usuario, { Sexo, TipoUsuario } from "../../models/Usuario";
 import UsuarioService from "../../services/UsuarioService";
 import "firebase/firestore";
 
-const CadastroUsuario: React.FC<RouteComponentProps> = () => {
+const CadastroUsuario: React.FC<RouteComponentProps> = (props) => {
 	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
 	const [showErrorBox, setShowErrorBox] = useState<boolean>(false);
 	const [showSuccessBox, setShowSuccessBox] = useState<boolean>(false);
@@ -86,6 +88,15 @@ const CadastroUsuario: React.FC<RouteComponentProps> = () => {
 		<IonPage>
 			<IonHeader>
 				<IonToolbar>
+					<IonButtons slot="start">
+						<IonIcon
+							icon={chevronBack}
+							size="large"
+							onClick={() => {
+								props.history.goBack();
+							}}
+						/>
+					</IonButtons>
 					<IonTitle>Cadastro de Usuario</IonTitle>
 				</IonToolbar>
 			</IonHeader>

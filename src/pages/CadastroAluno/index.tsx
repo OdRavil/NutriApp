@@ -15,14 +15,16 @@ import {
 	IonSelectOption,
 	IonDatetime,
 	IonLoading,
+	IonButtons,
 } from "@ionic/react";
 import {
 	calendarOutline,
+	chevronBack,
 	mailOutline,
 	maleFemaleOutline,
 	personOutline,
 } from "ionicons/icons";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import firebase from "firebase/app";
 import Aluno from "../../models/Aluno";
@@ -34,7 +36,7 @@ import Turma from "../../models/Turma";
 import UsuarioService from "../../services/UsuarioService";
 import { useAuth } from "../../context/auth";
 
-const CadastroAluno: React.FC<RouteComponentProps> = () => {
+const CadastroAluno: React.FC<RouteComponentProps> = (props) => {
 	const { auth } = useAuth();
 
 	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
@@ -52,7 +54,7 @@ const CadastroAluno: React.FC<RouteComponentProps> = () => {
 		setShowErrorBox(true);
 	};
 
-	const carregarTurma = async (usuario: Usuario) => {
+	const carregarTurma = useCallback(async (usuario: Usuario) => {
 		if (usuario.tipo === TipoUsuario.ADMINISTRADOR) {
 			new TurmaService().listar().then((turmas) => {
 				setTurmaLista(turmas);
@@ -75,7 +77,7 @@ const CadastroAluno: React.FC<RouteComponentProps> = () => {
 				}
 			});
 		}
-	};
+	}, []);
 
 	const cadastrar = async () => {
 		if (!nome || nome.trim().length === 0) {
@@ -118,15 +120,25 @@ const CadastroAluno: React.FC<RouteComponentProps> = () => {
 	};
 
 	useEffect(() => {
+		if (!auth?.user?.id) return;
 		new UsuarioService()
 			.getById(auth.user.id)
 			.then((usuario) => carregarTurma(usuario!));
-	}, []);
+	}, [auth?.user?.id, carregarTurma]);
 
 	return (
 		<IonPage>
 			<IonHeader>
 				<IonToolbar>
+					<IonButtons slot="start">
+						<IonIcon
+							icon={chevronBack}
+							size="large"
+							onClick={() => {
+								props.history.goBack();
+							}}
+						/>
+					</IonButtons>
 					<IonTitle>Cadastro de Aluno</IonTitle>
 				</IonToolbar>
 			</IonHeader>

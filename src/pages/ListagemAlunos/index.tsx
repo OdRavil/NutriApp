@@ -12,7 +12,7 @@ import {
 	IonTitle,
 	IonToolbar,
 } from "@ionic/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "firebase/auth";
 import { RouteComponentProps } from "react-router";
 import { arrowBackOutline } from "ionicons/icons";
@@ -21,27 +21,36 @@ import UsuarioService from "../../services/UsuarioService";
 import TurmaService from "../../services/TurmaService";
 import AlunoService from "../../services/AlunoService";
 import Aluno from "../../models/Aluno";
+import { TipoUsuario } from "../../models/Usuario";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 const ListagemAlunos: React.FC<RouteComponentProps> = (props) => {
-	const user = useAuth();
-	// const typeUser = user.auth.user.tipo;
-	const userID = user.auth.user.id;
+	const { auth } = useAuth();
 
-	const [listaAlunos, setListaAlunos] = useState<Aluno[]>([]);
+	const [listaAlunos, setListaAlunos] = useState<Aluno[]>();
 
-	new UsuarioService().getById(userID).then((usuario) => {
-		const listaEscolas = usuario!.listaEscola;
+	useEffect(() => {
+		if (!auth?.user?.id) return;
 
-		if (listaEscolas) {
-			new TurmaService().listarPorEscola(listaEscolas).then((turmas) => {
-				new AlunoService()
-					.listarPorTurma(turmas.map((item) => item.id!))
-					.then((alunos) => {
-						setListaAlunos(alunos);
+		if (auth.user.tipo === TipoUsuario.ADMINISTRADOR) {
+			new AlunoService().listar().then((alunos) => {
+				setListaAlunos(alunos);
+			});
+		} else {
+			new UsuarioService().getById(auth.user.id).then((usuario) => {
+				const listaEscolas = usuario!.listaEscola;
+				if (listaEscolas) {
+					new TurmaService().listarPorEscola(listaEscolas).then((turmas) => {
+						new AlunoService()
+							.listarPorTurma(turmas.map((item) => item.id!))
+							.then((alunos) => {
+								setListaAlunos(alunos);
+							});
 					});
+				}
 			});
 		}
-	});
+	}, [auth?.user?.id, auth.user.tipo]);
 
 	return (
 		<IonPage>
@@ -52,18 +61,23 @@ const ListagemAlunos: React.FC<RouteComponentProps> = (props) => {
 							<IonIcon slot="icon-only" icon={arrowBackOutline} />
 						</IonButton>
 					</IonButtons>
-					<IonTitle>Alterar senha</IonTitle>
+					<IonTitle>Alunos</IonTitle>
 				</IonToolbar>
 			</IonHeader>
-			<IonContent fullscreen className="ion-padding">
-				<IonList>
-					{listaAlunos.map((aluno) => (
-						<IonItem routerLink={`TelaAluno/${aluno.id}`}>
-							<IonLabel>{aluno.nome}</IonLabel>
-							<IonLabel>{aluno.email}</IonLabel>
-						</IonItem>
-					))}
-				</IonList>
+			<IonContent fullscreen>
+				{!listaAlunos && <LoadingSpinner />}
+				{listaAlunos && listaAlunos.length === 0 && (
+					<IonLabel>Nenhum aluno encontrado</IonLabel>
+				)}
+				{listaAlunos && listaAlunos.length !== 0 && (
+					<IonList>
+						{listaAlunos.map((aluno) => (
+							<IonItem key={aluno.id!} routerLink={`/aluno/visualizar/${aluno.id!}`}>
+								<IonLabel>{aluno.nome}</IonLabel>
+							</IonItem>
+						))}
+					</IonList>
+				)}
 			</IonContent>
 		</IonPage>
 	);
