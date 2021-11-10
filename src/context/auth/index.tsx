@@ -11,6 +11,7 @@ export interface Auth {
 		nome: string;
 		email: string;
 		tipo: TipoUsuario;
+		listaEscola: string[];
 	};
 }
 
@@ -56,6 +57,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 				nome: user.nome,
 				email: user.email,
 				tipo: user.tipo,
+				listaEscola: user.listaEscola || [],
 			};
 			return authUser;
 		} finally {
