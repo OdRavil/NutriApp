@@ -22,7 +22,15 @@ export function getTipoAnamneseText(tipo: TipoAnamnese) {
 export default interface Anamnese extends BaseModel {
 	tipo: TipoAnamnese;
 	idAluno: string;
-	peso: number;
-	altura: number;
-	imc: number;
+
+	questaoPossuiPessoaComDiabetesNaFamilia?: string;
+	questaoQuantasVezesPorSemanaComeDoce?: string;
+
+	questaoPossuiPessoaComProblemaDeCoracao?: string;
+	questaoPossuiHabitoDeAlimentosComMuitoSal?: string;
+
+	questaoPossuiHabitoDeBoaAlimentacao?: string;
+	questaoEscalaSaudavel?: number;
+	questaoOQueComeNoRecreio?: string;
+	questaoQuantasVezesComeAlimentosFritos?: string;
 }
