@@ -7,13 +7,13 @@ import {
 	IonPage,
 	IonToast,
 } from "@ionic/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import { useAuth } from "../../context/auth";
 import "./index.css";
 
 const Login: React.FC<RouteComponentProps> = (props) => {
-	const { login } = useAuth();
+	const { auth, login } = useAuth();
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -36,7 +36,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 					mostrarMensagemErro("Não foi possível logar usuário.");
 					return;
 				}
-				props.history.replace("private/home");
+				props.history.replace("/private/home");
 			})
 			.catch((error) => {
 				console.error(error);
@@ -44,6 +44,12 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 				setShowLoading(false);
 			});
 	};
+
+	useEffect(() => {
+		if (auth?.user?.id) {
+			props.history.replace("/private/home");
+		}
+	}, [auth?.user?.id, props.history]);
 
 	return (
 		<IonPage>
