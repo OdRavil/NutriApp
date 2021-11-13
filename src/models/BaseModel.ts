@@ -4,4 +4,5 @@ import "firebase/firestore";
 export default interface BaseModel {
 	id?: string;
 	createdAt?: firebase.firestore.Timestamp;
+	status?: boolean;
 }

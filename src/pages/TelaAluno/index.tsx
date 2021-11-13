@@ -62,6 +62,38 @@ const TelaAluno: React.FC<RouteComponentProps<TelaAlunoProps>> = (props) => {
 		setShowErrorBox(true);
 	};
 
+	const salvar = async () => {
+		if (!aluno) return;
+		if (!nome || nome.trim().length === 0) {
+			mostrarMensagemErro("Nome não preenchido.");
+			return;
+		}
+		if (!email || email.trim().length === 0) {
+			mostrarMensagemErro("E-mail não preenchido.");
+			return;
+		}
+		if (!sexo || sexo.trim().length === 0) {
+			mostrarMensagemErro("Sexo não preenchido.");
+			return;
+		}
+		if (!idTurma || idTurma.trim().length === 0) {
+			mostrarMensagemErro("Turma não selecionada.");
+			return;
+		}
+
+		try {
+			aluno.nome = nome;
+			aluno.email = email;
+			aluno.sexo = sexo;
+			aluno.idTurma = idTurma;
+			await new AlunoService().updateData(aluno.id!, aluno);
+			setShowSuccessBox(true);
+		} catch (error) {
+			console.error(error);
+			mostrarMensagemErro("Erro de conexão, tente novamente mais tarde.");
+		}
+	};
+
 	const carregarTurma = useCallback(async (usuario: Usuario) => {
 		if (usuario.tipo === TipoUsuario.ADMINISTRADOR) {
 			new TurmaService().listar().then((turmas) => {
@@ -195,6 +227,17 @@ const TelaAluno: React.FC<RouteComponentProps<TelaAlunoProps>> = (props) => {
 						</IonList>
 					)}
 				</IonCard>
+				<IonCard>
+					<IonButton
+						color="primary"
+						expand="block"
+						onClick={salvar}
+						className="register-button"
+						disabled={!aluno}
+					>
+						Salvar
+					</IonButton>
+				</IonCard>
 				<IonToast
 					isOpen={showErrorBox}
 					onDidDismiss={() => setShowErrorBox(false)}
@@ -207,7 +250,7 @@ const TelaAluno: React.FC<RouteComponentProps<TelaAlunoProps>> = (props) => {
 				<IonToast
 					isOpen={showSuccessBox}
 					onDidDismiss={() => setShowSuccessBox(false)}
-					message="Cadastrado com Sucesso."
+					message="Alterado com Sucesso."
 					duration={700}
 					color="success"
 				/>

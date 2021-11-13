@@ -52,6 +52,7 @@ export default abstract class FirebaseService<M extends BaseModel> {
 	): M {
 		const model = snapshot.data(options) as M;
 		model.id = snapshot.id;
+		if (typeof model.status === "undefined") model.status = true;
 		return model;
 	}
 
