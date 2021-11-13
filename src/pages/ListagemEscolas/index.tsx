@@ -1,21 +1,25 @@
-/* eslint-disable no-undef */
 import {
 	IonButton,
 	IonButtons,
+	IonCard,
+	IonCardContent,
 	IonContent,
 	IonHeader,
 	IonIcon,
 	IonItem,
 	IonLabel,
 	IonList,
+	IonModal,
 	IonPage,
+	IonSelect,
+	IonSelectOption,
 	IonTitle,
 	IonToolbar,
 } from "@ionic/react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "firebase/auth";
 import { RouteComponentProps } from "react-router";
-import { arrowBackOutline } from "ionicons/icons";
+import { arrowBackOutline, closeOutline, optionsOutline } from "ionicons/icons";
 import { useAuth } from "../../context/auth";
 import EscolaService from "../../services/EscolaService";
 import Escola from "../../models/Escola";
@@ -25,14 +29,27 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 const ListagemEscolas: React.FC<RouteComponentProps> = (props) => {
 	const { auth } = useAuth();
 
+	const [showModalFiltro, setShowModalFiltro] = useState<boolean>(false);
+	const [filtroStatus, setFiltroStatus] = useState<boolean>();
+
 	const [listaEscolas, setListaEscolas] = useState<Escola[]>();
 
-	useEffect(() => {
+	const filtrar = useCallback(
+		(escola: Escola): boolean => {
+			if (typeof filtroStatus !== "undefined" && escola.status !== filtroStatus) {
+				return false;
+			}
+			return true;
+		},
+		[filtroStatus]
+	);
+
+	const buscar = useCallback(() => {
 		if (!auth?.user?.id) return;
 		const escolaService = new EscolaService();
 		if (auth.user.tipo === TipoUsuario.ADMINISTRADOR) {
 			escolaService.listar().then((escolas) => {
-				setListaEscolas(escolas);
+				setListaEscolas(escolas.filter((item) => filtrar(item)));
 			});
 		} else {
 			const promises: Promise<Escola | undefined>[] = [];
@@ -43,7 +60,9 @@ const ListagemEscolas: React.FC<RouteComponentProps> = (props) => {
 			Promise.all(promises)
 				.then((escolas) => {
 					setListaEscolas(
-						escolas.filter((item) => typeof item !== "undefined") as Escola[]
+						(
+							escolas.filter((item) => typeof item !== "undefined") as Escola[]
+						).filter((item) => filtrar(item))
 					);
 				})
 				.catch((error) => {
@@ -51,7 +70,21 @@ const ListagemEscolas: React.FC<RouteComponentProps> = (props) => {
 					setListaEscolas([]);
 				});
 		}
-	}, [auth?.user?.id, auth?.user?.tipo, auth?.user?.listaEscola]);
+	}, [auth?.user?.id, auth?.user?.tipo, auth?.user?.listaEscola, filtrar]);
+
+	const aplicarFiltros = () => {
+		buscar();
+		setShowModalFiltro(false);
+	};
+
+	const limparFiltros = () => {
+		setFiltroStatus(undefined);
+		aplicarFiltros();
+	};
+
+	useEffect(() => {
+		buscar();
+	}, [buscar]);
 
 	return (
 		<IonPage>
@@ -63,12 +96,21 @@ const ListagemEscolas: React.FC<RouteComponentProps> = (props) => {
 						</IonButton>
 					</IonButtons>
 					<IonTitle>Escolas</IonTitle>
+					<IonButtons slot="end">
+						<IonButton onClick={() => setShowModalFiltro(true)}>
+							<IonIcon slot="icon-only" icon={optionsOutline} />
+						</IonButton>
+					</IonButtons>
 				</IonToolbar>
 			</IonHeader>
 			<IonContent fullscreen>
 				{!listaEscolas && <LoadingSpinner />}
 				{listaEscolas && listaEscolas.length === 0 && (
-					<IonLabel>Nenhuma escola encontrada</IonLabel>
+					<IonList>
+						<IonItem>
+							<IonLabel>Nenhuma escola encontrada</IonLabel>
+						</IonItem>
+					</IonList>
 				)}
 				{listaEscolas && listaEscolas.length !== 0 && (
 					<IonList>
@@ -82,6 +124,53 @@ const ListagemEscolas: React.FC<RouteComponentProps> = (props) => {
 						))}
 					</IonList>
 				)}
+				<IonModal isOpen={showModalFiltro} cssClass="filter-modal">
+					<IonHeader class="ion-no-border">
+						<IonToolbar>
+							<IonTitle>Filtro</IonTitle>
+							<IonButtons slot="end">
+								<IonButton onClick={() => setShowModalFiltro(false)}>
+									<IonIcon slot="icon-only" icon={closeOutline} />
+								</IonButton>
+							</IonButtons>
+						</IonToolbar>
+					</IonHeader>
+					<IonContent>
+						<IonCard>
+							<IonCardContent>
+								<IonList>
+									<IonItem className="item-config" lines="none">
+										<IonLabel>Status</IonLabel>
+										<IonSelect
+											className="input-config"
+											value={filtroStatus}
+											placeholder="Status"
+											onIonChange={(e) => setFiltroStatus(e.detail.value)}
+										>
+											<IonSelectOption value>Ativo</IonSelectOption>
+											<IonSelectOption value={false}>Inativo</IonSelectOption>
+										</IonSelect>
+									</IonItem>
+								</IonList>
+							</IonCardContent>
+						</IonCard>
+						<IonButton
+							className="ion-margin"
+							expand="block"
+							onClick={() => aplicarFiltros()}
+						>
+							Aplicar filtros
+							<IonIcon icon={optionsOutline} slot="start" />
+						</IonButton>
+						<IonButton
+							className="ion-margin"
+							expand="block"
+							onClick={() => limparFiltros()}
+						>
+							Limpar
+						</IonButton>
+					</IonContent>
+				</IonModal>
 			</IonContent>
 		</IonPage>
 	);

@@ -89,6 +89,7 @@ export default abstract class FirebaseService<M extends BaseModel> {
 		return this.getCollectionRef()
 			.add({
 				...data,
+				status: true,
 				createdAt: firebase.firestore.FieldValue.serverTimestamp(),
 			})
 			.then((doc) => doc.id);
