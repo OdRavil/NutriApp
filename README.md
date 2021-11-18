@@ -20,14 +20,14 @@ Utilize esses comandos para clonar o projeto:
 ```batch
 # Configure
 $ npm install -g @ionic/cli cordova-res
-$ git clone https://gitlab.com/vividussaude/vividus.git ionic-vividus
-$ cd ionic-vividus && npm install && ionic serve
+$ git clone https://github.com/OdRavil/NutriApp.git ionic-app
+$ cd ionic-app && yarn install && ionic serve
 
 # Development
-$ npm start
+$ yarn start
 
 # Production
-$ npm run build
+$ yarn build
 $ npm install -g serve
 $ serve -s build
 
