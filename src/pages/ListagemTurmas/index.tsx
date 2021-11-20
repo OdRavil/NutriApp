@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import {
 	IonButton,
 	IonButtons,
@@ -26,23 +25,30 @@ import TurmaService from "../../services/TurmaService";
 import Turma from "../../models/Turma";
 import { TipoUsuario } from "../../models/Usuario";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import EscolaService from "../../services/EscolaService";
+import Escola from "../../models/Escola";
 
 const ListagemTurmas: React.FC<RouteComponentProps> = (props) => {
 	const { auth } = useAuth();
 
 	const [showModalFiltro, setShowModalFiltro] = useState<boolean>(false);
 	const [filtroStatus, setFiltroStatus] = useState<boolean>();
+	const [filtroEscola, setFiltroEscola] = useState<string>();
 
 	const [listaTurmas, setListaTurmas] = useState<Turma[]>();
+	const [listaEscolas, setListaEscolas] = useState<Escola[]>([]);
 
 	const filtrar = useCallback(
 		(turma: Turma): boolean => {
 			if (typeof filtroStatus !== "undefined" && turma.status !== filtroStatus) {
 				return false;
 			}
+			if (typeof filtroEscola !== "undefined" && turma.idEscola !== filtroEscola) {
+				return false;
+			}
 			return true;
 		},
-		[filtroStatus]
+		[filtroStatus, filtroEscola]
 	);
 
 	const buscar = useCallback(() => {
@@ -72,8 +78,35 @@ const ListagemTurmas: React.FC<RouteComponentProps> = (props) => {
 
 	const limparFiltros = () => {
 		setFiltroStatus(undefined);
+		setFiltroEscola(undefined);
 		aplicarFiltros();
 	};
+
+	useEffect(() => {
+		if (!auth?.user?.id) return;
+		const escolaService = new EscolaService();
+		if (auth.user.tipo === TipoUsuario.ADMINISTRADOR) {
+			escolaService.listar().then((escolas) => {
+				setListaEscolas(escolas);
+			});
+		} else {
+			const promises: Promise<Escola | undefined>[] = [];
+			auth.user.listaEscola.forEach((item) => {
+				promises.push(escolaService.getById(item));
+			});
+
+			Promise.all(promises)
+				.then((escolas) => {
+					setListaEscolas(
+						escolas.filter((item) => typeof item !== "undefined") as Escola[]
+					);
+				})
+				.catch((error) => {
+					console.error(error);
+					setListaEscolas([]);
+				});
+		}
+	}, [auth?.user?.id, auth?.user?.tipo, auth?.user?.listaEscola]);
 
 	useEffect(() => {
 		buscar();
@@ -139,6 +172,23 @@ const ListagemTurmas: React.FC<RouteComponentProps> = (props) => {
 										>
 											<IonSelectOption value>Ativo</IonSelectOption>
 											<IonSelectOption value={false}>Inativo</IonSelectOption>
+										</IonSelect>
+									</IonItem>
+									<IonItem className="item-config" lines="none">
+										<IonLabel>Escola</IonLabel>
+										<IonSelect
+											className="input-config"
+											value={filtroEscola}
+											placeholder="Escola"
+											onIonChange={(e) => setFiltroEscola(e.detail.value)}
+										>
+											{listaEscolas.length === 0 && <IonSelectOption value="" />}
+											{listaEscolas.length !== 0 &&
+												listaEscolas.map((item) => (
+													<IonSelectOption key={item.id!} value={item.id!}>
+														{item.nome}
+													</IonSelectOption>
+												))}
 										</IonSelect>
 									</IonItem>
 								</IonList>
