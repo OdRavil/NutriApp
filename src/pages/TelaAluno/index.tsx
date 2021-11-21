@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 import {
+	IonAlert,
 	IonButton,
 	IonButtons,
 	IonCard,
@@ -46,6 +47,7 @@ const TelaAluno: React.FC<RouteComponentProps<TelaAlunoProps>> = (props) => {
 	const { idAluno } = props.match.params;
 	const [aluno, setAluno] = useState<Aluno>();
 
+	const [showAlertDesativar, setShowAlertDesativar] = useState<boolean>(false);
 	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
 	const [showErrorBox, setShowErrorBox] = useState<boolean>(false);
 	const [showSuccessBox, setShowSuccessBox] = useState<boolean>(false);
@@ -60,6 +62,30 @@ const TelaAluno: React.FC<RouteComponentProps<TelaAlunoProps>> = (props) => {
 	const mostrarMensagemErro = (mensagem: string) => {
 		setMensagemErrorBox(mensagem);
 		setShowErrorBox(true);
+	};
+
+	const ativar = async () => {
+		if (!aluno) return;
+		try {
+			aluno.status = true;
+			await new AlunoService().updateData(aluno.id!, aluno);
+			setShowSuccessBox(true);
+		} catch (error) {
+			console.error(error);
+			mostrarMensagemErro("Erro de conexão, tente novamente mais tarde.");
+		}
+	};
+
+	const desativar = async () => {
+		if (!aluno) return;
+		try {
+			aluno.status = false;
+			await new AlunoService().updateData(aluno.id!, aluno);
+			setShowSuccessBox(true);
+		} catch (error) {
+			console.error(error);
+			mostrarMensagemErro("Erro de conexão, tente novamente mais tarde.");
+		}
 	};
 
 	const salvar = async () => {
@@ -162,6 +188,15 @@ const TelaAluno: React.FC<RouteComponentProps<TelaAlunoProps>> = (props) => {
 					<IonTitle>Aluno</IonTitle>
 				</IonToolbar>
 			</IonHeader>
+			<IonAlert
+				isOpen={showAlertDesativar}
+				onDidDismiss={() => setShowAlertDesativar(false)}
+				message={`Deseja realmente desativar o aluno ${aluno?.nome}?`}
+				buttons={[
+					{ text: "Cancelar", role: "cancel" },
+					{ text: "Desativar", handler: () => desativar() },
+				]}
+			/>
 			<IonContent fullscreen className="ion-padding">
 				<IonCard>
 					{!aluno && <LoadingSpinner />}
@@ -236,6 +271,17 @@ const TelaAluno: React.FC<RouteComponentProps<TelaAlunoProps>> = (props) => {
 						disabled={!aluno}
 					>
 						Salvar
+					</IonButton>
+				</IonCard>
+				<IonCard>
+					<IonButton
+						color="danger"
+						expand="block"
+						onClick={() => (aluno?.status ? setShowAlertDesativar(true) : ativar())}
+						className="register-button"
+						disabled={!aluno}
+					>
+						{aluno?.status ? "Desativar" : "Ativar"}
 					</IonButton>
 				</IonCard>
 				<IonToast

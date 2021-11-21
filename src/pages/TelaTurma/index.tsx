@@ -1,5 +1,5 @@
-/* eslint-disable no-undef */
 import {
+	IonAlert,
 	IonButton,
 	IonButtons,
 	IonCard,
@@ -29,6 +29,7 @@ import { useAuth } from "../../context/auth";
 import UsuarioService from "../../services/UsuarioService";
 import EscolaService from "../../services/EscolaService";
 import Usuario, { TipoUsuario } from "../../models/Usuario";
+import AlunoService from "../../services/AlunoService";
 
 interface TelaTurmaProps {
 	idTurma: string;
@@ -40,6 +41,7 @@ const TelaTurma: React.FC<RouteComponentProps<TelaTurmaProps>> = (props) => {
 	const { idTurma } = props.match.params;
 	const [turma, setTurma] = useState<Turma>();
 
+	const [showAlertDesativar, setShowAlertDesativar] = useState<boolean>(false);
 	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
 	const [showErrorBox, setShowErrorBox] = useState<boolean>(false);
 	const [showSuccessBox, setShowSuccessBox] = useState<boolean>(false);
@@ -80,6 +82,40 @@ const TelaTurma: React.FC<RouteComponentProps<TelaTurmaProps>> = (props) => {
 			});
 		}
 	}, []);
+
+	const ativar = async () => {
+		if (!turma) return;
+		try {
+			turma.status = true;
+			await new TurmaService().updateData(turma.id!, turma);
+			setShowSuccessBox(true);
+		} catch (error) {
+			console.error(error);
+			mostrarMensagemErro("Erro de conexão, tente novamente mais tarde.");
+		}
+	};
+
+	const desativar = async () => {
+		if (!turma) return;
+		try {
+			const alunos = await (
+				await new AlunoService().listarPorTurma([turma.id!])
+			).filter((aluno) => !!aluno.status);
+
+			if (alunos.length !== 0) {
+				mostrarMensagemErro(
+					"Não é possível desativar uma turma com alunos ativos."
+				);
+				return;
+			}
+			turma.status = false;
+			await new TurmaService().updateData(turma.id!, turma);
+			setShowSuccessBox(true);
+		} catch (error) {
+			console.error(error);
+			mostrarMensagemErro("Erro de conexão, tente novamente mais tarde.");
+		}
+	};
 
 	const salvar = async () => {
 		if (!turma) return;
@@ -146,6 +182,15 @@ const TelaTurma: React.FC<RouteComponentProps<TelaTurmaProps>> = (props) => {
 					<IonTitle>Turma</IonTitle>
 				</IonToolbar>
 			</IonHeader>
+			<IonAlert
+				isOpen={showAlertDesativar}
+				onDidDismiss={() => setShowAlertDesativar(false)}
+				message={`Deseja realmente desativar a turma ${turma?.codigo}?`}
+				buttons={[
+					{ text: "Cancelar", role: "cancel" },
+					{ text: "Desativar", handler: () => desativar() },
+				]}
+			/>
 			<IonContent fullscreen className="ion-padding">
 				<IonCard>
 					{!turma && <LoadingSpinner />}
@@ -204,6 +249,17 @@ const TelaTurma: React.FC<RouteComponentProps<TelaTurmaProps>> = (props) => {
 						disabled={!turma}
 					>
 						Salvar
+					</IonButton>
+				</IonCard>
+				<IonCard>
+					<IonButton
+						color="danger"
+						expand="block"
+						onClick={() => (turma?.status ? setShowAlertDesativar(true) : ativar())}
+						className="register-button"
+						disabled={!turma}
+					>
+						{turma?.status ? "Desativar" : "Ativar"}
 					</IonButton>
 				</IonCard>
 				<IonToast

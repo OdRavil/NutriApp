@@ -18,14 +18,16 @@ export default class AlunoService extends FirebaseService<Aluno> {
 		return this.getCollectionRef()
 			.where("idTurma", "in", turmas)
 			.get()
-			.then((query) => query.docs.map((item) => item.data()));
+			.then((query) => query.docs.map((item) => item.data()))
+			.then((lista) => lista.filter((item) => !!item.status));
 	}
 
 	listarPorTurma(turmas: string[]) {
 		return this.getCollectionRef()
 			.where("idTurma", "in", turmas)
 			.get()
-			.then((query) => query.docs.map((item) => item.data()));
+			.then((query) => query.docs.map((item) => item.data()))
+			.then((lista) => lista.filter((item) => !!item.status));
 	}
 
 	listar() {
