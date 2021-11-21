@@ -16,6 +16,7 @@ export default class TurmaService extends FirebaseService<Turma> {
 		return this.getCollectionRef()
 			.where("idEscola", "in", escolas)
 			.get()
-			.then((query) => query.docs.map((item) => item.data()));
+			.then((query) => query.docs.map((item) => item.data()))
+			.then((lista) => lista.filter((item) => !!item.status));
 	}
 }

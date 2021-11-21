@@ -1,5 +1,5 @@
-/* eslint-disable no-undef */
 import {
+	IonAlert,
 	IonButton,
 	IonButtons,
 	IonCard,
@@ -22,6 +22,7 @@ import { arrowBackOutline } from "ionicons/icons";
 import EscolaService from "../../services/EscolaService";
 import Escola from "../../models/Escola";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import TurmaService from "../../services/TurmaService";
 
 interface TelaEscolaProps {
 	idEscola: string;
@@ -31,6 +32,7 @@ const TelaEscola: React.FC<RouteComponentProps<TelaEscolaProps>> = (props) => {
 	const { idEscola } = props.match.params;
 	const [escola, setEscola] = useState<Escola>();
 
+	const [showAlertDesativar, setShowAlertDesativar] = useState<boolean>(false);
 	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
 	const [showErrorBox, setShowErrorBox] = useState<boolean>(false);
 	const [showSuccessBox, setShowSuccessBox] = useState<boolean>(false);
@@ -40,6 +42,40 @@ const TelaEscola: React.FC<RouteComponentProps<TelaEscolaProps>> = (props) => {
 	const mostrarMensagemErro = (mensagem: string) => {
 		setMensagemErrorBox(mensagem);
 		setShowErrorBox(true);
+	};
+
+	const ativar = async () => {
+		if (!escola) return;
+		try {
+			escola.status = true;
+			await new EscolaService().updateData(escola.id!, escola);
+			setShowSuccessBox(true);
+		} catch (error) {
+			console.error(error);
+			mostrarMensagemErro("Erro de conexão, tente novamente mais tarde.");
+		}
+	};
+
+	const desativar = async () => {
+		if (!escola) return;
+		try {
+			const turmas = await (
+				await new TurmaService().listarPorEscola([escola.id!])
+			).filter((turma) => !!turma.status);
+
+			if (turmas.length !== 0) {
+				mostrarMensagemErro(
+					"Não é possível desativar uma escola com turmas ativas."
+				);
+				return;
+			}
+			escola.status = false;
+			await new EscolaService().updateData(escola.id!, escola);
+			setShowSuccessBox(true);
+		} catch (error) {
+			console.error(error);
+			mostrarMensagemErro("Erro de conexão, tente novamente mais tarde.");
+		}
 	};
 
 	const salvar = async () => {
@@ -94,6 +130,15 @@ const TelaEscola: React.FC<RouteComponentProps<TelaEscolaProps>> = (props) => {
 					<IonTitle>Escola</IonTitle>
 				</IonToolbar>
 			</IonHeader>
+			<IonAlert
+				isOpen={showAlertDesativar}
+				onDidDismiss={() => setShowAlertDesativar(false)}
+				message={`Deseja realmente desativar a escola ${escola?.nome}?`}
+				buttons={[
+					{ text: "Cancelar", role: "cancel" },
+					{ text: "Desativar", handler: () => desativar() },
+				]}
+			/>
 			<IonContent fullscreen className="ion-padding">
 				<IonCard>
 					{!escola && <LoadingSpinner />}
@@ -133,6 +178,17 @@ const TelaEscola: React.FC<RouteComponentProps<TelaEscolaProps>> = (props) => {
 						disabled={!escola}
 					>
 						Salvar
+					</IonButton>
+				</IonCard>
+				<IonCard>
+					<IonButton
+						color="danger"
+						expand="block"
+						onClick={() => (escola?.status ? setShowAlertDesativar(true) : ativar())}
+						className="register-button"
+						disabled={!escola}
+					>
+						{escola?.status ? "Desativar" : "Ativar"}
 					</IonButton>
 				</IonCard>
 				<IonToast
