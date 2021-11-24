@@ -52,7 +52,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 	}, [auth?.user?.id, props.history]);
 
 	return (
-		<IonPage>
+		<IonPage className="ion-padding a-s-d">
 			<IonImg className="i-l" />
 			<IonContent className="ion-padding c-f-l">
 				<IonLoading
@@ -70,23 +70,24 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 				<IonInput
 					placeholder="E-mail"
 					type="email"
+					autocorrect="off"
 					onIonChange={(e: any) => setEmail(e.target.value)}
 					className="i-s-l"
 				/>
 				<IonInput
-					placeholder="Password"
+					placeholder="Senha"
 					type="password"
 					onIonChange={(e: any) => setPassword(e.target.value)}
 					className="i-s-l"
 				/>
-				<IonContent>
-					<IonButton className="l-b-s" onClick={doLogin}>
-						Login
-					</IonButton>
-					<IonButton className="f-a-b-s" routerLink="/primeiro-acesso">
-						Primeiro acesso?
-					</IonButton>
-				</IonContent>
+
+				<IonButton className="l-b-s" expand="block" onClick={doLogin}>
+					Login
+				</IonButton>
+
+				<IonButton className="f-a-b-s" routerLink="/primeiro-acesso">
+					Primeiro acesso?
+				</IonButton>
 			</IonContent>
 		</IonPage>
 	);

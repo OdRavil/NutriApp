@@ -3,11 +3,11 @@ import {
 	IonContent,
 	IonHeader,
 	IonPage,
-	IonTitle,
 	IonToolbar,
 	IonLabel,
 	IonItem,
 	IonItemDivider,
+	IonText,
 } from "@ionic/react";
 import React from "react";
 import "./index.css";
@@ -16,7 +16,9 @@ const Home: React.FC = () => (
 	<IonPage>
 		<IonHeader>
 			<IonToolbar>
-				<IonTitle>Home</IonTitle>
+				<IonText className="q-w-e">
+					<h2>BEM VINDO(A)</h2>
+				</IonText>
 			</IonToolbar>
 		</IonHeader>
 		<IonContent fullscreen>
@@ -59,6 +61,12 @@ const Home: React.FC = () => (
 				</IonItem>
 				<IonItem routerLink="/aluno/listar">
 					<IonLabel>Listagem</IonLabel>
+				</IonItem>
+				<IonItemDivider>
+					<IonLabel>Postagens</IonLabel>
+				</IonItemDivider>
+				<IonItem routerLink="/aluno/listar">
+					<IonLabel>Orientaçãoes dos Nutricionistas</IonLabel>
 				</IonItem>
 			</IonList>
 		</IonContent>
