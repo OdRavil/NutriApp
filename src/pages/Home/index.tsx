@@ -33,6 +33,9 @@ const Home: React.FC = () => (
 				<IonItem routerLink="/usuario/cadastrar">
 					<IonLabel>Cadastro de Usuário</IonLabel>
 				</IonItem>
+				<IonItem routerLink="/usuario/listar">
+					<IonLabel>Listagem</IonLabel>
+				</IonItem>
 				<IonItemDivider>
 					<IonLabel>Escola</IonLabel>
 				</IonItemDivider>
