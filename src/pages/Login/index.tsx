@@ -54,7 +54,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 	return (
 		<IonPage className="ion-padding a-s-d">
 			<IonImg className="i-l" />
-			<IonContent className="ion-padding c-f-l">
+			<IonContent scrollY={false} className="ion-padding c-f-l">
 				<IonLoading
 					isOpen={showLoading}
 					onDidDismiss={() => setShowLoading(false)}

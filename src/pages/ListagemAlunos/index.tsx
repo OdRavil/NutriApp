@@ -70,7 +70,6 @@ const ListagemAlunos: React.FC<RouteComponentProps> = (props) => {
 
 	const buscar = useCallback(() => {
 		if (!auth?.user?.id) return;
-		console.log("dasdasasddsa");
 		if (auth.user.tipo === TipoUsuario.ADMINISTRADOR) {
 			new AlunoService().listar().then(async (alunos) => {
 				setListaAlunos(
