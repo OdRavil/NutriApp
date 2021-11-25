@@ -24,10 +24,10 @@ const Home: React.FC = () => (
 		<IonContent fullscreen>
 			<IonList>
 				<IonItemDivider>
-					<IonLabel>Home</IonLabel>
+					<IonLabel>Anamnese</IonLabel>
 				</IonItemDivider>
 				<IonItem routerLink="/anamnese">
-					<IonLabel>Anamnese</IonLabel>
+					<IonLabel>Fazer a Anamnese</IonLabel>
 				</IonItem>
 				<IonItemDivider>
 					<IonLabel>Usuário</IonLabel>
