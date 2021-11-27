@@ -18,6 +18,8 @@ import ListagemEscolas from "../pages/ListagemEscolas";
 import TelaEscola from "../pages/TelaEscola";
 import TelaTurma from "../pages/TelaTurma";
 import ListagemTurmas from "../pages/ListagemTurmas";
+import TelaUsuario from "../pages/TelaUsuario";
+import ListagemUsuarios from "../pages/ListagemUsuarios";
 
 const Router: React.FC = () => (
 	<IonReactRouter>
@@ -37,6 +39,11 @@ const Router: React.FC = () => (
 				<PrivateRoute path="/aluno/visualizar/:idAluno" component={TelaAluno} />
 
 				<PrivateRoute path="/usuario/cadastrar" component={CadastroUsuario} />
+				<PrivateRoute
+					path="/usuario/visualizar/:idUsuario"
+					component={TelaUsuario}
+				/>
+				<PrivateRoute path="/usuario/listar" component={ListagemUsuarios} />
 
 				<PrivateRoute path="/escola/cadastrar" component={CadastroEscola} />
 				<PrivateRoute path="/escola/listar" component={ListagemEscolas} />
