@@ -5,8 +5,10 @@ import {
 	IonCard,
 	IonCardHeader,
 	IonCardSubtitle,
+	IonCol,
 	IonContent,
 	IonDatetime,
+	IonGrid,
 	IonHeader,
 	IonIcon,
 	IonInput,
@@ -15,6 +17,7 @@ import {
 	IonList,
 	IonNote,
 	IonPage,
+	IonRow,
 	IonSelect,
 	IonSelectOption,
 	IonTitle,
@@ -365,32 +368,38 @@ const TelaUsuario: React.FC<RouteComponentProps<TelaUsuarioProps>> = (
 						)}
 					</IonCard>
 				)}
-				<IonCard>
-					<IonButton
-						color="primary"
-						expand="block"
-						onClick={salvar}
-						className="register-button"
-						disabled={!usuario}
-					>
-						Salvar
-					</IonButton>
-				</IonCard>
-				{usuario && auth?.user?.id !== usuario?.id && (
-					<IonCard>
-						<IonButton
-							color="danger"
-							expand="block"
-							onClick={() =>
-								usuario?.status ? setShowAlertDesativar(true) : ativar()
-							}
-							className="register-button"
-							disabled={!usuario}
-						>
-							{usuario?.status ? "Desativar" : "Ativar"}
-						</IonButton>
-					</IonCard>
-				)}
+				<IonGrid>
+					<IonRow>
+						<IonCol>
+							<IonButton
+								color="primary"
+								expand="block"
+								onClick={salvar}
+								className="register-button"
+								disabled={!usuario}
+							>
+								Salvar
+							</IonButton>
+						</IonCol>
+					</IonRow>
+					{usuario && auth?.user?.id !== usuario?.id && (
+						<IonRow>
+							<IonCol>
+								<IonButton
+									color="danger"
+									expand="block"
+									onClick={() =>
+										usuario?.status ? setShowAlertDesativar(true) : ativar()
+									}
+									className="register-button"
+									disabled={!usuario}
+								>
+									{usuario?.status ? "Desativar" : "Ativar"}
+								</IonButton>
+							</IonCol>
+						</IonRow>
+					)}
+				</IonGrid>
 				<IonToast
 					isOpen={showErrorBox}
 					onDidDismiss={() => setShowErrorBox(false)}

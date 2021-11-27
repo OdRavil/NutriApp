@@ -13,6 +13,9 @@ import {
 	IonTextarea,
 	IonButtons,
 	IonIcon,
+	IonRow,
+	IonCol,
+	IonGrid,
 } from "@ionic/react";
 import { chevronBack } from "ionicons/icons";
 import React, { useState } from "react";
@@ -73,7 +76,7 @@ const CadastroEscola: React.FC<RouteComponentProps> = (props) => {
 					<IonTitle>Cadastro de Escola</IonTitle>
 				</IonToolbar>
 			</IonHeader>
-			<IonContent fullscreen scrollY={false}>
+			<IonContent className="ion-padding" fullscreen scrollY={false}>
 				<IonCard>
 					<IonList lines="none">
 						<IonItem>
@@ -94,16 +97,20 @@ const CadastroEscola: React.FC<RouteComponentProps> = (props) => {
 						</IonItem>
 					</IonList>
 				</IonCard>
-				<IonCard>
-					<IonButton
-						color="primary"
-						expand="block"
-						onClick={cadastrar}
-						className="register-button"
-					>
-						Cadastrar
-					</IonButton>
-				</IonCard>
+				<IonGrid>
+					<IonRow>
+						<IonCol>
+							<IonButton
+								color="primary"
+								expand="block"
+								onClick={cadastrar}
+								className="register-button"
+							>
+								Cadastrar
+							</IonButton>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
 				<IonToast
 					isOpen={showErrorBox}
 					onDidDismiss={() => setShowErrorBox(false)}

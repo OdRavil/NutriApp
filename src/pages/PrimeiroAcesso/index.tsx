@@ -2,7 +2,9 @@ import {
 	IonButton,
 	IonButtons,
 	IonCard,
+	IonCol,
 	IonContent,
+	IonGrid,
 	IonHeader,
 	IonIcon,
 	IonInput,
@@ -10,6 +12,7 @@ import {
 	IonLabel,
 	IonList,
 	IonPage,
+	IonRow,
 	IonTitle,
 	IonToast,
 	IonToolbar,
@@ -111,7 +114,7 @@ const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
 					<IonTitle />
 				</IonToolbar>
 			</IonHeader>
-			<IonContent fullscreen scrollY={false}>
+			<IonContent className="ion-padding" fullscreen scrollY={false}>
 				<IonCard>
 					<IonList lines="none">
 						<IonItem className="item-config">
@@ -142,21 +145,25 @@ const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
 						</div>
 					</IonList>
 				</IonCard>
-				<IonCard>
-					<IonButton
-						color="primary"
-						expand="block"
-						onClick={() => {
-							if (showFinalizarCadastro) {
-								acessar();
-							} else {
-								verificarEmail();
-							}
-						}}
-					>
-						{showFinalizarCadastro ? "Acessar" : "Buscar"}
-					</IonButton>
-				</IonCard>
+				<IonGrid>
+					<IonRow>
+						<IonCol>
+							<IonButton
+								color="primary"
+								expand="block"
+								onClick={() => {
+									if (showFinalizarCadastro) {
+										acessar();
+									} else {
+										verificarEmail();
+									}
+								}}
+							>
+								{showFinalizarCadastro ? "Acessar" : "Buscar"}
+							</IonButton>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
 				<IonToast
 					isOpen={showErrorBox}
 					onDidDismiss={() => setShowErrorBox(false)}

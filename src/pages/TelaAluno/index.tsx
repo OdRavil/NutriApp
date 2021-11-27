@@ -4,14 +4,18 @@ import {
 	IonButton,
 	IonButtons,
 	IonCard,
+	IonCol,
 	IonContent,
 	IonDatetime,
+	IonGrid,
 	IonHeader,
 	IonIcon,
 	IonInput,
 	IonItem,
+	IonLabel,
 	IonList,
 	IonPage,
+	IonRow,
 	IonSelect,
 	IonSelectOption,
 	IonTitle,
@@ -21,13 +25,7 @@ import {
 import moment from "moment";
 import React, { useCallback, useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router";
-import {
-	arrowBackOutline,
-	calendarOutline,
-	mailOutline,
-	maleFemaleOutline,
-	personOutline,
-} from "ionicons/icons";
+import { arrowBackOutline } from "ionicons/icons";
 import TurmaService from "../../services/TurmaService";
 import AlunoService from "../../services/AlunoService";
 import Aluno from "../../models/Aluno";
@@ -203,7 +201,9 @@ const TelaAluno: React.FC<RouteComponentProps<TelaAlunoProps>> = (props) => {
 					{aluno && (
 						<IonList lines="none">
 							<IonItem>
-								<IonIcon className="icon-config" icon={personOutline} />
+								<IonLabel position="floating" className="icon-config">
+									Nome
+								</IonLabel>
 								<IonInput
 									className="input-config"
 									value={nome}
@@ -212,7 +212,9 @@ const TelaAluno: React.FC<RouteComponentProps<TelaAlunoProps>> = (props) => {
 								/>
 							</IonItem>
 							<IonItem>
-								<IonIcon className="icon-config" icon={mailOutline} />
+								<IonLabel position="floating" className="icon-config">
+									E-mail
+								</IonLabel>
 								<IonInput
 									className="input-config"
 									value={email}
@@ -222,7 +224,9 @@ const TelaAluno: React.FC<RouteComponentProps<TelaAlunoProps>> = (props) => {
 								/>
 							</IonItem>
 							<IonItem className="item-config" lines="none">
-								<IonIcon className="icon-config" icon={maleFemaleOutline} />
+								<IonLabel position="floating" className="icon-config">
+									Sexo
+								</IonLabel>
 								<IonSelect
 									className="input-config"
 									value={sexo}
@@ -234,7 +238,9 @@ const TelaAluno: React.FC<RouteComponentProps<TelaAlunoProps>> = (props) => {
 								</IonSelect>
 							</IonItem>
 							<IonItem className="item-config" lines="none">
-								<IonIcon className="icon-config" icon={calendarOutline} />
+								<IonLabel position="floating" className="icon-config">
+									Data de nascimento
+								</IonLabel>
 								<IonDatetime
 									value={dataNascimento}
 									onIonChange={(e) => setDataNascimento(e.detail.value!)}
@@ -245,6 +251,9 @@ const TelaAluno: React.FC<RouteComponentProps<TelaAlunoProps>> = (props) => {
 							</IonItem>
 							{turmaLista && (
 								<IonItem className="item-config" lines="none">
+									<IonLabel position="floating" className="icon-config">
+										Turma
+									</IonLabel>
 									<IonSelect
 										className="input-config"
 										value={idTurma}
@@ -262,28 +271,44 @@ const TelaAluno: React.FC<RouteComponentProps<TelaAlunoProps>> = (props) => {
 						</IonList>
 					)}
 				</IonCard>
-				<IonCard>
-					<IonButton
-						color="primary"
-						expand="block"
-						onClick={salvar}
-						className="register-button"
-						disabled={!aluno}
-					>
-						Salvar
-					</IonButton>
-				</IonCard>
-				<IonCard>
-					<IonButton
-						color="danger"
-						expand="block"
-						onClick={() => (aluno?.status ? setShowAlertDesativar(true) : ativar())}
-						className="register-button"
-						disabled={!aluno}
-					>
-						{aluno?.status ? "Desativar" : "Ativar"}
-					</IonButton>
-				</IonCard>
+				<IonGrid>
+					{[TipoUsuario.ADMINISTRADOR, TipoUsuario.PROFESSOR].includes(
+						auth?.user?.tipo
+					) && (
+						<IonRow>
+							<IonCol>
+								<IonButton
+									color="primary"
+									expand="block"
+									onClick={salvar}
+									className="register-button"
+									disabled={!aluno}
+								>
+									Salvar
+								</IonButton>
+							</IonCol>
+						</IonRow>
+					)}
+					{[TipoUsuario.ADMINISTRADOR, TipoUsuario.PROFESSOR].includes(
+						auth?.user?.tipo
+					) && (
+						<IonRow>
+							<IonCol>
+								<IonButton
+									color="danger"
+									expand="block"
+									onClick={() =>
+										aluno?.status ? setShowAlertDesativar(true) : ativar()
+									}
+									className="register-button"
+									disabled={!aluno}
+								>
+									{aluno?.status ? "Desativar" : "Ativar"}
+								</IonButton>
+							</IonCol>
+						</IonRow>
+					)}
+				</IonGrid>
 				<IonToast
 					isOpen={showErrorBox}
 					onDidDismiss={() => setShowErrorBox(false)}

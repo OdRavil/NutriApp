@@ -3,7 +3,9 @@ import {
 	IonButton,
 	IonButtons,
 	IonCard,
+	IonCol,
 	IonContent,
+	IonGrid,
 	IonHeader,
 	IonIcon,
 	IonInput,
@@ -11,6 +13,7 @@ import {
 	IonLabel,
 	IonList,
 	IonPage,
+	IonRow,
 	IonTextarea,
 	IonTitle,
 	IonToast,
@@ -169,28 +172,36 @@ const TelaEscola: React.FC<RouteComponentProps<TelaEscolaProps>> = (props) => {
 						</IonList>
 					)}
 				</IonCard>
-				<IonCard>
-					<IonButton
-						color="primary"
-						expand="block"
-						onClick={salvar}
-						className="register-button"
-						disabled={!escola}
-					>
-						Salvar
-					</IonButton>
-				</IonCard>
-				<IonCard>
-					<IonButton
-						color="danger"
-						expand="block"
-						onClick={() => (escola?.status ? setShowAlertDesativar(true) : ativar())}
-						className="register-button"
-						disabled={!escola}
-					>
-						{escola?.status ? "Desativar" : "Ativar"}
-					</IonButton>
-				</IonCard>
+				<IonGrid>
+					<IonRow>
+						<IonCol>
+							<IonButton
+								color="primary"
+								expand="block"
+								onClick={salvar}
+								className="register-button"
+								disabled={!escola}
+							>
+								Salvar
+							</IonButton>
+						</IonCol>
+					</IonRow>
+					<IonRow>
+						<IonCol>
+							<IonButton
+								color="danger"
+								expand="block"
+								onClick={() =>
+									escola?.status ? setShowAlertDesativar(true) : ativar()
+								}
+								className="register-button"
+								disabled={!escola}
+							>
+								{escola?.status ? "Desativar" : "Ativar"}
+							</IonButton>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
 				<IonToast
 					isOpen={showErrorBox}
 					onDidDismiss={() => setShowErrorBox(false)}

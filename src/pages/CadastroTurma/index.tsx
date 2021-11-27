@@ -16,6 +16,9 @@ import {
 	IonLoading,
 	IonButtons,
 	IonIcon,
+	IonGrid,
+	IonRow,
+	IonCol,
 } from "@ionic/react";
 import { chevronBack } from "ionicons/icons";
 import React, { useCallback, useEffect, useState } from "react";
@@ -126,7 +129,7 @@ const CadastroTurma: React.FC<RouteComponentProps> = (props) => {
 					<IonTitle>Cadastro de Turma</IonTitle>
 				</IonToolbar>
 			</IonHeader>
-			<IonContent fullscreen scrollY={false}>
+			<IonContent className="ion-padding" fullscreen scrollY={false}>
 				<IonLoading isOpen={!escolaLista} />
 				<IonCard>
 					<IonList lines="none">
@@ -164,17 +167,21 @@ const CadastroTurma: React.FC<RouteComponentProps> = (props) => {
 						)}
 					</IonList>
 				</IonCard>
-				<IonCard>
-					<IonButton
-						color="primary"
-						expand="block"
-						onClick={cadastrar}
-						className="register-button"
-						disabled={!escolaLista || escolaLista.length === 0}
-					>
-						Cadastrar
-					</IonButton>
-				</IonCard>
+				<IonGrid>
+					<IonRow>
+						<IonCol>
+							<IonButton
+								color="primary"
+								expand="block"
+								onClick={cadastrar}
+								className="register-button"
+								disabled={!escolaLista || escolaLista.length === 0}
+							>
+								Cadastrar
+							</IonButton>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
 				<IonToast
 					isOpen={showErrorBox}
 					onDidDismiss={() => setShowErrorBox(false)}

@@ -16,6 +16,9 @@ import {
 	IonDatetime,
 	IonLoading,
 	IonButtons,
+	IonGrid,
+	IonRow,
+	IonCol,
 } from "@ionic/react";
 import {
 	calendarOutline,
@@ -142,7 +145,7 @@ const CadastroAluno: React.FC<RouteComponentProps> = (props) => {
 					<IonTitle>Cadastro de Aluno</IonTitle>
 				</IonToolbar>
 			</IonHeader>
-			<IonContent fullscreen scrollY={false}>
+			<IonContent className="ion-padding" fullscreen scrollY={false}>
 				<IonLoading isOpen={!turmaLista} />
 				<IonCard>
 					<IonList lines="none">
@@ -205,17 +208,21 @@ const CadastroAluno: React.FC<RouteComponentProps> = (props) => {
 						)}
 					</IonList>
 				</IonCard>
-				<IonCard>
-					<IonButton
-						color="primary"
-						expand="block"
-						onClick={cadastrar}
-						className="register-button"
-						disabled={!turmaLista || turmaLista.length === 0}
-					>
-						Cadastrar
-					</IonButton>
-				</IonCard>
+				<IonGrid>
+					<IonRow>
+						<IonCol>
+							<IonButton
+								color="primary"
+								expand="block"
+								onClick={cadastrar}
+								className="register-button"
+								disabled={!turmaLista || turmaLista.length === 0}
+							>
+								Cadastrar
+							</IonButton>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
 				<IonToast
 					isOpen={showErrorBox}
 					onDidDismiss={() => setShowErrorBox(false)}

@@ -16,6 +16,9 @@ import {
 	IonButtons,
 	IonIcon,
 	IonTextarea,
+	IonGrid,
+	IonRow,
+	IonCol,
 } from "@ionic/react";
 import { chevronBack } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
@@ -457,16 +460,20 @@ const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
 						</IonList>
 					</IonCard>
 				</div>
-				<IonCard>
-					<IonButton
-						color="primary"
-						expand="block"
-						onClick={atualizar}
-						className="register-button"
-					>
-						Atualizar
-					</IonButton>
-				</IonCard>
+				<IonGrid>
+					<IonRow>
+						<IonCol>
+							<IonButton
+								color="primary"
+								expand="block"
+								onClick={atualizar}
+								className="register-button"
+							>
+								Atualizar
+							</IonButton>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
 				<IonToast
 					isOpen={showErrorBox}
 					onDidDismiss={() => setShowErrorBox(false)}

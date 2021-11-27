@@ -15,6 +15,9 @@ import {
 	IonSelectOption,
 	IonDatetime,
 	IonButtons,
+	IonGrid,
+	IonRow,
+	IonCol,
 } from "@ionic/react";
 import React, { useState } from "react";
 import { RouteComponentProps } from "react-router";
@@ -100,7 +103,7 @@ const CadastroUsuario: React.FC<RouteComponentProps> = (props) => {
 					<IonTitle>Cadastro de Usuario</IonTitle>
 				</IonToolbar>
 			</IonHeader>
-			<IonContent fullscreen scrollY={false}>
+			<IonContent className="ion-padding" fullscreen scrollY={false}>
 				<IonCard>
 					<IonList lines="none">
 						<IonItem>
@@ -165,16 +168,20 @@ const CadastroUsuario: React.FC<RouteComponentProps> = (props) => {
 						</IonItem>
 					</IonList>
 				</IonCard>
-				<IonCard>
-					<IonButton
-						color="primary"
-						expand="block"
-						onClick={cadastrar}
-						className="register-button"
-					>
-						Cadastrar
-					</IonButton>
-				</IonCard>
+				<IonGrid>
+					<IonRow>
+						<IonCol>
+							<IonButton
+								color="primary"
+								expand="block"
+								onClick={cadastrar}
+								className="register-button"
+							>
+								Cadastrar
+							</IonButton>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
 				<IonToast
 					isOpen={showErrorBox}
 					onDidDismiss={() => setShowErrorBox(false)}

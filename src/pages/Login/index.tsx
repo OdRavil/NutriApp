@@ -20,7 +20,6 @@ import { personCircle } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import { useAuth } from "../../context/auth";
-import "./index.css";
 
 const Login: React.FC<RouteComponentProps> = (props) => {
 	const { auth, login } = useAuth();

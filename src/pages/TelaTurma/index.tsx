@@ -3,7 +3,9 @@ import {
 	IonButton,
 	IonButtons,
 	IonCard,
+	IonCol,
 	IonContent,
+	IonGrid,
 	IonHeader,
 	IonIcon,
 	IonInput,
@@ -11,6 +13,7 @@ import {
 	IonLabel,
 	IonList,
 	IonPage,
+	IonRow,
 	IonSelect,
 	IonSelectOption,
 	IonTextarea,
@@ -240,28 +243,44 @@ const TelaTurma: React.FC<RouteComponentProps<TelaTurmaProps>> = (props) => {
 						</IonList>
 					)}
 				</IonCard>
-				<IonCard>
-					<IonButton
-						color="primary"
-						expand="block"
-						onClick={salvar}
-						className="register-button"
-						disabled={!turma}
-					>
-						Salvar
-					</IonButton>
-				</IonCard>
-				<IonCard>
-					<IonButton
-						color="danger"
-						expand="block"
-						onClick={() => (turma?.status ? setShowAlertDesativar(true) : ativar())}
-						className="register-button"
-						disabled={!turma}
-					>
-						{turma?.status ? "Desativar" : "Ativar"}
-					</IonButton>
-				</IonCard>
+				<IonGrid>
+					{[TipoUsuario.ADMINISTRADOR, TipoUsuario.NUTRICIONISTA].includes(
+						auth?.user?.tipo
+					) && (
+						<IonRow>
+							<IonCol>
+								<IonButton
+									color="primary"
+									expand="block"
+									onClick={salvar}
+									className="register-button"
+									disabled={!turma}
+								>
+									Salvar
+								</IonButton>
+							</IonCol>
+						</IonRow>
+					)}
+					{[TipoUsuario.ADMINISTRADOR, TipoUsuario.NUTRICIONISTA].includes(
+						auth?.user?.tipo
+					) && (
+						<IonRow>
+							<IonCol>
+								<IonButton
+									color="danger"
+									expand="block"
+									onClick={() =>
+										turma?.status ? setShowAlertDesativar(true) : ativar()
+									}
+									className="register-button"
+									disabled={!turma}
+								>
+									{turma?.status ? "Desativar" : "Ativar"}
+								</IonButton>
+							</IonCol>
+						</IonRow>
+					)}
+				</IonGrid>
 				<IonToast
 					isOpen={showErrorBox}
 					onDidDismiss={() => setShowErrorBox(false)}
