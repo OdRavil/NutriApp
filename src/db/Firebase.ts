@@ -96,6 +96,8 @@ export default abstract class FirebaseService<M extends BaseModel> {
 	}
 
 	updateData(id: string, objToSubmit: Partial<M>) {
+		Reflect.deleteProperty(objToSubmit, "createdAt");
+		Reflect.deleteProperty(objToSubmit, "id");
 		return this.getCollectionRef().doc(id).update(objToSubmit);
 	}
 

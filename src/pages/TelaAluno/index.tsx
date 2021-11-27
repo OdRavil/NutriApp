@@ -68,7 +68,7 @@ const TelaAluno: React.FC<RouteComponentProps<TelaAlunoProps>> = (props) => {
 		if (!aluno) return;
 		try {
 			aluno.status = true;
-			await new AlunoService().updateData(aluno.id!, aluno);
+			await new AlunoService().updateData(aluno.id!, { status: true });
 			setShowSuccessBox(true);
 		} catch (error) {
 			console.error(error);
@@ -80,7 +80,7 @@ const TelaAluno: React.FC<RouteComponentProps<TelaAlunoProps>> = (props) => {
 		if (!aluno) return;
 		try {
 			aluno.status = false;
-			await new AlunoService().updateData(aluno.id!, aluno);
+			await new AlunoService().updateData(aluno.id!, { status: false });
 			setShowSuccessBox(true);
 		} catch (error) {
 			console.error(error);

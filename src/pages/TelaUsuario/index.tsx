@@ -1,33 +1,32 @@
-/* eslint-disable no-undef */
 import {
 	IonAlert,
 	IonButton,
 	IonButtons,
 	IonCard,
+	IonCardHeader,
+	IonCardSubtitle,
 	IonContent,
 	IonDatetime,
 	IonHeader,
 	IonIcon,
 	IonInput,
 	IonItem,
+	IonLabel,
 	IonList,
+	IonNote,
 	IonPage,
 	IonSelect,
 	IonSelectOption,
 	IonTitle,
 	IonToast,
 	IonToolbar,
+	useIonAlert,
 } from "@ionic/react";
 import moment from "moment";
+import firebase from "firebase/app";
 import React, { useCallback, useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router";
-import {
-	arrowBackOutline,
-	calendarOutline,
-	mailOutline,
-	maleFemaleOutline,
-	personOutline,
-} from "ionicons/icons";
+import { addOutline, arrowBackOutline, trashOutline } from "ionicons/icons";
 import EscolaService from "../../services/EscolaService";
 import Escola from "../../models/Escola";
 import LoadingSpinner from "../../components/LoadingSpinner";
@@ -56,8 +55,12 @@ const TelaUsuario: React.FC<RouteComponentProps<TelaUsuarioProps>> = (
 	const [dataNascimento, setDataNascimento] = useState<string>();
 	const [sexo, setSexo] = useState<Sexo>(Sexo.MASCULINO);
 
-	const [tipoUsuario] = useState<TipoUsuario>(TipoUsuario.PROFESSOR);
-	const [, setListaEscola] = useState<Escola[]>();
+	const [tipoUsuario, setTipoUsuario] = useState<TipoUsuario>(
+		TipoUsuario.PROFESSOR
+	);
+	const [listaEscola, setListaEscola] = useState<Escola[]>();
+
+	const [confirmaRemoverEscola] = useIonAlert();
 
 	const mostrarMensagemErro = (mensagem: string) => {
 		setMensagemErrorBox(mensagem);
@@ -68,7 +71,7 @@ const TelaUsuario: React.FC<RouteComponentProps<TelaUsuarioProps>> = (
 		if (!usuario) return;
 		try {
 			usuario.status = true;
-			await new UsuarioService().updateData(usuario.id!, usuario);
+			await new UsuarioService().updateData(usuario.id!, { status: true });
 			setShowSuccessBox(true);
 		} catch (error) {
 			console.error(error);
@@ -80,7 +83,7 @@ const TelaUsuario: React.FC<RouteComponentProps<TelaUsuarioProps>> = (
 		if (!usuario) return;
 		try {
 			usuario.status = false;
-			await new UsuarioService().updateData(usuario.id!, usuario);
+			await new UsuarioService().updateData(usuario.id!, { status: false });
 			setShowSuccessBox(true);
 		} catch (error) {
 			console.error(error);
@@ -121,47 +124,75 @@ const TelaUsuario: React.FC<RouteComponentProps<TelaUsuarioProps>> = (
 	};
 
 	const carregarEscola = useCallback(async (myusuario: Usuario) => {
-		if (myusuario.tipo === TipoUsuario.ADMINISTRADOR) {
-			new EscolaService().listar().then((escolas) => {
-				setListaEscola(escolas);
-				if (!escolas || escolas.length === 0) {
-					mostrarMensagemErro("Não existem turmas cadastradas.");
-				}
-			});
-		} else {
-			const escolasUsuario = myusuario.listaEscola;
-			if (!escolasUsuario || escolasUsuario.length === 0) {
-				setListaEscola([]);
-				mostrarMensagemErro("Não existem turmas para este usuário.");
-			}
-			/* // Apenas as turmas que o usuário possui acesso
-			new TurmaService().listarPorEscola(escolasUsuario).then((turmas) => {
-				setTurmaLista(turmas);
-				if (!turmas || turmas.length === 0) {
-					mostrarMensagemErro("Não existem turmas para este usuário.");
-				}
-			}); */
+		if (!myusuario?.listaEscola) {
+			setListaEscola([]);
+			return;
 		}
+		new EscolaService().listar().then((escolas) => {
+			setListaEscola(
+				escolas.filter(
+					(item) => item.status || myusuario.listaEscola!.includes(item.id!)
+				)
+			);
+			if (!escolas || escolas.length === 0) {
+				mostrarMensagemErro("Não existem turmas cadastradas.");
+			}
+		});
 	}, []);
 
+	const removerEscola = async (id: string) => {
+		if (!id || !usuario) return;
+		if (!usuario.listaEscola) usuario.listaEscola = [];
+		try {
+			usuario.listaEscola = usuario.listaEscola.filter((escola) => escola !== id);
+			await new UsuarioService()
+				.getCollectionRef()
+				.doc(idUsuario)
+				.update({ listaEscola: firebase.firestore.FieldValue.arrayRemove(id) });
+			carregarEscola(usuario);
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	const handleAdicionarEscola = async (id: string) => {
+		if (!id || !usuario) return;
+		if (!usuario.listaEscola) usuario.listaEscola = [];
+		try {
+			usuario.listaEscola = [...usuario.listaEscola, id];
+			await new UsuarioService()
+				.getCollectionRef()
+				.doc(idUsuario)
+				.update({ listaEscola: firebase.firestore.FieldValue.arrayUnion(id) });
+			carregarEscola(usuario);
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	const handleConfirmaRemoverEscola = async (id: string) => {
+		confirmaRemoverEscola({
+			message: "Deseja remover escola?",
+			buttons: [
+				"Não",
+				{
+					text: "Sim",
+					handler: () => removerEscola(id),
+				},
+			],
+		});
+	};
+
 	useEffect(() => {
-		if (!auth?.user?.id) return;
-		new UsuarioService()
-			.getById(auth.user.id)
-			.then((myusuario) => carregarEscola(myusuario!));
-	}, [auth?.user?.id, carregarEscola]);
+		if (!usuario) return;
+		carregarEscola(usuario);
+	}, [usuario, carregarEscola]);
 
 	useEffect(() => {
 		if (!idUsuario) return;
-		new UsuarioService().getById(idUsuario).then((myUsuario) => {
-			setUsuario(myUsuario);
-
-			/* if (myUsuario?.tipoUsuario) {
-				new TurmaService().getById(myUsuario?.tipoUsuario).then((myTurma) => {
-					setIdTurma(myTurma?.id);
-				});
-			} */
-		});
+		new UsuarioService()
+			.getById(idUsuario)
+			.then((myUsuario) => setUsuario(myUsuario));
 	}, [idUsuario]);
 
 	useEffect(() => {
@@ -173,6 +204,7 @@ const TelaUsuario: React.FC<RouteComponentProps<TelaUsuarioProps>> = (
 				: ""
 		);
 		setSexo(usuario?.sexo || Sexo.MASCULINO);
+		setTipoUsuario(usuario?.tipo || TipoUsuario.PROFESSOR);
 	}, [usuario]);
 
 	return (
@@ -202,7 +234,9 @@ const TelaUsuario: React.FC<RouteComponentProps<TelaUsuarioProps>> = (
 					{usuario && (
 						<IonList lines="none">
 							<IonItem>
-								<IonIcon className="icon-config" icon={personOutline} />
+								<IonLabel position="floating" className="icon-config">
+									Nome
+								</IonLabel>
 								<IonInput
 									className="input-config"
 									value={nome}
@@ -211,7 +245,9 @@ const TelaUsuario: React.FC<RouteComponentProps<TelaUsuarioProps>> = (
 								/>
 							</IonItem>
 							<IonItem>
-								<IonIcon className="icon-config" icon={mailOutline} />
+								<IonLabel position="floating" className="icon-config">
+									E-mail
+								</IonLabel>
 								<IonInput
 									className="input-config"
 									value={email}
@@ -221,7 +257,9 @@ const TelaUsuario: React.FC<RouteComponentProps<TelaUsuarioProps>> = (
 								/>
 							</IonItem>
 							<IonItem className="item-config" lines="none">
-								<IonIcon className="icon-config" icon={maleFemaleOutline} />
+								<IonLabel position="floating" className="icon-config">
+									Sexo
+								</IonLabel>
 								<IonSelect
 									className="input-config"
 									value={sexo}
@@ -233,7 +271,9 @@ const TelaUsuario: React.FC<RouteComponentProps<TelaUsuarioProps>> = (
 								</IonSelect>
 							</IonItem>
 							<IonItem className="item-config" lines="none">
-								<IonIcon className="icon-config" icon={calendarOutline} />
+								<IonLabel position="floating" className="icon-config">
+									Data de nascimento
+								</IonLabel>
 								<IonDatetime
 									value={dataNascimento}
 									onIonChange={(e) => setDataNascimento(e.detail.value!)}
@@ -242,9 +282,88 @@ const TelaUsuario: React.FC<RouteComponentProps<TelaUsuarioProps>> = (
 									placeholder="Data de nascimento"
 								/>
 							</IonItem>
+							<IonItem className="item-config" lines="none">
+								<IonLabel position="floating" className="icon-config">
+									Permissão
+								</IonLabel>
+								<IonSelect
+									className="input-config"
+									value={tipoUsuario}
+									placeholder="Permissão"
+									onIonChange={(e) => setTipoUsuario(e.detail.value)}
+								>
+									<IonSelectOption value={TipoUsuario.ADMINISTRADOR}>
+										Administrador
+									</IonSelectOption>
+									<IonSelectOption value={TipoUsuario.NUTRICIONISTA}>
+										Nutricionista
+									</IonSelectOption>
+									<IonSelectOption value={TipoUsuario.PROFESSOR}>
+										Professor
+									</IonSelectOption>
+								</IonSelect>
+							</IonItem>
 						</IonList>
 					)}
 				</IonCard>
+				{usuario && usuario.tipo !== TipoUsuario.ADMINISTRADOR && (
+					<IonCard>
+						<IonCardHeader>
+							<IonCardSubtitle>Escolas</IonCardSubtitle>
+						</IonCardHeader>
+						{!listaEscola && <LoadingSpinner />}
+						{listaEscola && listaEscola.length === 0 && (
+							<IonList lines="none">
+								<IonItem>
+									<IonLabel>Nenhuma escola para este usuário</IonLabel>
+								</IonItem>
+							</IonList>
+						)}
+						{listaEscola && listaEscola.length !== 0 && (
+							<IonList lines="none">
+								{listaEscola.map((item, index) => (
+									<IonItem
+										key={item.id!}
+										lines={index === listaEscola.length - 1 ? "none" : "full"}
+									>
+										<IonLabel slot="start" className="icon-config">
+											{item.nome}
+										</IonLabel>
+										{!item.status && (
+											<IonNote
+												slot="end"
+												style={{
+													fontSize: "0.8rem",
+												}}
+												color="danger"
+											>
+												Inativo
+											</IonNote>
+										)}
+										{usuario.listaEscola!.includes(item.id!) && (
+											<IonButton
+												fill="clear"
+												slot="end"
+												onClick={() => handleConfirmaRemoverEscola(item.id!)}
+											>
+												<IonIcon color="danger" src={trashOutline} />
+											</IonButton>
+										)}
+										{!usuario.listaEscola!.includes(item.id!) && (
+											<IonButton
+												fill="clear"
+												slot="end"
+												onClick={() => handleAdicionarEscola(item.id!)}
+											>
+												<IonIcon color="danger" src={addOutline} />
+											</IonButton>
+										)}
+									</IonItem>
+								))}
+							</IonList>
+						)}
+					</IonCard>
+				)}
 				<IonCard>
 					<IonButton
 						color="primary"
@@ -256,17 +375,21 @@ const TelaUsuario: React.FC<RouteComponentProps<TelaUsuarioProps>> = (
 						Salvar
 					</IonButton>
 				</IonCard>
-				<IonCard>
-					<IonButton
-						color="danger"
-						expand="block"
-						onClick={() => (usuario?.status ? setShowAlertDesativar(true) : ativar())}
-						className="register-button"
-						disabled={!usuario}
-					>
-						{usuario?.status ? "Desativar" : "Ativar"}
-					</IonButton>
-				</IonCard>
+				{usuario && auth?.user?.id !== usuario?.id && (
+					<IonCard>
+						<IonButton
+							color="danger"
+							expand="block"
+							onClick={() =>
+								usuario?.status ? setShowAlertDesativar(true) : ativar()
+							}
+							className="register-button"
+							disabled={!usuario}
+						>
+							{usuario?.status ? "Desativar" : "Ativar"}
+						</IonButton>
+					</IonCard>
+				)}
 				<IonToast
 					isOpen={showErrorBox}
 					onDidDismiss={() => setShowErrorBox(false)}

@@ -48,7 +48,7 @@ const TelaEscola: React.FC<RouteComponentProps<TelaEscolaProps>> = (props) => {
 		if (!escola) return;
 		try {
 			escola.status = true;
-			await new EscolaService().updateData(escola.id!, escola);
+			await new EscolaService().updateData(escola.id!, { status: true });
 			setShowSuccessBox(true);
 		} catch (error) {
 			console.error(error);
@@ -70,7 +70,7 @@ const TelaEscola: React.FC<RouteComponentProps<TelaEscolaProps>> = (props) => {
 				return;
 			}
 			escola.status = false;
-			await new EscolaService().updateData(escola.id!, escola);
+			await new EscolaService().updateData(escola.id!, { status: false });
 			setShowSuccessBox(true);
 		} catch (error) {
 			console.error(error);

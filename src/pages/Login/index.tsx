@@ -40,7 +40,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 			})
 			.catch((error) => {
 				console.error(error);
-				mostrarMensagemErro(error);
+				mostrarMensagemErro(error.message);
 				setShowLoading(false);
 			});
 	};
@@ -64,7 +64,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 					onDidDismiss={() => setShowErrorBox(false)}
 					message={mensagemErrorBox}
 					duration={1000}
-					position="bottom"
+					position="top"
 					color="danger"
 				/>
 				<IonInput

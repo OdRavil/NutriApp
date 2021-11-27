@@ -65,12 +65,12 @@ const Home: React.FC = () => (
 				<IonItem routerLink="/aluno/listar">
 					<IonLabel>Listagem</IonLabel>
 				</IonItem>
-				<IonItemDivider>
+				{/* <IonItemDivider>
 					<IonLabel>Postagens</IonLabel>
 				</IonItemDivider>
 				<IonItem routerLink="/aluno/listar">
 					<IonLabel>Orientaçãoes dos Nutricionistas</IonLabel>
-				</IonItem>
+				</IonItem> */}
 			</IonList>
 		</IonContent>
 	</IonPage>

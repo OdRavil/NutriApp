@@ -87,7 +87,7 @@ const TelaTurma: React.FC<RouteComponentProps<TelaTurmaProps>> = (props) => {
 		if (!turma) return;
 		try {
 			turma.status = true;
-			await new TurmaService().updateData(turma.id!, turma);
+			await new TurmaService().updateData(turma.id!, { status: true });
 			setShowSuccessBox(true);
 		} catch (error) {
 			console.error(error);
@@ -109,7 +109,7 @@ const TelaTurma: React.FC<RouteComponentProps<TelaTurmaProps>> = (props) => {
 				return;
 			}
 			turma.status = false;
-			await new TurmaService().updateData(turma.id!, turma);
+			await new TurmaService().updateData(turma.id!, { status: false });
 			setShowSuccessBox(true);
 		} catch (error) {
 			console.error(error);

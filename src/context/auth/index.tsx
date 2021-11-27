@@ -4,6 +4,7 @@ import "firebase/auth";
 import { getAuth, setAuth as setAuthStorage } from "../../utils/storage";
 import UsuarioService from "../../services/UsuarioService";
 import Usuario, { TipoUsuario } from "../../models/Usuario";
+import { UserInactive, UserNotFound } from "../../errors";
 
 export interface Auth {
 	user: {
@@ -44,6 +45,9 @@ export const AuthProvider: React.FC = ({ children }) => {
 	const login = async (email: string, senha: string): Promise<Auth> => {
 		const authUser: Auth = {} as any;
 		try {
+			const usuarioPorEmail = await new UsuarioService().getUsuarioPorEmail(email);
+			if (!usuarioPorEmail) throw new UserNotFound();
+			if (!usuarioPorEmail.status) throw new UserInactive();
 			await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
 			const credentials = await firebase
 				.auth()
