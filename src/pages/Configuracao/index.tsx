@@ -1,8 +1,10 @@
 import {
 	IonButton,
 	IonCard,
+	IonCol,
 	IonContent,
 	IonDatetime,
+	IonGrid,
 	IonHeader,
 	IonIcon,
 	IonInput,
@@ -10,6 +12,7 @@ import {
 	IonList,
 	IonLoading,
 	IonPage,
+	IonRow,
 	IonSelect,
 	IonSelectOption,
 	IonTitle,
@@ -217,38 +220,48 @@ const Configuracao: React.FC<RouteComponentProps> = (props) => {
 						</IonItem>
 					</IonList>
 				</IonCard>
-				<IonCard>
-					<IonButton
-						color="primary"
-						expand="block"
-						routerLink="/mudar-senha"
-						disabled={bloquearPagina}
-					>
-						Mudar senha
-					</IonButton>
-				</IonCard>
-				<IonCard>
-					<IonButton
-						color="primary"
-						expand="block"
-						onClick={() => salvar()}
-						disabled={bloquearPagina || !permitirSalvar()}
-					>
-						Salvar
-					</IonButton>
-				</IonCard>
+				<IonGrid>
+					<IonRow>
+						<IonCol>
+							<IonButton
+								color="primary"
+								expand="block"
+								routerLink="/mudar-senha"
+								disabled={bloquearPagina}
+							>
+								Mudar senha
+							</IonButton>
+						</IonCol>
+					</IonRow>
+					<IonRow>
+						<IonCol>
+							<IonButton
+								color="primary"
+								expand="block"
+								onClick={() => salvar()}
+								disabled={bloquearPagina || !permitirSalvar()}
+							>
+								Salvar
+							</IonButton>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
+				<IonGrid>
+					<IonRow>
+						<IonCol>
+							<IonButton
+								color="danger"
+								expand="block"
+								onClick={() => {
+									sair();
+								}}
+							>
+								Sair
+							</IonButton>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
 			</IonContent>
-			<IonCard>
-				<IonButton
-					color="danger"
-					expand="block"
-					onClick={() => {
-						sair();
-					}}
-				>
-					Sair
-				</IonButton>
-			</IonCard>
 		</IonPage>
 	);
 };
