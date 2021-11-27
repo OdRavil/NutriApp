@@ -138,7 +138,9 @@ const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
 	const perguntasTipoDiabetesMetlitus = () => (
 		<>
 			<IonItem className="item-config" lines="none">
-				<IonLabel>Tem alguma pessoa com diabetes na sua família?</IonLabel>
+				<IonLabel className="ion-text-wrap">
+					Tem alguma pessoa com diabetes na sua família?
+				</IonLabel>
 			</IonItem>
 			<IonItem className="item-config">
 				<IonTextarea
@@ -150,7 +152,9 @@ const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
 				/>
 			</IonItem>
 			<IonItem className="item-config" lines="none">
-				<IonLabel>Quantas vezes por semana você come doces?</IonLabel>
+				<IonLabel className="ion-text-wrap">
+					Quantas vezes por semana você come doces?
+				</IonLabel>
 			</IonItem>
 			<IonItem className="item-config">
 				<IonTextarea
@@ -167,7 +171,9 @@ const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
 	const perguntasTipoHipertensao = () => (
 		<>
 			<IonItem className="item-config" lines="none">
-				<IonLabel>Tem alguém na sua família com problemas no coração?</IonLabel>
+				<IonLabel className="ion-text-wrap">
+					Tem alguém na sua família com problemas no coração?
+				</IonLabel>
 			</IonItem>
 			<IonItem className="item-config">
 				<IonTextarea
@@ -179,7 +185,7 @@ const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
 				/>
 			</IonItem>
 			<IonItem className="item-config" lines="none">
-				<IonLabel>
+				<IonLabel className="ion-text-wrap">
 					Sua família tem o hábito de comer alimentos com muito sal?
 				</IonLabel>
 			</IonItem>
@@ -198,7 +204,9 @@ const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
 	const perguntasTipoObesidade = () => (
 		<>
 			<IonItem className="item-config" lines="none">
-				<IonLabel>Você tem o hábito de ter uma boa alimentação?</IonLabel>
+				<IonLabel className="ion-text-wrap">
+					Você tem o hábito de ter uma boa alimentação?
+				</IonLabel>
 			</IonItem>
 			<IonItem className="item-config">
 				<IonTextarea
@@ -210,7 +218,7 @@ const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
 				/>
 			</IonItem>
 			<IonItem className="item-config" lines="none">
-				<IonLabel>
+				<IonLabel className="ion-text-wrap">
 					Em uma escala de 0 a 10, quanto você se classificaria uma &quot;pessoa
 					saudável&quot;?
 				</IonLabel>
@@ -234,7 +242,9 @@ const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
 				</IonSelect>
 			</IonItem>
 			<IonItem className="item-config" lines="none">
-				<IonLabel>O que você leva para comer na hora do recreio?</IonLabel>
+				<IonLabel className="ion-text-wrap">
+					O que você leva para comer na hora do recreio?
+				</IonLabel>
 			</IonItem>
 			<IonItem className="item-config">
 				<IonTextarea
@@ -244,7 +254,9 @@ const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
 				/>
 			</IonItem>
 			<IonItem className="item-config" lines="none">
-				<IonLabel>Quantas vezes por semana você come alimentos fritos?</IonLabel>
+				<IonLabel className="ion-text-wrap">
+					Quantas vezes por semana você come alimentos fritos?
+				</IonLabel>
 			</IonItem>
 			<IonItem className="item-config">
 				<IonTextarea
