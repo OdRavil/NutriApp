@@ -1,12 +1,22 @@
 import {
 	IonButton,
+	IonCol,
 	IonContent,
-	IonImg,
+	IonGrid,
+	IonHeader,
+	IonIcon,
 	IonInput,
+	IonItem,
+	IonLabel,
 	IonLoading,
 	IonPage,
+	IonRouterLink,
+	IonRow,
+	IonTitle,
 	IonToast,
+	IonToolbar,
 } from "@ionic/react";
+import { personCircle } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import { useAuth } from "../../context/auth";
@@ -52,9 +62,17 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 	}, [auth?.user?.id, props.history]);
 
 	return (
-		<IonPage className="ion-padding a-s-d">
-			<IonImg className="i-l" />
-			<IonContent scrollY={false} className="ion-padding c-f-l">
+		<IonPage>
+			<IonHeader>
+				<IonToolbar>
+					<IonTitle>Login</IonTitle>
+				</IonToolbar>
+			</IonHeader>
+			<IonContent
+				fullscreen
+				className="ion-padding ion-text-center"
+				scrollY={false}
+			>
 				<IonLoading
 					isOpen={showLoading}
 					onDidDismiss={() => setShowLoading(false)}
@@ -67,27 +85,63 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 					position="top"
 					color="danger"
 				/>
-				<IonInput
-					placeholder="E-mail"
-					type="email"
-					autocorrect="off"
-					onIonChange={(e: any) => setEmail(e.target.value)}
-					className="i-s-l"
-				/>
-				<IonInput
-					placeholder="Senha"
-					type="password"
-					onIonChange={(e: any) => setPassword(e.target.value)}
-					className="i-s-l"
-				/>
+				<IonGrid>
+					<IonRow>
+						<IonCol>
+							<IonIcon
+								style={{ fontSize: "70px", color: "#0040ff" }}
+								icon={personCircle}
+							/>
+						</IonCol>
+					</IonRow>
+					<IonRow>
+						<IonCol>
+							<IonItem>
+								<IonLabel position="floating">E-mail</IonLabel>
+								<IonInput
+									placeholder="E-mail"
+									type="email"
+									autocorrect="off"
+									onIonChange={(e: any) => setEmail(e.target.value)}
+								/>
+							</IonItem>
+						</IonCol>
+					</IonRow>
+					<IonRow>
+						<IonCol>
+							<IonItem>
+								<IonLabel position="floating">Senha</IonLabel>
+								<IonInput
+									placeholder="Senha"
+									type="password"
+									onIonChange={(e: any) => setPassword(e.target.value)}
+								/>
+							</IonItem>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
 
-				<IonButton className="l-b-s" expand="block" onClick={doLogin}>
-					Login
-				</IonButton>
-
-				<IonButton className="f-a-b-s" routerLink="/primeiro-acesso">
-					Primeiro acesso?
-				</IonButton>
+				<IonRow>
+					<IonCol>
+						<IonButton expand="block" onClick={doLogin}>
+							Acessar
+						</IonButton>
+					</IonCol>
+				</IonRow>
+				<IonRow>
+					<IonCol>
+						<IonButton expand="block" routerLink="/primeiro-acesso">
+							Primeiro acesso?
+						</IonButton>
+					</IonCol>
+				</IonRow>
+				<IonRow className="ion-text-right">
+					<IonCol>
+						<IonRouterLink routerLink="/esqueci-senha">
+							Esqueceu sua senha?
+						</IonRouterLink>
+					</IonCol>
+				</IonRow>
 			</IonContent>
 		</IonPage>
 	);

@@ -89,6 +89,8 @@ const ListagemAlunos: React.FC<RouteComponentProps> = (props) => {
 								);
 							});
 					});
+				} else {
+					setListaAlunos([]);
 				}
 			});
 		}

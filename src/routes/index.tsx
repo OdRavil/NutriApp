@@ -20,6 +20,7 @@ import TelaTurma from "../pages/TelaTurma";
 import ListagemTurmas from "../pages/ListagemTurmas";
 import TelaUsuario from "../pages/TelaUsuario";
 import ListagemUsuarios from "../pages/ListagemUsuarios";
+import EsqueciMinhaSenha from "../pages/EsqueciMinhaSenha";
 
 const Router: React.FC = () => (
 	<IonReactRouter>
@@ -32,6 +33,7 @@ const Router: React.FC = () => (
 				<Route path="/primeiro-acesso" component={PrimeiroAcesso} />
 				<PrivateRoute path="/anamnese" component={Anamnese} />
 				<PrivateRoute path="/mudar-senha" component={MudarSenha} />
+				<PrivateRoute path="/esqueci-senha" component={EsqueciMinhaSenha} />
 				<PrivateRoute path="/private" component={Tabs} />
 
 				<PrivateRoute path="/aluno/cadastrar" component={CadastroAluno} />

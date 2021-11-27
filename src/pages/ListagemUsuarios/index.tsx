@@ -34,7 +34,6 @@ const ListagemUsuarios: React.FC<RouteComponentProps> = (props) => {
 	const [filtroEscola, setFiltroEscola] = useState<string>();
 
 	const [listaUsuarios, setListaUsuarios] = useState<Usuario[]>();
-	// const [listaEscolas, setListaEscolas] = useState<Escola[]>([]);
 
 	const filtrar = useCallback(
 		(usuario: Usuario): boolean => {

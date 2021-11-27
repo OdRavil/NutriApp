@@ -254,6 +254,7 @@ const TelaUsuario: React.FC<RouteComponentProps<TelaUsuarioProps>> = (
 									type="email"
 									placeholder="E-mail"
 									onIonChange={(e) => setEmail(e.detail.value!)}
+									disabled
 								/>
 							</IonItem>
 							<IonItem className="item-config" lines="none">
