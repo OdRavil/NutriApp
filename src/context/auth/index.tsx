@@ -1,7 +1,10 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import firebase from "firebase";
 import "firebase/auth";
-import { getAuth, setAuth as setAuthStorage } from "../../utils/storage";
+import StorageService, {
+	getAuth,
+	setAuth as setAuthStorage,
+} from "../../utils/storage";
 import UsuarioService from "../../services/UsuarioService";
 import Usuario, { TipoUsuario } from "../../models/Usuario";
 import { UserInactive, UserNotFound } from "../../errors";
@@ -18,6 +21,7 @@ export interface Auth {
 
 export interface AuthContextData {
 	signed: boolean;
+	loaded: boolean;
 	auth: Auth;
 	setAuthUser(auth: Auth): void;
 	login(code: string, phoneNumber: string): Promise<Auth>;
@@ -29,12 +33,15 @@ export const AuthContext = createContext<AuthContextData>({} as any);
 
 export const AuthProvider: React.FC = ({ children }) => {
 	const [auth, setAuth] = useState<Auth | undefined>(undefined);
+	const [loaded, setLoaded] = useState<boolean>(false);
 
 	useEffect(() => {
-		const authTemp = getAuth();
-		if (authTemp) {
-			setAuth(authTemp);
-		}
+		getAuth().then((authTemp) => {
+			if (authTemp) {
+				setAuth(authTemp);
+			}
+			setLoaded(true);
+		});
 	}, []);
 
 	const setAuthUser = (authUser: Auth): void => {
@@ -75,9 +82,10 @@ export const AuthProvider: React.FC = ({ children }) => {
 		firebase
 			.auth()
 			.signOut()
-			.then(() => {
+			.then(async () => {
 				localStorage.clear();
 				sessionStorage.clear();
+				await StorageService.getInstance().clear();
 				setAuth(undefined);
 			});
 
@@ -111,6 +119,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 		<AuthContext.Provider
 			value={{
 				signed: isSigned(),
+				loaded,
 				auth: auth as any,
 				login,
 				logout,

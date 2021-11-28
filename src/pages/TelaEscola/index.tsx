@@ -18,9 +18,10 @@ import {
 	IonTitle,
 	IonToast,
 	IonToolbar,
+	useIonRouter,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
-import { RouteComponentProps } from "react-router";
+import { useRouteMatch } from "react-router";
 import { arrowBackOutline } from "ionicons/icons";
 import EscolaService from "../../services/EscolaService";
 import Escola from "../../models/Escola";
@@ -31,8 +32,15 @@ interface TelaEscolaProps {
 	idEscola: string;
 }
 
-const TelaEscola: React.FC<RouteComponentProps<TelaEscolaProps>> = (props) => {
-	const { idEscola } = props.match.params;
+const TelaEscola: React.FC = () => {
+	const router = useIonRouter();
+
+	const navigateBack = () => router.canGoBack() && router.goBack();
+
+	const match = useRouteMatch<TelaEscolaProps>();
+
+	const { idEscola } = match.params;
+
 	const [escola, setEscola] = useState<Escola>();
 
 	const [showAlertDesativar, setShowAlertDesativar] = useState<boolean>(false);
@@ -126,7 +134,7 @@ const TelaEscola: React.FC<RouteComponentProps<TelaEscolaProps>> = (props) => {
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot="start">
-						<IonButton onClick={() => props.history.goBack()}>
+						<IonButton onClick={() => navigateBack()}>
 							<IonIcon slot="icon-only" icon={arrowBackOutline} />
 						</IonButton>
 					</IonButtons>

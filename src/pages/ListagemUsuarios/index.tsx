@@ -15,18 +15,21 @@ import {
 	IonSelectOption,
 	IonTitle,
 	IonToolbar,
+	useIonRouter,
 } from "@ionic/react";
 import React, { useCallback, useEffect, useState } from "react";
 import "firebase/auth";
-import { RouteComponentProps } from "react-router";
 import { arrowBackOutline, closeOutline, optionsOutline } from "ionicons/icons";
 import { useAuth } from "../../context/auth";
 import UsuarioService from "../../services/UsuarioService";
 import Usuario from "../../models/Usuario";
 import LoadingSpinner from "../../components/LoadingSpinner";
-// import Escola from "../../models/Escola";
 
-const ListagemUsuarios: React.FC<RouteComponentProps> = (props) => {
+const ListagemUsuarios: React.FC = () => {
+	const router = useIonRouter();
+
+	const navigateBack = () => router.canGoBack() && router.goBack();
+
 	const { auth } = useAuth();
 
 	const [showModalFiltro, setShowModalFiltro] = useState<boolean>(false);
@@ -74,7 +77,7 @@ const ListagemUsuarios: React.FC<RouteComponentProps> = (props) => {
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot="start">
-						<IonButton onClick={() => props.history.goBack()}>
+						<IonButton onClick={() => navigateBack()}>
 							<IonIcon slot="icon-only" icon={arrowBackOutline} />
 						</IonButton>
 					</IonButtons>

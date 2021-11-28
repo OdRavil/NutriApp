@@ -24,11 +24,12 @@ import {
 	IonToast,
 	IonToolbar,
 	useIonAlert,
+	useIonRouter,
 } from "@ionic/react";
 import moment from "moment";
 import firebase from "firebase/app";
 import React, { useCallback, useEffect, useState } from "react";
-import { RouteComponentProps } from "react-router";
+import { useRouteMatch } from "react-router";
 import { addOutline, arrowBackOutline, trashOutline } from "ionicons/icons";
 import EscolaService from "../../services/EscolaService";
 import Escola from "../../models/Escola";
@@ -41,12 +42,16 @@ interface TelaUsuarioProps {
 	idUsuario: string;
 }
 
-const TelaUsuario: React.FC<RouteComponentProps<TelaUsuarioProps>> = (
-	props
-) => {
+const TelaUsuario: React.FC = () => {
+	const router = useIonRouter();
+
+	const navigateBack = () => router.canGoBack() && router.goBack();
+
+	const match = useRouteMatch<TelaUsuarioProps>();
+	const { idUsuario } = match.params;
+
 	const { auth } = useAuth();
 
-	const { idUsuario } = props.match.params;
 	const [usuario, setUsuario] = useState<Usuario>();
 
 	const [showAlertDesativar, setShowAlertDesativar] = useState<boolean>(false);
@@ -215,7 +220,7 @@ const TelaUsuario: React.FC<RouteComponentProps<TelaUsuarioProps>> = (
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot="start">
-						<IonButton onClick={() => props.history.goBack()}>
+						<IonButton onClick={() => navigateBack()}>
 							<IonIcon slot="icon-only" icon={arrowBackOutline} />
 						</IonButton>
 					</IonButtons>

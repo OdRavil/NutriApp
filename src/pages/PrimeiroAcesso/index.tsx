@@ -16,10 +16,10 @@ import {
 	IonTitle,
 	IonToast,
 	IonToolbar,
+	useIonRouter,
 } from "@ionic/react";
 import { chevronBack, keyOutline, mailOutline } from "ionicons/icons";
 import React, { useState } from "react";
-import { RouteComponentProps } from "react-router";
 import "./index.css";
 import UsuarioService from "../../services/UsuarioService";
 import Usuario from "../../models/Usuario";
@@ -27,7 +27,11 @@ import { useAuth } from "../../context/auth";
 
 const usuarioService = new UsuarioService();
 
-const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
+const PrimeiroAcesso: React.FC = () => {
+	const router = useIonRouter();
+
+	const navigateBack = () => router.canGoBack() && router.goBack();
+
 	const { register } = useAuth();
 
 	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
@@ -74,7 +78,7 @@ const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
 				}
 				mostrarMensagemSucesso("Informações atualizadas.");
 				clear();
-				props.history.push("private/home");
+				router.push("private/home", "none", "replace");
 			})
 			.catch((error) => console.error(error));
 	};
@@ -95,7 +99,7 @@ const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
 
 	const voltar = () => {
 		clear();
-		props.history.goBack();
+		navigateBack();
 	};
 
 	return (

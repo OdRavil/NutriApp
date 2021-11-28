@@ -20,9 +20,10 @@ import {
 	IonTitle,
 	IonToast,
 	IonToolbar,
+	useIonRouter,
 } from "@ionic/react";
 import React, { useCallback, useEffect, useState } from "react";
-import { RouteComponentProps } from "react-router";
+import { useRouteMatch } from "react-router";
 import { arrowBackOutline } from "ionicons/icons";
 import TurmaService from "../../services/TurmaService";
 import Turma from "../../models/Turma";
@@ -38,10 +39,16 @@ interface TelaTurmaProps {
 	idTurma: string;
 }
 
-const TelaTurma: React.FC<RouteComponentProps<TelaTurmaProps>> = (props) => {
+const TelaTurma: React.FC = () => {
+	const router = useIonRouter();
+
+	const navigateBack = () => router.canGoBack() && router.goBack();
+
+	const match = useRouteMatch<TelaTurmaProps>();
+	const { idTurma } = match.params;
+
 	const { auth } = useAuth();
 
-	const { idTurma } = props.match.params;
 	const [turma, setTurma] = useState<Turma>();
 
 	const [showAlertDesativar, setShowAlertDesativar] = useState<boolean>(false);
@@ -178,7 +185,7 @@ const TelaTurma: React.FC<RouteComponentProps<TelaTurmaProps>> = (props) => {
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot="start">
-						<IonButton onClick={() => props.history.goBack()}>
+						<IonButton onClick={() => navigateBack()}>
 							<IonIcon slot="icon-only" icon={arrowBackOutline} />
 						</IonButton>
 					</IonButtons>

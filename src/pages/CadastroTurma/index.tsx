@@ -19,10 +19,10 @@ import {
 	IonGrid,
 	IonRow,
 	IonCol,
+	useIonRouter,
 } from "@ionic/react";
 import { chevronBack } from "ionicons/icons";
 import React, { useCallback, useEffect, useState } from "react";
-import { RouteComponentProps } from "react-router";
 import { useAuth } from "../../context/auth";
 import Escola from "../../models/Escola";
 import Turma from "../../models/Turma";
@@ -31,7 +31,11 @@ import EscolaService from "../../services/EscolaService";
 import TurmaService from "../../services/TurmaService";
 import UsuarioService from "../../services/UsuarioService";
 
-const CadastroTurma: React.FC<RouteComponentProps> = (props) => {
+const CadastroTurma: React.FC = () => {
+	const router = useIonRouter();
+
+	const navigateBack = () => router.canGoBack() && router.goBack();
+
 	const { auth } = useAuth();
 
 	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
@@ -118,13 +122,7 @@ const CadastroTurma: React.FC<RouteComponentProps> = (props) => {
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot="start">
-						<IonIcon
-							icon={chevronBack}
-							size="large"
-							onClick={() => {
-								props.history.goBack();
-							}}
-						/>
+						<IonIcon icon={chevronBack} size="large" onClick={() => navigateBack()} />
 					</IonButtons>
 					<IonTitle>Cadastro de Turma</IonTitle>
 				</IonToolbar>

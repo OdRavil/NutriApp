@@ -15,14 +15,16 @@ import {
 	IonTitle,
 	IonToast,
 	IonToolbar,
+	useIonRouter,
 } from "@ionic/react";
 import { personCircle } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
-import { RouteComponentProps } from "react-router";
 import { useAuth } from "../../context/auth";
 
-const Login: React.FC<RouteComponentProps> = (props) => {
-	const { auth, login } = useAuth();
+const Login: React.FC = () => {
+	const router = useIonRouter();
+
+	const { signed, login } = useAuth();
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -45,7 +47,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 					mostrarMensagemErro("Não foi possível logar usuário.");
 					return;
 				}
-				props.history.replace("/private/home");
+				router.push("/private/home", "none", "replace");
 			})
 			.catch((error) => {
 				console.error(error);
@@ -55,10 +57,8 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 	};
 
 	useEffect(() => {
-		if (auth?.user?.id) {
-			props.history.replace("/private/home");
-		}
-	}, [auth?.user?.id, props.history]);
+		if (signed) router.push("/private/home", "none", "replace");
+	}, [signed]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
 		<IonPage>

@@ -13,14 +13,18 @@ import {
 	IonTitle,
 	IonToast,
 	IonToolbar,
+	useIonRouter,
 } from "@ionic/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
-import { RouteComponentProps } from "react-router";
 import { arrowBackOutline } from "ionicons/icons";
 
-const MudarSenha: React.FC<RouteComponentProps> = (props) => {
+const MudarSenha: React.FC = () => {
+	const router = useIonRouter();
+
+	const navigateBack = () => router.canGoBack() && router.goBack();
+
 	const [mensagemToastErro, setMensagemToastErro] = useState<string>("");
 	const [showToastErro, setShowToastErro] = useState<boolean>(false);
 	const [showToastSucesso, setShowToastSucesso] = useState<boolean>(false);
@@ -35,7 +39,7 @@ const MudarSenha: React.FC<RouteComponentProps> = (props) => {
 
 	const botaoAlterar = useRef<HTMLIonButtonElement>(null);
 
-	const verificaNovasSenhas = (): void => {
+	const verificaNovasSenhas = useCallback((): void => {
 		if (novaSenhaConfirma.length === 0) {
 			setCorNovaSenha("default");
 			setCorNovaSenhaConfirma("default");
@@ -45,9 +49,9 @@ const MudarSenha: React.FC<RouteComponentProps> = (props) => {
 		setCorNovaSenhaConfirma(
 			novaSenha === novaSenhaConfirma ? "success" : "danger"
 		);
-	};
+	}, [novaSenha, novaSenhaConfirma]);
 
-	const handleChanges = (): boolean => {
+	const handleChanges = useCallback((): boolean => {
 		if (botaoAlterar.current) {
 			if (
 				senhaAtual.length === 0 ||
@@ -62,7 +66,7 @@ const MudarSenha: React.FC<RouteComponentProps> = (props) => {
 		}
 		verificaNovasSenhas();
 		return true;
-	};
+	}, [novaSenha, novaSenhaConfirma, senhaAtual.length, verificaNovasSenhas]);
 
 	useEffect(() => {
 		handleChanges();
@@ -83,9 +87,7 @@ const MudarSenha: React.FC<RouteComponentProps> = (props) => {
 					.updatePassword(novaSenha)
 					.then(() => {
 						setShowToastSucesso(true);
-						setTimeout(() => {
-							props.history.goBack();
-						}, 500);
+						setTimeout(() => navigateBack(), 500);
 					})
 					.catch((error) => {
 						setMensagemToastErro(error.message);
@@ -103,7 +105,7 @@ const MudarSenha: React.FC<RouteComponentProps> = (props) => {
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot="start">
-						<IonButton onClick={() => props.history.goBack()}>
+						<IonButton onClick={() => navigateBack()}>
 							<IonIcon slot="icon-only" icon={arrowBackOutline} />
 						</IonButton>
 					</IonButtons>

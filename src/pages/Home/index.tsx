@@ -8,6 +8,7 @@ import {
 	IonItem,
 	IonItemDivider,
 	IonText,
+	useIonAlert,
 } from "@ionic/react";
 import React, { useCallback } from "react";
 import { useAuth } from "../../context/auth";
@@ -16,6 +17,8 @@ import "./index.css";
 
 const Home: React.FC = () => {
 	const { auth } = useAuth();
+
+	const [alertaExportarAnamnese] = useIonAlert();
 
 	const getPrimeiroNome = useCallback(() => {
 		if (!auth?.user) return "";
@@ -29,6 +32,23 @@ const Home: React.FC = () => {
 		return `Olá, ${name}!`;
 	};
 
+	const exportarAnamnese = () => {
+		console.log("peo");
+	};
+
+	const handleExportarAnamnese = () => {
+		alertaExportarAnamnese({
+			message: "Exportar os dados dos alunos?",
+			buttons: [
+				"Não",
+				{
+					text: "Sim",
+					handler: () => exportarAnamnese(),
+				},
+			],
+		});
+	};
+
 	const getHomeAdministrador = () => (
 		<IonList>
 			<IonItemDivider>
@@ -37,9 +57,9 @@ const Home: React.FC = () => {
 			<IonItem routerLink="/anamnese">
 				<IonLabel>Fazer a Anamnese</IonLabel>
 			</IonItem>
-			{/* <IonItem lines="none" routerLink="/turma/listar">
+			<IonItem hidden lines="none" onClick={() => handleExportarAnamnese()}>
 				<IonLabel>Exportar</IonLabel>
-			</IonItem> */}
+			</IonItem>
 			<IonItemDivider>
 				<IonLabel>Usuário</IonLabel>
 			</IonItemDivider>
@@ -87,9 +107,9 @@ const Home: React.FC = () => {
 			<IonItem routerLink="/anamnese">
 				<IonLabel>Fazer a Anamnese</IonLabel>
 			</IonItem>
-			{/* <IonItem lines="none" routerLink="/turma/listar">
+			<IonItem hidden lines="none" onClick={() => handleExportarAnamnese()}>
 				<IonLabel>Exportar</IonLabel>
-			</IonItem> */}
+			</IonItem>
 			<IonItemDivider>
 				<IonLabel>Turma</IonLabel>
 			</IonItemDivider>
@@ -113,7 +133,7 @@ const Home: React.FC = () => {
 			<IonItemDivider>
 				<IonLabel>Anamnese</IonLabel>
 			</IonItemDivider>
-			<IonItem routerLink="/anamnese">
+			<IonItem lines="none" routerLink="/anamnese">
 				<IonLabel>Fazer a Anamnese</IonLabel>
 			</IonItem>
 			<IonItemDivider>

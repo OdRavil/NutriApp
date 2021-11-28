@@ -19,6 +19,7 @@ import {
 	IonGrid,
 	IonRow,
 	IonCol,
+	useIonRouter,
 } from "@ionic/react";
 import { chevronBack } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
@@ -34,7 +35,11 @@ import AlunoService from "../../services/AlunoService";
 import AnamneseService from "../../services/AnamneseService";
 import { maskImc } from "../../utils/string";
 
-const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
+const Anamnese: React.FC<RouteComponentProps> = () => {
+	const router = useIonRouter();
+
+	const navigateBack = () => router.canGoBack() && router.goBack();
+
 	const { auth } = useAuth();
 
 	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
@@ -348,13 +353,7 @@ const Anamnese: React.FC<RouteComponentProps> = ({ history }) => {
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot="start">
-						<IonIcon
-							icon={chevronBack}
-							size="large"
-							onClick={() => {
-								history.goBack();
-							}}
-						/>
+						<IonIcon icon={chevronBack} size="large" onClick={() => navigateBack()} />
 					</IonButtons>
 					<IonTitle>Anamnese</IonTitle>
 				</IonToolbar>

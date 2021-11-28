@@ -19,6 +19,7 @@ import {
 	IonGrid,
 	IonRow,
 	IonCol,
+	useIonRouter,
 } from "@ionic/react";
 import {
 	calendarOutline,
@@ -28,7 +29,6 @@ import {
 	personOutline,
 } from "ionicons/icons";
 import React, { useCallback, useEffect, useState } from "react";
-import { RouteComponentProps } from "react-router";
 import firebase from "firebase/app";
 import Aluno from "../../models/Aluno";
 import Usuario, { Sexo, TipoUsuario } from "../../models/Usuario";
@@ -39,7 +39,11 @@ import Turma from "../../models/Turma";
 import UsuarioService from "../../services/UsuarioService";
 import { useAuth } from "../../context/auth";
 
-const CadastroAluno: React.FC<RouteComponentProps> = (props) => {
+const CadastroAluno: React.FC = () => {
+	const router = useIonRouter();
+
+	const navigateBack = () => router.canGoBack() && router.goBack();
+
 	const { auth } = useAuth();
 
 	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
@@ -134,13 +138,7 @@ const CadastroAluno: React.FC<RouteComponentProps> = (props) => {
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot="start">
-						<IonIcon
-							icon={chevronBack}
-							size="large"
-							onClick={() => {
-								props.history.goBack();
-							}}
-						/>
+						<IonIcon icon={chevronBack} size="large" onClick={() => navigateBack()} />
 					</IonButtons>
 					<IonTitle>Cadastro de Aluno</IonTitle>
 				</IonToolbar>

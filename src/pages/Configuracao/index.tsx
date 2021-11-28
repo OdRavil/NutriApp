@@ -18,6 +18,7 @@ import {
 	IonTitle,
 	IonToast,
 	IonToolbar,
+	useIonRouter,
 } from "@ionic/react";
 import {
 	calendarOutline,
@@ -26,7 +27,6 @@ import {
 	manOutline,
 } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
-import { RouteComponentProps } from "react-router";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "./index.css";
@@ -37,7 +37,9 @@ import { useAuth } from "../../context/auth";
 
 const usuarioService = new UsuarioService();
 
-const Configuracao: React.FC<RouteComponentProps> = (props) => {
+const Configuracao: React.FC = () => {
+	const router = useIonRouter();
+
 	const { auth, logout, setAuthUser } = useAuth();
 
 	const [mensagemToastErro, setMensagemToastErro] = useState<string>("");
@@ -89,9 +91,7 @@ const Configuracao: React.FC<RouteComponentProps> = (props) => {
 	const sair = async () => {
 		setShowLoading(true);
 		await logout()
-			.then(() => {
-				props.history.replace("/");
-			})
+			.then(() => router.push("/", "forward", "replace"))
 			.catch((error) => {
 				console.error(error);
 				setMensagemToastErro(error.message);

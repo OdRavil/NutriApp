@@ -18,9 +18,9 @@ import {
 	IonGrid,
 	IonRow,
 	IonCol,
+	useIonRouter,
 } from "@ionic/react";
 import React, { useState } from "react";
-import { RouteComponentProps } from "react-router";
 import {
 	calendarOutline,
 	chevronBack,
@@ -34,7 +34,11 @@ import Usuario, { Sexo, TipoUsuario } from "../../models/Usuario";
 import UsuarioService from "../../services/UsuarioService";
 import "firebase/firestore";
 
-const CadastroUsuario: React.FC<RouteComponentProps> = (props) => {
+const CadastroUsuario: React.FC = () => {
+	const router = useIonRouter();
+
+	const navigateBack = () => router.canGoBack() && router.goBack();
+
 	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
 	const [showErrorBox, setShowErrorBox] = useState<boolean>(false);
 	const [showSuccessBox, setShowSuccessBox] = useState<boolean>(false);
@@ -92,13 +96,7 @@ const CadastroUsuario: React.FC<RouteComponentProps> = (props) => {
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot="start">
-						<IonIcon
-							icon={chevronBack}
-							size="large"
-							onClick={() => {
-								props.history.goBack();
-							}}
-						/>
+						<IonIcon icon={chevronBack} size="large" onClick={() => navigateBack()} />
 					</IonButtons>
 					<IonTitle>Cadastro de Usuario</IonTitle>
 				</IonToolbar>

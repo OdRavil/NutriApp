@@ -1,6 +1,4 @@
 import {
-	IonButton,
-	IonButtons,
 	IonCard,
 	IonCardHeader,
 	IonCardSubtitle,
@@ -8,44 +6,29 @@ import {
 	IonContent,
 	IonGrid,
 	IonHeader,
-	IonIcon,
 	IonItem,
 	IonList,
 	IonPage,
 	IonRow,
-	IonTitle,
 	IonToolbar,
 } from "@ionic/react";
-import { chevronBack } from "ionicons/icons";
 import React from "react";
-import { RouteComponentProps } from "react-router";
 import "./index.css";
 
-const Sobre: React.FC<RouteComponentProps> = ({ history }) => (
+const Sobre: React.FC = () => (
 	<IonPage>
 		<IonHeader>
-			<IonToolbar>
-				<IonButtons slot="start">
-					<IonButton onClick={() => history.goBack()}>
-						<IonIcon slot="icon-only" icon={chevronBack} />
-					</IonButton>
-				</IonButtons>
-				<IonTitle />
-			</IonToolbar>
+			<IonToolbar />
 		</IonHeader>
 		<IonContent fullscreen className="ion-padding ion-text-center">
 			<IonGrid>
 				<IonRow className="ion-justify-content-center">
-					{/* <IonCard className="ion-padding"> */}
 					<IonCol>
 						<img style={{ maxHeight: "5em" }} alt="" src="./assets/unijui.png" />
 					</IonCol>
-					{/* </IonCard> */}
-					{/* <IonCard style={{ borderTop: "500px" }} className="ion-padding"> */}
 					<IonCol>
 						<img style={{ maxHeight: "5em" }} alt="" src="./assets/cc.png" />
 					</IonCol>
-					{/* </IonCard> */}
 				</IonRow>
 				<IonRow>
 					<IonCol>
@@ -74,7 +57,7 @@ const Sobre: React.FC<RouteComponentProps> = ({ history }) => (
 									Eduardo Augusto Morgentern
 								</IonItem>
 								<IonItem color="secundary" style={{ color: "#fff" }} lines="none">
-									Leonardo Diniz
+									Leonardo Diniz Schlueter
 								</IonItem>
 								<IonItem color="secundary" style={{ color: "#fff" }} lines="none">
 									Vinícius Mânica

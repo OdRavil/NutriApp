@@ -1,4 +1,4 @@
-import { IonApp } from "@ionic/react";
+import { IonApp, setupConfig } from "@ionic/react";
 import React from "react";
 
 /* Core CSS required for Ionic components to work properly */
@@ -25,6 +25,12 @@ import "./theme/global.css";
 import "./utils/Firebase";
 import Router from "./routes";
 import { AuthProvider } from "./context/auth";
+
+setupConfig({
+	rippleEffect: false,
+	animated: true,
+	hardwareBackButton: false,
+});
 
 const App: React.FC = () => (
 	<IonApp>

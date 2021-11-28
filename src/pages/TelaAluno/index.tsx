@@ -21,10 +21,11 @@ import {
 	IonTitle,
 	IonToast,
 	IonToolbar,
+	useIonRouter,
 } from "@ionic/react";
 import moment from "moment";
 import React, { useCallback, useEffect, useState } from "react";
-import { RouteComponentProps } from "react-router";
+import { useRouteMatch } from "react-router";
 import { arrowBackOutline } from "ionicons/icons";
 import TurmaService from "../../services/TurmaService";
 import AlunoService from "../../services/AlunoService";
@@ -39,10 +40,16 @@ interface TelaAlunoProps {
 	idAluno: string;
 }
 
-const TelaAluno: React.FC<RouteComponentProps<TelaAlunoProps>> = (props) => {
+const TelaAluno: React.FC = () => {
+	const router = useIonRouter();
+
+	const navigateBack = () => router.canGoBack() && router.goBack();
+
+	const match = useRouteMatch<TelaAlunoProps>();
+	const { idAluno } = match.params;
+
 	const { auth } = useAuth();
 
-	const { idAluno } = props.match.params;
 	const [aluno, setAluno] = useState<Aluno>();
 
 	const [showAlertDesativar, setShowAlertDesativar] = useState<boolean>(false);
@@ -179,7 +186,7 @@ const TelaAluno: React.FC<RouteComponentProps<TelaAlunoProps>> = (props) => {
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot="start">
-						<IonButton onClick={() => props.history.goBack()}>
+						<IonButton onClick={() => navigateBack()}>
 							<IonIcon slot="icon-only" icon={arrowBackOutline} />
 						</IonButton>
 					</IonButtons>

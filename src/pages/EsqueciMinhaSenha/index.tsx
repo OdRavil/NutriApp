@@ -15,17 +15,21 @@ import {
 	IonTitle,
 	IonToast,
 	IonToolbar,
+	useIonRouter,
 } from "@ionic/react";
 import { chevronBack, mailOutline } from "ionicons/icons";
 import React, { useState } from "react";
-import { RouteComponentProps } from "react-router";
 import firebase from "firebase/app";
 import "./index.css";
 import UsuarioService from "../../services/UsuarioService";
 
 const usuarioService = new UsuarioService();
 
-const EsqueciMinhaSenha: React.FC<RouteComponentProps> = (props) => {
+const EsqueciMinhaSenha: React.FC = () => {
+	const router = useIonRouter();
+
+	const navigateBack = () => router.canGoBack() && router.goBack();
+
 	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
 	const [showErrorBox, setShowErrorBox] = useState<boolean>(false);
 	const [mensagemSuccessBox, setMensagemSuccessBox] = useState<string>("");
@@ -66,7 +70,7 @@ const EsqueciMinhaSenha: React.FC<RouteComponentProps> = (props) => {
 
 	const voltar = () => {
 		clear();
-		props.history.goBack();
+		navigateBack();
 	};
 
 	return (

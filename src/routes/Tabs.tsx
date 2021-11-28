@@ -12,6 +12,7 @@ import { home, informationCircle, settings } from "ionicons/icons";
 
 import Home from "../pages/Home";
 import Configuracao from "../pages/Configuracao";
+import Sobre from "../pages/Sobre";
 
 const Tabs: React.FC = () => (
 	<IonTabs>
@@ -19,6 +20,7 @@ const Tabs: React.FC = () => (
 			<Redirect exact path="/private" to="/private/home" />
 			<Route exact path="/private/home" component={Home} />
 			<Route exact path="/private/configuracao" component={Configuracao} />
+			<Route exact path="/private/sobre" component={Sobre} />
 		</IonRouterOutlet>
 		<IonTabBar slot="bottom">
 			<IonTabButton tab="home" href="/private/home">
@@ -29,7 +31,7 @@ const Tabs: React.FC = () => (
 				<IonIcon icon={settings} />
 				<IonLabel>Configurações</IonLabel>
 			</IonTabButton>
-			<IonTabButton tab="sobre" href="/sobre">
+			<IonTabButton tab="sobre" href="/private/sobre">
 				<IonIcon icon={informationCircle} />
 				<IonLabel>Sobre</IonLabel>
 			</IonTabButton>

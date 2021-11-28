@@ -1250,6 +1250,11 @@
   resolved "https://registry.yarnpkg.com/@capacitor/status-bar/-/status-bar-1.0.3.tgz#0ed10d86958b80342292e4044cc9e9630d2413fb"
   integrity sha512-btprzQ5Spjqd6FX3eXKqRKTKZWlIZmJL4bQ79d5N1ESortOZ5NJFB25lAT/a073t8aaJv6DVdZurVFd0/0ELSA==
 
+"@capacitor/storage@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@capacitor/storage/-/storage-1.2.3.tgz#5d5873f2890d0ba3717cef97ecfea7b02823a122"
+  integrity sha512-Rc5CKS53sfxokF5dxzNQDhig4lnZonky6VqskHZKTe3Ltl37FKmrG+I8ttZCinFZ5MPWfGSuP44m93hsQqitjQ==
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.4.tgz#f864ae85004d0fcab6f50be9141c4da368d1656a"
@@ -1601,6 +1606,13 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.0.tgz#87de7af9c231826fdd68ac7258f77c429e0e5fcf"
   integrity sha512-wdppn25U8z/2yiaT6YGquE6X8sSv7hNMWSXYSSU1jGv/yd6XqjXgTDJ8KP4NgjTXfJ3GbRjeeb8RTV7a/VpM+w==
 
+"@ionic-native/core@^5.36.0":
+  version "5.36.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/core/-/core-5.36.0.tgz#712c40a530b119b0039e8d16cb577899f50541d4"
+  integrity sha512-lOrkktadlKYbYf1LrDyAtsu1JnQ0oCCdkOU7iHQ8oXnNOkMwobFfD2m62F1CoOr0u9LIkpYnZSPjng8lZbmbNw==
+  dependencies:
+    "@types/cordova" latest
+
 "@ionic/cli-framework-output@^2.2.1":
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/@ionic/cli-framework-output/-/cli-framework-output-2.2.2.tgz#d03367e2b767a32fa7046c455843555b4971cd4a"
@@ -1643,6 +1655,13 @@
     "@ionic/core" "5.8.4"
     ionicons "^5.1.2"
     tslib "*"
+
+"@ionic/storage@^3.0.6":
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/@ionic/storage/-/storage-3.0.6.tgz#77affcf39afffa86536c97b388ad9c8ecc56d6d1"
+  integrity sha512-sw+zSJINIpbQCGZR9mEtb9N0WmZLuhcMVqOZJBqLuDACAMdXqG39zmp5nSVqhGI1/9X3nd0K5gVn6icyVfUnUg==
+  dependencies:
+    localforage "^1.9.0"
 
 "@ionic/utils-array@2.1.5":
   version "2.1.5"
@@ -2261,6 +2280,11 @@
   integrity sha512-K2waXdXBi2302XUdcHcR1jCeU0LL4TD9HRs/gk0N2Xvrht+G/BfJa4QObBQZfhMdxiCpV3COl5Nfq4uKTeTnJA==
   dependencies:
     "@babel/types" "^7.3.0"
+
+"@types/cordova@latest":
+  version "0.0.34"
+  resolved "https://registry.yarnpkg.com/@types/cordova/-/cordova-0.0.34.tgz#ea7addf74ecec3d7629827a0c39e2c9addc73d04"
+  integrity sha1-6nrd907Ow9dimCegw54smt3HPQQ=
 
 "@types/eslint@^7.2.6":
   version "7.28.1"
@@ -3842,6 +3866,14 @@ caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000981, caniuse-lite@^1.0.30001109, can
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001265.tgz#0613c9e6c922e422792e6fcefdf9a3afeee4f8c3"
   integrity sha512-YzBnspggWV5hep1m9Z6sZVLOt7vrju8xWooFAgN6BA5qvy98qPAPb7vNUzypFaoh2pb3vlfzbDO8tB57UPGbtw==
 
+capacitor@^0.5.5:
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/capacitor/-/capacitor-0.5.5.tgz#c379711ee2939d7a16b95eca78945f38997377b9"
+  integrity sha1-w3lxHuKTnXoWuV7KeJRfOJlzd7k=
+  dependencies:
+    immutable "^3.7.3"
+    lodash "^2.4.1"
+
 capture-exit@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/capture-exit/-/capture-exit-2.0.0.tgz#fb953bfaebeb781f62898239dabb426d08a509a4"
@@ -4253,6 +4285,18 @@ copy-descriptor@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/copy-descriptor/-/copy-descriptor-0.1.1.tgz#676f6eb3c39997c2ee1ac3a924fd6124748f578d"
   integrity sha1-Z29us8OZl8LuGsOpJP1hJHSPV40=
+
+cordova-sqlite-storage-dependencies@4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/cordova-sqlite-storage-dependencies/-/cordova-sqlite-storage-dependencies-4.0.0.tgz#2ffa2d1f2fb3bae868f489b6e174fb58d2926b8f"
+  integrity sha512-dTBxYaX/RGzH6+pp49o4sb3FuHCvhrssaKn1XMJ4LL3f9dnvz3rhFK2LdcWrdFkhOLOndnW/azUkbzZd+WWhRA==
+
+cordova-sqlite-storage@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/cordova-sqlite-storage/-/cordova-sqlite-storage-6.0.0.tgz#25eba8eb4657d2b526c4b753747e6d1533fcb73b"
+  integrity sha512-njRloA3AICaUFztKHXoFfVcwlL7zbvyFxtdZIkK7P+MA3umILXtSKhYAQkSe2GtHr0LBNzJI5xUUqAlZl/Js0A==
+  dependencies:
+    cordova-sqlite-storage-dependencies "4.0.0"
 
 core-js-compat@^3.16.0, core-js-compat@^3.16.2, core-js-compat@^3.6.2:
   version "3.18.3"
@@ -6567,10 +6611,20 @@ ignore@^5.1.4, ignore@^5.1.8:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.1.8.tgz#f150a8b50a34289b33e22f5889abd4d8016f0e57"
   integrity sha512-BMpfD7PpiETpBl/A6S498BaIJ6Y/ABT93ETbby2fP00v4EbvPBXWEoaR1UBPKs3iR53pJY7EtZk5KACI57i1Uw==
 
+immediate@~3.0.5:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/immediate/-/immediate-3.0.6.tgz#9db1dbd0faf8de6fbe0f5dd5e56bb606280de69b"
+  integrity sha1-nbHb0Pr43m++D13V5Wu2BigN5ps=
+
 immer@8.0.1:
   version "8.0.1"
   resolved "https://registry.yarnpkg.com/immer/-/immer-8.0.1.tgz#9c73db683e2b3975c424fb0572af5889877ae656"
   integrity sha512-aqXhGP7//Gui2+UrEtvxZxSquQVXTpZ7KDxfCcKAF3Vysvw0CViVaW9RZ1j1xlIYqaaaipBoqdqeibkc18PNvA==
+
+immutable@^3.7.3:
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
+  integrity sha1-wkOZUUVbs5kT2vKBN28VMOEErfM=
 
 import-cwd@^2.0.0:
   version "2.1.0"
@@ -7790,6 +7844,13 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+lie@3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/lie/-/lie-3.1.1.tgz#9a436b2cc7746ca59de7a41fa469b3efb76bd87e"
+  integrity sha1-mkNrLMd0bKWd56QfpGmz77dr2H4=
+  dependencies:
+    immediate "~3.0.5"
+
 lines-and-columns@^1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
@@ -7859,6 +7920,20 @@ loader-utils@^1.1.0, loader-utils@^1.2.3, loader-utils@^1.4.0:
     big.js "^5.2.2"
     emojis-list "^3.0.0"
     json5 "^1.0.1"
+
+localforage-cordovasqlitedriver@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/localforage-cordovasqlitedriver/-/localforage-cordovasqlitedriver-1.8.0.tgz#13a3613650b01e0899aaf19336ed4655cc0bf77f"
+  integrity sha512-AeYiVPURow8gPAGHNOiGMS9rlgv81wUuQLtnyCP6Eh1mq+IsqNl9fwAOP+RiTi6aO/Wfy3TTWiW2WtbTdJaUnQ==
+  dependencies:
+    localforage ">=1.5.0"
+
+localforage@>=1.5.0, localforage@^1.9.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/localforage/-/localforage-1.10.0.tgz#5c465dc5f62b2807c3a84c0c6a1b1b3212781dd4"
+  integrity sha512-14/H1aX7hzBBmmh7sGPd+AOMkkIrHM3Z1PAyGgZigA1H1p5O5ANnMyWzvpAETtG68/dC4pC0ncy3+PPGzXZHPg==
+  dependencies:
+    lie "3.1.1"
 
 locate-path@^2.0.0:
   version "2.0.0"
@@ -7942,6 +8017,11 @@ lodash.uniq@^4.5.0:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
+
+lodash@^2.4.1:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-2.4.2.tgz#fadd834b9683073da179b3eae6d9c0d15053f73e"
+  integrity sha1-+t2DS5aDBz2hebPq5tnA0VBT9z4=
 
 log-update@^4.0.0:
   version "4.0.0"

@@ -16,14 +16,18 @@ import {
 	IonRow,
 	IonCol,
 	IonGrid,
+	useIonRouter,
 } from "@ionic/react";
 import { chevronBack } from "ionicons/icons";
 import React, { useState } from "react";
-import { RouteComponentProps } from "react-router";
 import Escola from "../../models/Escola";
 import EscolaService from "../../services/EscolaService";
 
-const CadastroEscola: React.FC<RouteComponentProps> = (props) => {
+const CadastroEscola: React.FC = () => {
+	const router = useIonRouter();
+
+	const navigateBack = () => router.canGoBack() && router.goBack();
+
 	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
 	const [showErrorBox, setShowErrorBox] = useState<boolean>(false);
 	const [showSuccessBox, setShowSuccessBox] = useState<boolean>(false);
@@ -65,13 +69,7 @@ const CadastroEscola: React.FC<RouteComponentProps> = (props) => {
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot="start">
-						<IonIcon
-							icon={chevronBack}
-							size="large"
-							onClick={() => {
-								props.history.goBack();
-							}}
-						/>
+						<IonIcon icon={chevronBack} size="large" onClick={() => navigateBack()} />
 					</IonButtons>
 					<IonTitle>Cadastro de Escola</IonTitle>
 				</IonToolbar>
