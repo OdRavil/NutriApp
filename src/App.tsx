@@ -1,5 +1,6 @@
 import { IonApp, setupConfig } from "@ionic/react";
 import React from "react";
+import moment from "moment";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -25,6 +26,8 @@ import "./theme/global.css";
 import "./utils/Firebase";
 import Router from "./routes";
 import { AuthProvider } from "./context/auth";
+
+moment.locale("pt-br");
 
 setupConfig({
 	rippleEffect: false,

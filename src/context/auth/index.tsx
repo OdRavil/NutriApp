@@ -113,7 +113,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 		return authUser as any;
 	};
 
-	const isSigned = (): boolean => !!auth && !!auth.user;
+	const isSigned = (): boolean => !!auth?.user?.id;
 
 	return (
 		<AuthContext.Provider

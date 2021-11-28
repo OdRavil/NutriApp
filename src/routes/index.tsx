@@ -34,88 +34,102 @@ const Router: React.FC = () => {
 			<IonSplitPane contentId="main">
 				<IonRouterOutlet id="main">
 					<Route exact path="/">
-						<Redirect to={isSigned ? "/login" : "/private/home"} />
+						<Redirect to={isSigned ? "/private/home" : "/login"} />
 					</Route>
-					<Route path="/login" component={Login} />
-					<Route path="/primeiro-acesso" component={PrimeiroAcesso} />
+					<Route path="/login/esqueci-senha" component={EsqueciMinhaSenha} exact />
+					<Route path="/login/primeiro-acesso" component={PrimeiroAcesso} exact />
+					<Route path="/login" component={Login} exact />
 					<PrivateRoute signed={isSigned} path="/private" component={Tabs} />
-					<PrivateRoute signed={isSigned} path="/anamnese" component={Anamnese} />
+					<PrivateRoute
+						signed={isSigned}
+						path="/anamnese"
+						component={Anamnese}
+						exact
+					/>
 					<PrivateRoute
 						signed={isSigned}
 						path="/mudar-senha"
 						component={MudarSenha}
-					/>
-					<PrivateRoute
-						signed={isSigned}
-						path="/esqueci-senha"
-						component={EsqueciMinhaSenha}
+						exact
 					/>
 
 					<PrivateRoute
 						signed={isSigned}
 						path="/aluno/cadastrar"
 						component={CadastroAluno}
+						exact
 					/>
 					<PrivateRoute
 						signed={isSigned}
 						path="/aluno/listar"
 						component={ListagemAlunos}
+						exact
 					/>
 					<PrivateRoute
 						signed={isSigned}
 						path="/aluno/visualizar/:idAluno"
 						component={TelaAluno}
+						exact
 					/>
 
 					<PrivateRoute
 						signed={isSigned}
 						path="/usuario/cadastrar"
 						component={CadastroUsuario}
+						exact
 					/>
 					<PrivateRoute
 						signed={isSigned}
 						path="/usuario/visualizar/:idUsuario"
 						component={TelaUsuario}
+						exact
 					/>
 					<PrivateRoute
 						signed={isSigned}
 						path="/usuario/listar"
 						component={ListagemUsuarios}
+						exact
 					/>
 
 					<PrivateRoute
 						signed={isSigned}
 						path="/escola/cadastrar"
 						component={CadastroEscola}
+						exact
 					/>
 					<PrivateRoute
 						signed={isSigned}
 						path="/escola/listar"
 						component={ListagemEscolas}
+						exact
 					/>
 					<PrivateRoute
 						signed={isSigned}
 						path="/escola/visualizar/:idEscola"
 						component={TelaEscola}
+						exact
 					/>
 
 					<PrivateRoute
 						signed={isSigned}
 						path="/turma/cadastrar"
 						component={CadastroTurma}
+						exact
 					/>
 					<PrivateRoute
 						signed={isSigned}
 						path="/turma/listar"
 						component={ListagemTurmas}
+						exact
 					/>
 					<PrivateRoute
 						signed={isSigned}
 						path="/turma/visualizar/:idTurma"
 						component={TelaTurma}
+						exact
 					/>
 					{/* Fallback redirect */}
-					<Route render={() => <Redirect to="/" />} />
+					<Route render={() => <Redirect to="/login" />} />
 				</IonRouterOutlet>
 			</IonSplitPane>
 		</IonReactRouter>

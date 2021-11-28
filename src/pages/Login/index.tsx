@@ -129,14 +129,14 @@ const Login: React.FC = () => {
 				</IonRow>
 				<IonRow>
 					<IonCol>
-						<IonButton expand="block" routerLink="/primeiro-acesso">
+						<IonButton expand="block" routerLink="/login/primeiro-acesso">
 							Primeiro acesso?
 						</IonButton>
 					</IonCol>
 				</IonRow>
 				<IonRow className="ion-text-right">
 					<IonCol>
-						<IonRouterLink routerLink="/esqueci-senha">
+						<IonRouterLink routerLink="/login/esqueci-senha">
 							Esqueceu sua senha?
 						</IonRouterLink>
 					</IonCol>

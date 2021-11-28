@@ -13,4 +13,10 @@ export default class AnamneseService extends FirebaseService<Anamnese> {
 			.get()
 			.then((result) => (result.empty ? undefined : result.docs[0].data()));
 	}
+
+	listar() {
+		return this.getCollectionRef()
+			.get()
+			.then((query) => query.docs.map((item) => item.data()));
+	}
 }

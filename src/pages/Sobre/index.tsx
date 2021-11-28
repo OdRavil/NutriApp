@@ -5,21 +5,16 @@ import {
 	IonCol,
 	IonContent,
 	IonGrid,
-	IonHeader,
 	IonItem,
 	IonList,
 	IonPage,
 	IonRow,
-	IonToolbar,
 } from "@ionic/react";
 import React from "react";
 import "./index.css";
 
 const Sobre: React.FC = () => (
 	<IonPage>
-		<IonHeader>
-			<IonToolbar />
-		</IonHeader>
 		<IonContent fullscreen className="ion-padding ion-text-center">
 			<IonGrid>
 				<IonRow className="ion-justify-content-center">

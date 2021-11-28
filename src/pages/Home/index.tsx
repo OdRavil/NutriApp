@@ -9,16 +9,31 @@ import {
 	IonItemDivider,
 	IonText,
 	useIonAlert,
+	IonToast,
 } from "@ionic/react";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
+import moment from "moment";
+import { Filesystem, Directory } from "@capacitor/filesystem";
 import { useAuth } from "../../context/auth";
 import { TipoUsuario } from "../../models/Usuario";
 import "./index.css";
+import useExcelAlunos from "../../hooks/ExcelAlunos";
 
 const Home: React.FC = () => {
 	const { auth } = useAuth();
 
+	const [exportarDadosAlunos] = useExcelAlunos();
+
+	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
+	const [showErrorBox, setShowErrorBox] = useState<boolean>(false);
+	const [showSuccessBox, setShowSuccessBox] = useState<boolean>(false);
+
 	const [alertaExportarAnamnese] = useIonAlert();
+
+	const mostrarMensagemErro = (erro: Error) => {
+		setMensagemErrorBox(erro.message);
+		setShowErrorBox(true);
+	};
 
 	const getPrimeiroNome = useCallback(() => {
 		if (!auth?.user) return "";
@@ -32,8 +47,20 @@ const Home: React.FC = () => {
 		return `Olá, ${name}!`;
 	};
 
-	const exportarAnamnese = () => {
-		console.log("peo");
+	const exportarAnamnese = async () => {
+		try {
+			const workbook = await exportarDadosAlunos();
+			if (!workbook) return;
+			const buffer = await workbook.xlsx.writeBuffer();
+			await Filesystem.writeFile({
+				path: `export-alunos-${moment().format("DDMMYYY_Hmmss")}.xlsx`,
+				data: Buffer.from(buffer).toString("base64"),
+				directory: Directory.Documents,
+			});
+			setShowSuccessBox(true);
+		} catch (error: any) {
+			mostrarMensagemErro(error.message);
+		}
 	};
 
 	const handleExportarAnamnese = () => {
@@ -57,7 +84,7 @@ const Home: React.FC = () => {
 			<IonItem routerLink="/anamnese">
 				<IonLabel>Fazer a Anamnese</IonLabel>
 			</IonItem>
-			<IonItem hidden lines="none" onClick={() => handleExportarAnamnese()}>
+			<IonItem lines="none" onClick={() => handleExportarAnamnese()}>
 				<IonLabel>Exportar</IonLabel>
 			</IonItem>
 			<IonItemDivider>
@@ -107,7 +134,7 @@ const Home: React.FC = () => {
 			<IonItem routerLink="/anamnese">
 				<IonLabel>Fazer a Anamnese</IonLabel>
 			</IonItem>
-			<IonItem hidden lines="none" onClick={() => handleExportarAnamnese()}>
+			<IonItem lines="none" onClick={() => handleExportarAnamnese()}>
 				<IonLabel>Exportar</IonLabel>
 			</IonItem>
 			<IonItemDivider>
@@ -163,6 +190,22 @@ const Home: React.FC = () => {
 					</IonText>
 				</IonToolbar>
 			</IonHeader>
+			<IonToast
+				isOpen={showErrorBox}
+				onDidDismiss={() => setShowErrorBox(false)}
+				message={mensagemErrorBox}
+				duration={1000}
+				position="top"
+				color="danger"
+			/>
+			<IonToast
+				isOpen={showSuccessBox}
+				onDidDismiss={() => setShowSuccessBox(false)}
+				message="Arquivo salvo no dispositivo com sucesso."
+				duration={1500}
+				position="top"
+				color="success"
+			/>
 			<IonContent fullscreen>
 				{auth?.user?.tipo === TipoUsuario.ADMINISTRADOR
 					? getHomeAdministrador()

@@ -1,0 +1,6 @@
+{
+	"appId": "br.com.unijui.healthteens",
+	"appName": "Health Teens",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}

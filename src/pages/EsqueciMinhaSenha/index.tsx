@@ -4,7 +4,9 @@ import {
 	IonCard,
 	IonCardHeader,
 	IonCardSubtitle,
+	IonCol,
 	IonContent,
+	IonGrid,
 	IonHeader,
 	IonIcon,
 	IonInput,
@@ -12,6 +14,7 @@ import {
 	IonLabel,
 	IonList,
 	IonPage,
+	IonRow,
 	IonTitle,
 	IonToast,
 	IonToolbar,
@@ -89,7 +92,7 @@ const EsqueciMinhaSenha: React.FC = () => {
 					<IonTitle />
 				</IonToolbar>
 			</IonHeader>
-			<IonContent fullscreen scrollY={false}>
+			<IonContent className="ion-padding" fullscreen scrollY={false}>
 				<IonCard>
 					<IonCardHeader>
 						<IonCardSubtitle>Alteração de senha</IonCardSubtitle>
@@ -110,11 +113,15 @@ const EsqueciMinhaSenha: React.FC = () => {
 						</IonItem>
 					</IonList>
 				</IonCard>
-				<IonCard>
-					<IonButton color="primary" expand="block" onClick={() => enviar()}>
-						Enviar e-mail
-					</IonButton>
-				</IonCard>
+				<IonGrid>
+					<IonRow>
+						<IonCol>
+							<IonButton color="primary" expand="block" onClick={() => enviar()}>
+								Enviar e-mail
+							</IonButton>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
 				<IonToast
 					isOpen={showErrorBox}
 					onDidDismiss={() => setShowErrorBox(false)}
