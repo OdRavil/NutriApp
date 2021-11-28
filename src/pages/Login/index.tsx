@@ -3,8 +3,6 @@ import {
 	IonCol,
 	IonContent,
 	IonGrid,
-	IonHeader,
-	IonIcon,
 	IonInput,
 	IonItem,
 	IonLabel,
@@ -12,12 +10,9 @@ import {
 	IonPage,
 	IonRouterLink,
 	IonRow,
-	IonTitle,
 	IonToast,
-	IonToolbar,
 	useIonRouter,
 } from "@ionic/react";
-import { personCircle } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/auth";
 
@@ -62,11 +57,6 @@ const Login: React.FC = () => {
 
 	return (
 		<IonPage>
-			<IonHeader>
-				<IonToolbar>
-					<IonTitle>Login</IonTitle>
-				</IonToolbar>
-			</IonHeader>
 			<IonContent
 				fullscreen
 				className="ion-padding ion-text-center"
@@ -87,9 +77,10 @@ const Login: React.FC = () => {
 				<IonGrid>
 					<IonRow>
 						<IonCol>
-							<IonIcon
-								style={{ fontSize: "70px", color: "#0040ff" }}
-								icon={personCircle}
+							<img
+								style={{ maxHeight: "70em" }}
+								alt=""
+								src="./assets/logo_healthteens-01.png"
 							/>
 						</IonCol>
 					</IonRow>
