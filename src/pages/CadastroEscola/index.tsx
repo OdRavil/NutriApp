@@ -11,13 +11,23 @@ import {
 	IonToast,
 	IonList,
 	IonTextarea,
+	IonButtons,
+	IonIcon,
+	IonRow,
+	IonCol,
+	IonGrid,
+	useIonRouter,
 } from "@ionic/react";
+import { chevronBack } from "ionicons/icons";
 import React, { useState } from "react";
-import { RouteComponentProps } from "react-router";
 import Escola from "../../models/Escola";
 import EscolaService from "../../services/EscolaService";
 
-const CadastroEscola: React.FC<RouteComponentProps> = () => {
+const CadastroEscola: React.FC = () => {
+	const router = useIonRouter();
+
+	const navigateBack = () => router.canGoBack() && router.goBack();
+
 	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
 	const [showErrorBox, setShowErrorBox] = useState<boolean>(false);
 	const [showSuccessBox, setShowSuccessBox] = useState<boolean>(false);
@@ -58,10 +68,13 @@ const CadastroEscola: React.FC<RouteComponentProps> = () => {
 		<IonPage>
 			<IonHeader>
 				<IonToolbar>
+					<IonButtons slot="start">
+						<IonIcon icon={chevronBack} size="large" onClick={() => navigateBack()} />
+					</IonButtons>
 					<IonTitle>Cadastro de Escola</IonTitle>
 				</IonToolbar>
 			</IonHeader>
-			<IonContent fullscreen scrollY={false}>
+			<IonContent className="ion-padding" fullscreen scrollY={false}>
 				<IonCard>
 					<IonList lines="none">
 						<IonItem>
@@ -82,16 +95,20 @@ const CadastroEscola: React.FC<RouteComponentProps> = () => {
 						</IonItem>
 					</IonList>
 				</IonCard>
-				<IonCard>
-					<IonButton
-						color="primary"
-						expand="block"
-						onClick={cadastrar}
-						className="register-button"
-					>
-						Cadastrar
-					</IonButton>
-				</IonCard>
+				<IonGrid>
+					<IonRow>
+						<IonCol>
+							<IonButton
+								color="primary"
+								expand="block"
+								onClick={cadastrar}
+								className="register-button"
+							>
+								Cadastrar
+							</IonButton>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
 				<IonToast
 					isOpen={showErrorBox}
 					onDidDismiss={() => setShowErrorBox(false)}

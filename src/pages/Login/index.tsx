@@ -1,20 +1,31 @@
 import {
 	IonButton,
+	IonCol,
 	IonContent,
+	IonGrid,
 	IonHeader,
+	IonIcon,
 	IonInput,
+	IonItem,
+	IonLabel,
 	IonLoading,
 	IonPage,
+	IonRouterLink,
+	IonRow,
 	IonTitle,
 	IonToast,
 	IonToolbar,
+	useIonRouter,
 } from "@ionic/react";
-import React, { useState } from "react";
-import { RouteComponentProps } from "react-router";
-import { loginUser } from "../../utils/Firebase";
-import "./index.css";
+import { personCircle } from "ionicons/icons";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../../context/auth";
 
-const Login: React.FC<RouteComponentProps> = (props) => {
+const Login: React.FC = () => {
+	const router = useIonRouter();
+
+	const { signed, login } = useAuth();
+
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
@@ -28,25 +39,26 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 		setShowErrorBox(true);
 	};
 
-	const login = async () => {
-		try {
-			setShowLoading(true);
-			await loginUser(email, password)
-				.then((credentials) => {
-					if (!credentials.user) {
-						mostrarMensagemErro("Não foi possível logar usuário.");
-						return;
-					}
-					props.history.push("private/home");
-				})
-				.catch((error) => {
-					console.error(error);
-					mostrarMensagemErro(error);
-				});
-		} finally {
-			setShowLoading(false);
-		}
+	const doLogin = async () => {
+		setShowLoading(true);
+		await login(email, password)
+			.then((authUser) => {
+				if (!authUser.user) {
+					mostrarMensagemErro("Não foi possível logar usuário.");
+					return;
+				}
+				router.push("/private/home", "none", "replace");
+			})
+			.catch((error) => {
+				console.error(error);
+				mostrarMensagemErro(error.message);
+				setShowLoading(false);
+			});
 	};
+
+	useEffect(() => {
+		if (signed) router.push("/private/home", "none", "replace");
+	}, [signed]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
 		<IonPage>
@@ -55,7 +67,11 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 					<IonTitle>Login</IonTitle>
 				</IonToolbar>
 			</IonHeader>
-			<IonContent className="ion-padding">
+			<IonContent
+				fullscreen
+				className="ion-padding ion-text-center"
+				scrollY={false}
+			>
 				<IonLoading
 					isOpen={showLoading}
 					onDidDismiss={() => setShowLoading(false)}
@@ -65,21 +81,66 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 					onDidDismiss={() => setShowErrorBox(false)}
 					message={mensagemErrorBox}
 					duration={1000}
-					position="bottom"
+					position="top"
 					color="danger"
 				/>
-				<IonInput
-					placeholder="E-mail"
-					type="email"
-					onIonChange={(e: any) => setEmail(e.target.value)}
-				/>
-				<IonInput
-					placeholder="Password"
-					type="password"
-					onIonChange={(e: any) => setPassword(e.target.value)}
-				/>
-				<IonButton onClick={login}>Login</IonButton>
-				<IonButton routerLink="/primeiro-acesso">Primeiro acesso?</IonButton>
+				<IonGrid>
+					<IonRow>
+						<IonCol>
+							<IonIcon
+								style={{ fontSize: "70px", color: "#0040ff" }}
+								icon={personCircle}
+							/>
+						</IonCol>
+					</IonRow>
+					<IonRow>
+						<IonCol>
+							<IonItem>
+								<IonLabel position="floating">E-mail</IonLabel>
+								<IonInput
+									placeholder="E-mail"
+									type="email"
+									autocorrect="off"
+									onIonChange={(e: any) => setEmail(e.target.value)}
+								/>
+							</IonItem>
+						</IonCol>
+					</IonRow>
+					<IonRow>
+						<IonCol>
+							<IonItem>
+								<IonLabel position="floating">Senha</IonLabel>
+								<IonInput
+									placeholder="Senha"
+									type="password"
+									onIonChange={(e: any) => setPassword(e.target.value)}
+								/>
+							</IonItem>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
+
+				<IonRow>
+					<IonCol>
+						<IonButton expand="block" onClick={doLogin}>
+							Acessar
+						</IonButton>
+					</IonCol>
+				</IonRow>
+				<IonRow>
+					<IonCol>
+						<IonButton expand="block" routerLink="/login/primeiro-acesso">
+							Primeiro acesso?
+						</IonButton>
+					</IonCol>
+				</IonRow>
+				<IonRow className="ion-text-right">
+					<IonCol>
+						<IonRouterLink routerLink="/login/esqueci-senha">
+							Esqueceu sua senha?
+						</IonRouterLink>
+					</IonCol>
+				</IonRow>
 			</IonContent>
 		</IonPage>
 	);

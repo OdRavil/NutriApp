@@ -52,6 +52,7 @@ export default abstract class FirebaseService<M extends BaseModel> {
 	): M {
 		const model = snapshot.data(options) as M;
 		model.id = snapshot.id;
+		if (typeof model.status === "undefined") model.status = true;
 		return model;
 	}
 
@@ -88,12 +89,15 @@ export default abstract class FirebaseService<M extends BaseModel> {
 		return this.getCollectionRef()
 			.add({
 				...data,
+				status: true,
 				createdAt: firebase.firestore.FieldValue.serverTimestamp(),
 			})
 			.then((doc) => doc.id);
 	}
 
 	updateData(id: string, objToSubmit: Partial<M>) {
+		Reflect.deleteProperty(objToSubmit, "createdAt");
+		Reflect.deleteProperty(objToSubmit, "id");
 		return this.getCollectionRef().doc(id).update(objToSubmit);
 	}
 

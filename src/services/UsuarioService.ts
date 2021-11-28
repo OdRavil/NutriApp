@@ -33,4 +33,10 @@ export default class UsuarioService extends FirebaseService<Usuario> {
 				return doc.docs[0].data();
 			});
 	}
+
+	listar() {
+		return this.getCollectionRef()
+			.get()
+			.then((query) => query.docs.map((item) => item.data()));
+	}
 }

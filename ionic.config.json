@@ -1,7 +1,7 @@
 {
-  "name": "lambda",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "react"
+	"name": "Health Teens",
+	"integrations": {
+		"capacitor": {}
+	},
+	"type": "react"
 }

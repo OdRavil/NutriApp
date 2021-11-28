@@ -2,7 +2,9 @@ import {
 	IonButton,
 	IonButtons,
 	IonCard,
+	IonCol,
 	IonContent,
+	IonGrid,
 	IonHeader,
 	IonIcon,
 	IonInput,
@@ -10,23 +12,28 @@ import {
 	IonLabel,
 	IonList,
 	IonPage,
+	IonRow,
 	IonTitle,
 	IonToast,
 	IonToolbar,
+	useIonRouter,
 } from "@ionic/react";
 import { chevronBack, keyOutline, mailOutline } from "ionicons/icons";
 import React, { useState } from "react";
-import { RouteComponentProps } from "react-router";
 import "./index.css";
-import firebase from "firebase/app";
-import "firebase/auth";
 import UsuarioService from "../../services/UsuarioService";
 import Usuario from "../../models/Usuario";
-import { loginUser } from "../../utils/Firebase";
+import { useAuth } from "../../context/auth";
 
 const usuarioService = new UsuarioService();
 
-const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
+const PrimeiroAcesso: React.FC = () => {
+	const router = useIonRouter();
+
+	const navigateBack = () => router.canGoBack() && router.goBack();
+
+	const { register } = useAuth();
+
 	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
 	const [showErrorBox, setShowErrorBox] = useState<boolean>(false);
 	const [mensagemSuccessBox, setMensagemSuccessBox] = useState<string>("");
@@ -63,29 +70,15 @@ const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
 			return;
 		}
 
-		firebase
-			.auth()
-			.createUserWithEmailAndPassword(email, senha)
-			.then((credentials) => {
-				if (!credentials.user) {
-					mostrarMensagemErro(
-						"Erro ao cadastrar usuário.\nUsuário não cadastrado no Autenticador."
-					);
+		register(usuario, email, senha)
+			.then((auth) => {
+				if (!auth.user) {
+					mostrarMensagemErro("Não foi possível logar usuário.");
+					return;
 				}
-				const id = credentials.user!.uid;
-				usuarioService
-					.registrarUsuario(id, usuario)
-					.then(async () => {
-						const credentialsUser = await loginUser(email, senha);
-						if (!credentialsUser.user) {
-							mostrarMensagemErro("Não foi possível logar usuário.");
-							return;
-						}
-						mostrarMensagemSucesso("Informações atualizadas.");
-						clear();
-						props.history.push("private/home");
-					})
-					.catch((error) => console.error(error));
+				mostrarMensagemSucesso("Informações atualizadas.");
+				clear();
+				router.push("private/home", "none", "replace");
 			})
 			.catch((error) => console.error(error));
 	};
@@ -106,7 +99,7 @@ const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
 
 	const voltar = () => {
 		clear();
-		props.history.goBack();
+		navigateBack();
 	};
 
 	return (
@@ -125,7 +118,7 @@ const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
 					<IonTitle />
 				</IonToolbar>
 			</IonHeader>
-			<IonContent fullscreen scrollY={false}>
+			<IonContent className="ion-padding" fullscreen scrollY={false}>
 				<IonCard>
 					<IonList lines="none">
 						<IonItem className="item-config">
@@ -156,21 +149,25 @@ const PrimeiroAcesso: React.FC<RouteComponentProps> = (props) => {
 						</div>
 					</IonList>
 				</IonCard>
-				<IonCard>
-					<IonButton
-						color="primary"
-						expand="block"
-						onClick={() => {
-							if (showFinalizarCadastro) {
-								acessar();
-							} else {
-								verificarEmail();
-							}
-						}}
-					>
-						{showFinalizarCadastro ? "Acessar" : "Buscar"}
-					</IonButton>
-				</IonCard>
+				<IonGrid>
+					<IonRow>
+						<IonCol>
+							<IonButton
+								color="primary"
+								expand="block"
+								onClick={() => {
+									if (showFinalizarCadastro) {
+										acessar();
+									} else {
+										verificarEmail();
+									}
+								}}
+							>
+								{showFinalizarCadastro ? "Acessar" : "Buscar"}
+							</IonButton>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
 				<IonToast
 					isOpen={showErrorBox}
 					onDidDismiss={() => setShowErrorBox(false)}

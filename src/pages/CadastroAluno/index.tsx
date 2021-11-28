@@ -15,25 +15,37 @@ import {
 	IonSelectOption,
 	IonDatetime,
 	IonLoading,
+	IonButtons,
+	IonGrid,
+	IonRow,
+	IonCol,
+	useIonRouter,
 } from "@ionic/react";
 import {
 	calendarOutline,
+	chevronBack,
 	mailOutline,
 	maleFemaleOutline,
 	personOutline,
 } from "ionicons/icons";
-import React, { useEffect, useState } from "react";
-import { RouteComponentProps } from "react-router";
+import React, { useCallback, useEffect, useState } from "react";
 import firebase from "firebase/app";
 import Aluno from "../../models/Aluno";
 import Usuario, { Sexo, TipoUsuario } from "../../models/Usuario";
 import AlunoService from "../../services/AlunoService";
 import "firebase/firestore";
-import { getCurrentUser } from "../../utils/Firebase";
 import TurmaService from "../../services/TurmaService";
 import Turma from "../../models/Turma";
+import UsuarioService from "../../services/UsuarioService";
+import { useAuth } from "../../context/auth";
 
-const CadastroAluno: React.FC<RouteComponentProps> = () => {
+const CadastroAluno: React.FC = () => {
+	const router = useIonRouter();
+
+	const navigateBack = () => router.canGoBack() && router.goBack();
+
+	const { auth } = useAuth();
+
 	const [mensagemErrorBox, setMensagemErrorBox] = useState<string>("");
 	const [showErrorBox, setShowErrorBox] = useState<boolean>(false);
 	const [showSuccessBox, setShowSuccessBox] = useState<boolean>(false);
@@ -49,7 +61,7 @@ const CadastroAluno: React.FC<RouteComponentProps> = () => {
 		setShowErrorBox(true);
 	};
 
-	const carregarTurma = async (usuario: Usuario) => {
+	const carregarTurma = useCallback(async (usuario: Usuario) => {
 		if (usuario.tipo === TipoUsuario.ADMINISTRADOR) {
 			new TurmaService().listar().then((turmas) => {
 				setTurmaLista(turmas);
@@ -72,7 +84,7 @@ const CadastroAluno: React.FC<RouteComponentProps> = () => {
 				}
 			});
 		}
-	};
+	}, []);
 
 	const cadastrar = async () => {
 		if (!nome || nome.trim().length === 0) {
@@ -115,17 +127,23 @@ const CadastroAluno: React.FC<RouteComponentProps> = () => {
 	};
 
 	useEffect(() => {
-		getCurrentUser().then((usuario) => carregarTurma(usuario!));
-	}, []);
+		if (!auth?.user?.id) return;
+		new UsuarioService()
+			.getById(auth.user.id)
+			.then((usuario) => carregarTurma(usuario!));
+	}, [auth?.user?.id, carregarTurma]);
 
 	return (
 		<IonPage>
 			<IonHeader>
 				<IonToolbar>
+					<IonButtons slot="start">
+						<IonIcon icon={chevronBack} size="large" onClick={() => navigateBack()} />
+					</IonButtons>
 					<IonTitle>Cadastro de Aluno</IonTitle>
 				</IonToolbar>
 			</IonHeader>
-			<IonContent fullscreen scrollY={false}>
+			<IonContent className="ion-padding" fullscreen scrollY={false}>
 				<IonLoading isOpen={!turmaLista} />
 				<IonCard>
 					<IonList lines="none">
@@ -188,17 +206,21 @@ const CadastroAluno: React.FC<RouteComponentProps> = () => {
 						)}
 					</IonList>
 				</IonCard>
-				<IonCard>
-					<IonButton
-						color="primary"
-						expand="block"
-						onClick={cadastrar}
-						className="register-button"
-						disabled={!turmaLista || turmaLista.length === 0}
-					>
-						Cadastrar
-					</IonButton>
-				</IonCard>
+				<IonGrid>
+					<IonRow>
+						<IonCol>
+							<IonButton
+								color="primary"
+								expand="block"
+								onClick={cadastrar}
+								className="register-button"
+								disabled={!turmaLista || turmaLista.length === 0}
+							>
+								Cadastrar
+							</IonButton>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
 				<IonToast
 					isOpen={showErrorBox}
 					onDidDismiss={() => setShowErrorBox(false)}

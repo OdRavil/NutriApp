@@ -9,4 +9,12 @@ export default interface Aluno extends BaseModel {
 	sexo?: Sexo;
 	dataNascimento?: firebase.firestore.Timestamp;
 	idTurma: string;
+
+	dadosSaude?: {
+		peso?: number;
+		altura?: number;
+		imc?: number;
+		questaoPossuiHabitoSaudavel?: string;
+		questaoPossuiDoenca?: string;
+	};
 }

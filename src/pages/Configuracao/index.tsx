@@ -1,8 +1,10 @@
 import {
 	IonButton,
 	IonCard,
+	IonCol,
 	IonContent,
 	IonDatetime,
+	IonGrid,
 	IonHeader,
 	IonIcon,
 	IonInput,
@@ -10,11 +12,13 @@ import {
 	IonList,
 	IonLoading,
 	IonPage,
+	IonRow,
 	IonSelect,
 	IonSelectOption,
 	IonTitle,
 	IonToast,
 	IonToolbar,
+	useIonRouter,
 } from "@ionic/react";
 import {
 	calendarOutline,
@@ -22,268 +26,244 @@ import {
 	maleFemaleOutline,
 	manOutline,
 } from "ionicons/icons";
-import React from "react";
-import { RouteComponentProps } from "react-router";
+import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "./index.css";
 import { Sexo } from "../../models/Usuario";
 import UsuarioService from "../../services/UsuarioService";
 import { validarEmail } from "../../utils/string";
-import { getCurrentUser } from "../../utils/Firebase";
+import { useAuth } from "../../context/auth";
 
-export interface ConfiguracaoProps {}
-export interface ConfiguracaoState {
-	emailAtual: string;
-	sexoAtual: Sexo;
-	nomeAtual: string;
-	dataNascimentoAtual: string;
-	mensagemToastErro: string;
-	showToastErro: boolean;
-	showToastSucesso: boolean;
-	email: string;
-	sexo: Sexo;
-	nome: string;
-	dataNascimento: string;
-	showLoading: boolean;
-	loginInvalido: boolean;
-	emailInvalido: boolean;
-	nomeInvalido: boolean;
-	bloquearPagina: boolean;
-}
-class Configuracao extends React.Component<
-	RouteComponentProps<ConfiguracaoProps>,
-	ConfiguracaoState
-> {
-	constructor(props: RouteComponentProps<ConfiguracaoProps>) {
-		super(props);
-		this.state = {
-			emailAtual: "",
-			sexoAtual: Sexo.MASCULINO,
-			nomeAtual: "",
-			dataNascimentoAtual: "",
-			mensagemToastErro: "",
-			showToastErro: false,
-			showToastSucesso: false,
-			email: "",
-			sexo: Sexo.MASCULINO,
-			nome: "",
-			dataNascimento: "",
-			showLoading: true,
-			loginInvalido: false,
-			emailInvalido: false,
-			nomeInvalido: false,
-			bloquearPagina: false,
-		};
-	}
+const usuarioService = new UsuarioService();
 
-	componentDidMount() {
-		getCurrentUser().then((usuario) => {
-			if (!usuario) return;
-			this.setState({
-				showLoading: false,
-				email: usuario.email || "",
-				emailAtual: usuario.email || "",
-				sexo: usuario.sexo || Sexo.MASCULINO,
-				sexoAtual: usuario.sexo || Sexo.MASCULINO,
-				nome: usuario.nome || "",
-				nomeAtual: usuario.nome || "",
-				dataNascimento: usuario.dataNascimento
-					? usuario.dataNascimento.toDate().toISOString()
-					: "",
-				dataNascimentoAtual: usuario.dataNascimento
-					? usuario.dataNascimento.toDate().toISOString()
-					: "",
-			});
-		});
-	}
+const Configuracao: React.FC = () => {
+	const router = useIonRouter();
 
-	private getDadosParaAtualizar() {
-		const data: any = {};
-		this.state.emailAtual !== this.state.email && (data.email = this.state.email);
-		this.state.sexoAtual !== this.state.sexo && (data.sexo = this.state.sexo);
-		this.state.nomeAtual !== this.state.nome && (data.nome = this.state.nome);
-		this.state.dataNascimentoAtual !== this.state.dataNascimento &&
-			(data.dataNascimento = firebase.firestore.Timestamp.fromDate(
-				new Date(this.state.dataNascimento)
-			));
-		return [data, data.email];
-	}
+	const { auth, logout, setAuthUser } = useAuth();
 
-	private async sair() {
-		this.setState({ showLoading: true });
-		await firebase
-			.auth()
-			.signOut()
-			.then(() => {
-				localStorage.clear();
-				this.props.history.push("/");
-			})
-			.catch(console.error);
-		this.setState({ showLoading: false });
-	}
+	const [mensagemToastErro, setMensagemToastErro] = useState<string>("");
+	const [showToastErro, setShowToastErro] = useState<boolean>(false);
+	const [showToastSucesso, setShowToastSucesso] = useState<boolean>(false);
+	const [showLoading, setShowLoading] = useState<boolean>(true);
 
-	private readonly usuarioService = new UsuarioService();
+	const [emailInvalido, setEmailInvalido] = useState<boolean>(false);
+	const [nomeInvalido, setNomeInvalido] = useState<boolean>(false);
+	const [bloquearPagina, setBloquearPagina] = useState<boolean>(false);
 
-	private permitirSalvar(): boolean {
-		return (
-			!this.state.loginInvalido &&
-			!this.state.nomeInvalido &&
-			!this.state.emailInvalido
-		);
-	}
+	const [email, setEmail] = useState<string>("");
+	const [sexo, setSexo] = useState<Sexo>(Sexo.MASCULINO);
+	const [nome, setNome] = useState<string>("");
+	const [dataNascimento, setDataNascimento] = useState<string>("");
 
-	private async salvar() {
-		try {
-			this.setState({ bloquearPagina: true });
-			this.setState({ showLoading: true });
-			const [data, email] = this.getDadosParaAtualizar();
-			if (email) {
-				try {
-					await firebase.auth().currentUser!.updateEmail(email);
-				} catch (error) {
-					console.log(error);
-					return;
-				}
-			}
-			const id = localStorage.getItem("user")!;
-			await this.usuarioService.updateData(id, data).catch(console.error);
-		} catch (error) {
-			console.error(error);
-		} finally {
-			this.setState({ showLoading: false });
-			this.setState({ bloquearPagina: false });
+	useEffect(() => {
+		if (!auth?.user?.id) {
+			setEmail("");
+			setSexo(Sexo.MASCULINO);
+			setNome("");
+			setDataNascimento("");
+			return;
 		}
-	}
+		setShowLoading(true);
+		usuarioService.getById(auth.user.id).then((usuario) => {
+			if (!usuario) return;
+			setEmail(usuario.email);
+			setSexo(usuario.sexo || Sexo.MASCULINO);
+			setNome(usuario.nome);
+			setDataNascimento(
+				usuario.dataNascimento ? usuario.dataNascimento.toDate().toISOString() : ""
+			);
+			setShowLoading(false);
+		});
+	}, [auth?.user?.id]);
 
-	render() {
-		return (
-			<IonPage>
-				<IonHeader>
-					<IonToolbar>
-						<IonTitle>Configuração</IonTitle>
-					</IonToolbar>
-				</IonHeader>
-				<IonContent fullscreen scrollY={false}>
-					<IonToast
-						isOpen={this.state.showToastSucesso}
-						onDidDismiss={() => this.setState({ showToastSucesso: false })}
-						message="Configurações atualizadas!"
-						duration={600}
-					/>
-					<IonToast
-						isOpen={this.state.showToastErro}
-						onDidDismiss={() => this.setState({ showToastErro: false })}
-						message={this.state.mensagemToastErro}
-						duration={600}
-					/>
-					<IonLoading
-						isOpen={this.state.showLoading}
-						onDidDismiss={() => this.setState({ showLoading: false })}
-					/>
-					<IonCard>
-						<IonList>
-							<IonItem className="item-config" lines="none">
-								<IonIcon className="icon-config" icon={mailOutline} />
-								<IonInput
-									className="input-config"
-									color={this.state.emailInvalido ? "danger" : "default"}
-									value={this.state.email}
-									onIonChange={(e) => {
-										const value = e.detail.value!;
-										this.setState({
-											email: value,
-											emailInvalido: !value || value.length === 0 || !validarEmail(value),
-										});
-									}}
-									placeholder="E-mail"
-									type="email"
-									disabled={this.state.bloquearPagina}
-								/>
-							</IonItem>
-						</IonList>
-					</IonCard>
-					<IonCard>
-						<IonList>
-							<IonItem className="item-config" lines="none">
-								<IonIcon className="icon-config" icon={maleFemaleOutline} />
-								<IonSelect
-									className="input-config"
-									value={this.state.sexo}
-									placeholder="Sexo"
-									onIonChange={(e) => this.setState({ sexo: e.detail.value })}
-									disabled={this.state.bloquearPagina}
-								>
-									<IonSelectOption value={Sexo.FEMININO}>Feminino</IonSelectOption>
-									<IonSelectOption value={Sexo.MASCULINO}>Masculino</IonSelectOption>
-								</IonSelect>
-							</IonItem>
-							<IonItem className="item-config" lines="none">
-								<IonIcon className="icon-config" icon={manOutline} />
-								<IonInput
-									className="input-config"
-									color={this.state.nomeInvalido ? "danger" : "default"}
-									value={this.state.nome}
-									onIonChange={(e) => {
-										const value = e.detail.value!;
-										this.setState({
-											nome: value,
-											nomeInvalido: !value || value.length === 0,
-										});
-									}}
-									placeholder="Nome"
-									type="text"
-									disabled={this.state.bloquearPagina}
-								/>
-							</IonItem>
-							<IonItem className="item-config" lines="none">
-								<IonIcon className="icon-config" icon={calendarOutline} />
-								<IonDatetime
-									value={this.state.dataNascimento}
-									onIonChange={(e) => this.setState({ dataNascimento: e.detail.value! })}
-									displayFormat="DD/MM/YYYY"
-									className="input-config"
-									placeholder="Data de nascimento"
-									disabled={this.state.bloquearPagina}
-								/>
-							</IonItem>
-						</IonList>
-					</IonCard>
-					<IonCard>
-						<IonButton
-							color="primary"
-							expand="block"
-							routerLink="/mudar-senha"
-							disabled={this.state.bloquearPagina}
-						>
-							Mudar senha
-						</IonButton>
-					</IonCard>
-					<IonCard>
-						<IonButton
-							color="primary"
-							expand="block"
-							onClick={() => this.salvar()}
-							disabled={this.state.bloquearPagina || !this.permitirSalvar()}
-						>
-							Salvar
-						</IonButton>
-					</IonCard>
-				</IonContent>
-				<IonCard>
-					<IonButton
-						color="danger"
-						expand="block"
-						onClick={() => {
-							this.sair();
-						}}
-					>
-						Sair
-					</IonButton>
-				</IonCard>
-			</IonPage>
+	const getDadosParaAtualizar = () => {
+		const data: any = {};
+		auth.user.email !== email && (data.email = email);
+		data.sexo = sexo;
+		data.nome = nome;
+		data.dataNascimento = firebase.firestore.Timestamp.fromDate(
+			new Date(dataNascimento)
 		);
-	}
-}
+		return data;
+	};
+
+	const sair = async () => {
+		setShowLoading(true);
+		await logout()
+			.then(() => router.push("/", "none", "replace"))
+			.catch((error) => {
+				console.error(error);
+				setMensagemToastErro(error.message);
+				setShowToastErro(true);
+				setShowLoading(false);
+			});
+	};
+
+	const permitirSalvar = () => !nomeInvalido && !emailInvalido;
+
+	const salvar = async () => {
+		if (!auth?.user?.id) return;
+		try {
+			setBloquearPagina(true);
+			setShowLoading(true);
+			const data = getDadosParaAtualizar();
+			if (data.email) {
+				await firebase.auth().currentUser!.updateEmail(email);
+			}
+			await usuarioService.updateData(auth.user.id, data).catch(console.error);
+			const newUser = (await usuarioService.getById(auth.user.id))!;
+			setAuthUser({
+				user: {
+					id: newUser.id!,
+					email: newUser.email,
+					nome: newUser.email,
+					tipo: newUser.tipo,
+					listaEscola: newUser.listaEscola || [],
+				},
+			});
+		} catch (error: any) {
+			console.error(error);
+			setMensagemToastErro(error.message);
+			setShowToastErro(true);
+		} finally {
+			setShowLoading(false);
+			setBloquearPagina(false);
+		}
+	};
+
+	return (
+		<IonPage>
+			<IonHeader>
+				<IonToolbar>
+					<IonTitle>Configuração</IonTitle>
+				</IonToolbar>
+			</IonHeader>
+			<IonContent fullscreen scrollY={false}>
+				<IonToast
+					isOpen={showToastSucesso}
+					onDidDismiss={() => setShowToastSucesso(false)}
+					message="Configurações atualizadas!"
+					duration={600}
+				/>
+				<IonToast
+					isOpen={showToastErro}
+					onDidDismiss={() => setShowToastErro(false)}
+					message={mensagemToastErro}
+					duration={600}
+				/>
+				<IonLoading
+					isOpen={showLoading}
+					onDidDismiss={() => setShowLoading(false)}
+				/>
+				<IonCard>
+					<IonList>
+						<IonItem className="item-config" lines="none">
+							<IonIcon className="icon-config" icon={mailOutline} />
+							<IonInput
+								className="input-config"
+								color={emailInvalido ? "danger" : "default"}
+								value={email}
+								onIonChange={(e) => {
+									const value = e.detail.value!;
+									setEmail(value);
+									setEmailInvalido(!value || value.length === 0 || !validarEmail(value));
+								}}
+								placeholder="E-mail"
+								type="email"
+								disabled={bloquearPagina}
+							/>
+						</IonItem>
+					</IonList>
+				</IonCard>
+				<IonCard>
+					<IonList>
+						<IonItem className="item-config" lines="none">
+							<IonIcon className="icon-config" icon={maleFemaleOutline} />
+							<IonSelect
+								className="input-config"
+								value={sexo}
+								placeholder="Sexo"
+								onIonChange={(e) => setSexo(e.detail.value)}
+								disabled={bloquearPagina}
+							>
+								<IonSelectOption value={Sexo.FEMININO}>Feminino</IonSelectOption>
+								<IonSelectOption value={Sexo.MASCULINO}>Masculino</IonSelectOption>
+							</IonSelect>
+						</IonItem>
+						<IonItem className="item-config" lines="none">
+							<IonIcon className="icon-config" icon={manOutline} />
+							<IonInput
+								className="input-config"
+								color={nomeInvalido ? "danger" : "default"}
+								value={nome}
+								onIonChange={(e) => {
+									const value = e.detail.value!;
+									setNome(value);
+									setNomeInvalido(!value || value.length === 0);
+								}}
+								placeholder="Nome"
+								type="text"
+								disabled={bloquearPagina}
+							/>
+						</IonItem>
+						<IonItem className="item-config" lines="none">
+							<IonIcon className="icon-config" icon={calendarOutline} />
+							<IonDatetime
+								value={dataNascimento}
+								onIonChange={(e) => setDataNascimento(e.detail.value!)}
+								displayFormat="DD/MM/YYYY"
+								className="input-config"
+								placeholder="Data de nascimento"
+								disabled={bloquearPagina}
+							/>
+						</IonItem>
+					</IonList>
+				</IonCard>
+				<IonGrid>
+					<IonRow>
+						<IonCol>
+							<IonButton
+								color="primary"
+								expand="block"
+								routerLink="/mudar-senha"
+								disabled={bloquearPagina}
+							>
+								Mudar senha
+							</IonButton>
+						</IonCol>
+					</IonRow>
+					<IonRow>
+						<IonCol>
+							<IonButton
+								color="primary"
+								expand="block"
+								onClick={() => salvar()}
+								disabled={bloquearPagina || !permitirSalvar()}
+							>
+								Salvar
+							</IonButton>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
+				<IonGrid>
+					<IonRow>
+						<IonCol>
+							<IonButton
+								color="danger"
+								expand="block"
+								onClick={() => {
+									sair();
+								}}
+							>
+								Sair
+							</IonButton>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
+			</IonContent>
+		</IonPage>
+	);
+};
 
 export default Configuracao;
