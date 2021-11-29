@@ -78,7 +78,10 @@ const PrimeiroAcesso: React.FC = () => {
 				}
 				mostrarMensagemSucesso("Informações atualizadas.");
 				clear();
-				router.push("private/home", "none", "replace");
+				setTimeout(() => {
+					clear();
+					router.push("/private/home");
+				}, 1000);
 			})
 			.catch((error) => console.error(error));
 	};

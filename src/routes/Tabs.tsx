@@ -17,10 +17,10 @@ import Sobre from "../pages/Sobre";
 const Tabs: React.FC = () => (
 	<IonTabs>
 		<IonRouterOutlet>
-			<Redirect exact path="/private" to="/private/home" />
 			<Route exact path="/private/home" component={Home} />
 			<Route exact path="/private/configuracao" component={Configuracao} />
 			<Route exact path="/private/sobre" component={Sobre} />
+			<Route path="/" render={() => <Redirect to="/private/home" />} exact />
 		</IonRouterOutlet>
 		<IonTabBar slot="bottom">
 			<IonTabButton tab="home" href="/private/home">

@@ -77,10 +77,12 @@ const CadastroUsuario: React.FC = () => {
 				email: email.trim(),
 				tipo,
 				sexo,
-				dataNascimento: dataNascimento
-					? firebase.firestore.Timestamp.fromDate(new Date(dataNascimento))
-					: undefined,
 			};
+			if (dataNascimento) {
+				usuario.dataNascimento = firebase.firestore.Timestamp.fromDate(
+					new Date(dataNascimento)
+				);
+			}
 			usuario.id = await new UsuarioService().pushData(usuario);
 			setNome("");
 			setEmail("");
@@ -98,7 +100,7 @@ const CadastroUsuario: React.FC = () => {
 					<IonButtons slot="start">
 						<IonIcon icon={chevronBack} size="large" onClick={() => navigateBack()} />
 					</IonButtons>
-					<IonTitle>Cadastro de Usuario</IonTitle>
+					<IonTitle>Cadastro de Usuário</IonTitle>
 				</IonToolbar>
 			</IonHeader>
 			<IonContent className="ion-padding" fullscreen scrollY={false}>

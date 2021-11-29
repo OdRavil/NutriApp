@@ -23,6 +23,7 @@ import ListagemUsuarios from "../pages/ListagemUsuarios";
 import EsqueciMinhaSenha from "../pages/EsqueciMinhaSenha";
 import useHardwareButton from "../hooks/HardwareButton";
 import useAuthSigned from "../hooks/AuthSigned";
+import Welcome from "../pages/Welcome";
 
 const Router: React.FC = () => {
 	const isSigned = useAuthSigned();
@@ -33,13 +34,11 @@ const Router: React.FC = () => {
 		<IonReactRouter>
 			<IonSplitPane contentId="main">
 				<IonRouterOutlet id="main">
-					<Route exact path="/">
-						<Redirect to={isSigned ? "/private/home" : "/login"} />
-					</Route>
+					<Route path="/" component={Welcome} exact />
 					<Route path="/login/esqueci-senha" component={EsqueciMinhaSenha} exact />
 					<Route path="/login/primeiro-acesso" component={PrimeiroAcesso} exact />
 					<Route path="/login" component={Login} exact />
-					<PrivateRoute signed={isSigned} path="/private" component={Tabs} />
+					<Route path="/private" component={Tabs} />
 					<PrivateRoute
 						signed={isSigned}
 						path="/anamnese"
@@ -129,7 +128,7 @@ const Router: React.FC = () => {
 						exact
 					/>
 					{/* Fallback redirect */}
-					<Route render={() => <Redirect to="/login" />} />
+					<Route render={() => <Redirect to="/" />} />
 				</IonRouterOutlet>
 			</IonSplitPane>
 		</IonReactRouter>

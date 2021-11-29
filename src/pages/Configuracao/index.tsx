@@ -91,7 +91,7 @@ const Configuracao: React.FC = () => {
 	const sair = async () => {
 		setShowLoading(true);
 		await logout()
-			.then(() => router.push("/", "none", "replace"))
+			.then(() => router.push("/login", "none", "replace"))
 			.catch((error) => {
 				console.error(error);
 				setMensagemToastErro(error.message);
