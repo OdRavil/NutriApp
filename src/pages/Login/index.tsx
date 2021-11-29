@@ -13,13 +13,13 @@ import {
 	IonToast,
 	useIonRouter,
 } from "@ionic/react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAuth } from "../../context/auth";
 
 const Login: React.FC = () => {
 	const router = useIonRouter();
 
-	const { signed, login } = useAuth();
+	const { login } = useAuth();
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -42,7 +42,12 @@ const Login: React.FC = () => {
 					mostrarMensagemErro("Não foi possível logar usuário.");
 					return;
 				}
-				router.push("/private/home", "none", "replace");
+				setTimeout(() => {
+					setShowLoading(false);
+					setEmail("");
+					setPassword("");
+					router.push("/private/home");
+				}, 1000);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -50,10 +55,6 @@ const Login: React.FC = () => {
 				setShowLoading(false);
 			});
 	};
-
-	useEffect(() => {
-		if (signed) router.push("/private/home", "none", "replace");
-	}, [signed]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
 		<IonPage>
@@ -92,6 +93,7 @@ const Login: React.FC = () => {
 									placeholder="E-mail"
 									type="email"
 									autocorrect="off"
+									value={email}
 									onIonChange={(e: any) => setEmail(e.target.value)}
 								/>
 							</IonItem>
@@ -104,6 +106,7 @@ const Login: React.FC = () => {
 								<IonInput
 									placeholder="Senha"
 									type="password"
+									value={password}
 									onIonChange={(e: any) => setPassword(e.target.value)}
 								/>
 							</IonItem>

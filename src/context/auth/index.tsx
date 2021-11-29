@@ -32,7 +32,7 @@ export interface AuthContextData {
 export const AuthContext = createContext<AuthContextData>({} as any);
 
 export const AuthProvider: React.FC = ({ children }) => {
-	const [auth, setAuth] = useState<Auth | undefined>(undefined);
+	const [auth, setAuth] = useState<Auth>();
 	const [loaded, setLoaded] = useState<boolean>(false);
 
 	useEffect(() => {

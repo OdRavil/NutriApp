@@ -13,11 +13,13 @@ export default class UsuarioService extends FirebaseService<Usuario> {
 			tipo: antigoUsuario.tipo,
 			createdAt: antigoUsuario.createdAt,
 			sexo: antigoUsuario.sexo,
-			dataNascimento: antigoUsuario.dataNascimento,
 		};
+		if (antigoUsuario.dataNascimento) {
+			novoUsuario.dataNascimento = antigoUsuario.dataNascimento;
+		}
 		return this.getCollectionRef()
 			.doc(novoId)
-			.set(novoUsuario)
+			.set(novoUsuario, { merge: true })
 			.then(async (id) => {
 				await this.getCollectionRef().doc(antigoUsuario.id!).delete();
 				return id;
