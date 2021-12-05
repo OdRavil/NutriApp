@@ -428,7 +428,9 @@ const Anamnese: React.FC<RouteComponentProps> = () => {
 								<IonInput slot="end" value={maskImc(imc)} readonly />
 							</IonItem>
 							<IonItem className="item-config" lines="none">
-								<IonLabel>Possui um hábito saudável? Se sim, qual?</IonLabel>
+								<IonLabel className="ion-text-wrap">
+									Possui um hábito saudável? Se sim, qual?
+								</IonLabel>
 							</IonItem>
 							<IonItem className="item-config">
 								<IonTextarea
@@ -438,7 +440,9 @@ const Anamnese: React.FC<RouteComponentProps> = () => {
 								/>
 							</IonItem>
 							<IonItem className="item-config" lines="none">
-								<IonLabel>Possui alguma doença? Se sim, qual?</IonLabel>
+								<IonLabel className="ion-text-wrap">
+									Possui alguma doença? Se sim, qual?
+								</IonLabel>
 							</IonItem>
 							<IonItem className="item-config">
 								<IonTextarea

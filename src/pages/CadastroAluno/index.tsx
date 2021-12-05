@@ -38,6 +38,8 @@ import TurmaService from "../../services/TurmaService";
 import Turma from "../../models/Turma";
 import UsuarioService from "../../services/UsuarioService";
 import { useAuth } from "../../context/auth";
+import Escola from "../../models/Escola";
+import EscolaService from "../../services/EscolaService";
 
 const CadastroAluno: React.FC = () => {
 	const router = useIonRouter();
@@ -55,6 +57,7 @@ const CadastroAluno: React.FC = () => {
 	const [sexo, setSexo] = useState<Sexo>(Sexo.MASCULINO);
 	const [idTurma, setIdTurma] = useState<string>();
 	const [turmaLista, setTurmaLista] = useState<Turma[]>();
+	const [listaEscolas, setListaEscolas] = useState<Escola[]>([]);
 
 	const mostrarMensagemErro = (mensagem: string) => {
 		setMensagemErrorBox(mensagem);
@@ -62,7 +65,9 @@ const CadastroAluno: React.FC = () => {
 	};
 
 	const carregarTurma = useCallback(async (usuario: Usuario) => {
+		const escolaService = new EscolaService();
 		if (usuario.tipo === TipoUsuario.ADMINISTRADOR) {
+			await escolaService.listar().then((escolas) => setListaEscolas(escolas));
 			new TurmaService().listar().then((turmas) => {
 				setTurmaLista(turmas);
 				if (!turmas || turmas.length === 0) {
@@ -76,6 +81,20 @@ const CadastroAluno: React.FC = () => {
 				mostrarMensagemErro("Não existem turmas para este usuário.");
 				return;
 			}
+			const promises: Promise<Escola | undefined>[] = [];
+			escolasUsuario.forEach((item) => {
+				promises.push(escolaService.getById(item));
+			});
+			await Promise.all(promises)
+				.then((escolas) => {
+					setListaEscolas(
+						escolas.filter((item) => typeof item !== "undefined") as Escola[]
+					);
+				})
+				.catch((error) => {
+					console.error(error);
+					setListaEscolas([]);
+				});
 			// Apenas as turmas que o usuário possui acesso
 			new TurmaService().listarPorEscola(escolasUsuario).then((turmas) => {
 				setTurmaLista(turmas);
@@ -124,6 +143,12 @@ const CadastroAluno: React.FC = () => {
 			console.error(error);
 			mostrarMensagemErro("Erro de conexão, tente novamente mais tarde.");
 		}
+	};
+
+	const getTurmaSelectItemText = (turma: Turma) => {
+		const escola = listaEscolas.find((item) => item.id! === turma.idEscola)?.nome;
+		if (escola) return `${turma.codigo} - ${escola}`;
+		return turma.codigo;
 	};
 
 	useEffect(() => {
@@ -198,7 +223,7 @@ const CadastroAluno: React.FC = () => {
 								>
 									{turmaLista.map((item) => (
 										<IonSelectOption key={item.id!} value={item.id!}>
-											{item.codigo}
+											{getTurmaSelectItemText(item)}
 										</IonSelectOption>
 									))}
 								</IonSelect>
