@@ -19,14 +19,30 @@ import {
 } from "@ionic/react";
 import React, { useCallback, useEffect, useState } from "react";
 import "firebase/auth";
-import { arrowBackOutline, closeOutline, optionsOutline } from "ionicons/icons";
+
+// Import Icons
+import {
+	arrowBackOutline,
+	arrowForward,
+	closeOutline,
+	optionsOutline,
+	people,
+} from "ionicons/icons";
+
+// Import Context
 import { useAuth } from "../../context/auth";
+
+// Import Services
 import TurmaService from "../../services/TurmaService";
+import EscolaService from "../../services/EscolaService";
+
+// Import Models
 import Turma from "../../models/Turma";
 import { TipoUsuario } from "../../models/Usuario";
-import LoadingSpinner from "../../components/LoadingSpinner";
-import EscolaService from "../../services/EscolaService";
 import Escola from "../../models/Escola";
+
+// Import Components
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 const ListagemTurmas: React.FC = () => {
 	const router = useIonRouter();
@@ -146,7 +162,9 @@ const ListagemTurmas: React.FC = () => {
 					<IonList>
 						{listaTurmas.map((turma) => (
 							<IonItem key={turma.id!} routerLink={`/turma/visualizar/${turma.id!}`}>
-								<IonLabel>{turma.codigo}</IonLabel>
+								<IonIcon src={people} />
+								<IonLabel className="m-l-10">{turma.codigo}</IonLabel>
+								<IonIcon src={arrowForward} />
 							</IonItem>
 						))}
 					</IonList>

@@ -20,19 +20,31 @@ import {
 	IonToolbar,
 	useIonRouter,
 } from "@ionic/react";
+import React, { useEffect, useState } from "react";
+import firebase from "firebase/app";
+import "firebase/firestore";
+
+// Import Icons
 import {
 	calendarOutline,
 	mailOutline,
 	maleFemaleOutline,
 	manOutline,
 } from "ionicons/icons";
-import React, { useEffect, useState } from "react";
-import firebase from "firebase/app";
-import "firebase/firestore";
+
+// Import Styles
 import "./index.css";
+
+// Import Models
 import { Sexo } from "../../models/Usuario";
+
+// Import Services
 import UsuarioService from "../../services/UsuarioService";
+
+// Import Utils
 import { validarEmail } from "../../utils/string";
+
+// Import Context
 import { useAuth } from "../../context/auth";
 
 const usuarioService = new UsuarioService();
@@ -158,7 +170,7 @@ const Configuracao: React.FC = () => {
 				/>
 				<IonCard>
 					<IonList>
-						<IonItem className="item-config" lines="none">
+						<IonItem className="item-config inputField" lines="none">
 							<IonIcon className="icon-config" icon={mailOutline} />
 							<IonInput
 								className="input-config"
@@ -178,10 +190,10 @@ const Configuracao: React.FC = () => {
 				</IonCard>
 				<IonCard>
 					<IonList>
-						<IonItem className="item-config" lines="none">
+						<IonItem className="item-config inputField" lines="none">
 							<IonIcon className="icon-config" icon={maleFemaleOutline} />
 							<IonSelect
-								className="input-config"
+								className="input-config w-100"
 								value={sexo}
 								placeholder="Sexo"
 								onIonChange={(e) => setSexo(e.detail.value)}
@@ -191,7 +203,7 @@ const Configuracao: React.FC = () => {
 								<IonSelectOption value={Sexo.MASCULINO}>Masculino</IonSelectOption>
 							</IonSelect>
 						</IonItem>
-						<IonItem className="item-config" lines="none">
+						<IonItem className="item-config inputField" lines="none">
 							<IonIcon className="icon-config" icon={manOutline} />
 							<IonInput
 								className="input-config"
@@ -207,13 +219,13 @@ const Configuracao: React.FC = () => {
 								disabled={bloquearPagina}
 							/>
 						</IonItem>
-						<IonItem className="item-config" lines="none">
+						<IonItem className="item-config inputField" lines="none">
 							<IonIcon className="icon-config" icon={calendarOutline} />
 							<IonDatetime
 								value={dataNascimento}
 								onIonChange={(e) => setDataNascimento(e.detail.value!)}
 								displayFormat="DD/MM/YYYY"
-								className="input-config"
+								className="input-config w-100"
 								placeholder="Data de nascimento"
 								disabled={bloquearPagina}
 							/>
@@ -226,22 +238,22 @@ const Configuracao: React.FC = () => {
 							<IonButton
 								color="primary"
 								expand="block"
-								routerLink="/mudar-senha"
-								disabled={bloquearPagina}
+								onClick={() => salvar()}
+								disabled={bloquearPagina || !permitirSalvar()}
 							>
-								Mudar senha
+								Salvar Alterações
 							</IonButton>
 						</IonCol>
 					</IonRow>
 					<IonRow>
 						<IonCol>
 							<IonButton
-								color="primary"
+								color="light"
 								expand="block"
-								onClick={() => salvar()}
-								disabled={bloquearPagina || !permitirSalvar()}
+								routerLink="/mudar-senha"
+								disabled={bloquearPagina}
 							>
-								Salvar
+								Mudar senha
 							</IonButton>
 						</IonCol>
 					</IonRow>
@@ -256,7 +268,7 @@ const Configuracao: React.FC = () => {
 									sair();
 								}}
 							>
-								Sair
+								Sair do Aplicativo
 							</IonButton>
 						</IonCol>
 					</IonRow>

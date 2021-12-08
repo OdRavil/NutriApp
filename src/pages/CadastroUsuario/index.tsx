@@ -21,6 +21,10 @@ import {
 	useIonRouter,
 } from "@ionic/react";
 import React, { useState } from "react";
+import firebase from "firebase/app";
+import "firebase/firestore";
+
+// Import Icons
 import {
 	calendarOutline,
 	chevronBack,
@@ -29,10 +33,12 @@ import {
 	peopleOutline,
 	personOutline,
 } from "ionicons/icons";
-import firebase from "firebase/app";
+
+// Import Models
 import Usuario, { Sexo, TipoUsuario } from "../../models/Usuario";
+
+// Import Services
 import UsuarioService from "../../services/UsuarioService";
-import "firebase/firestore";
 
 const CadastroUsuario: React.FC = () => {
 	const router = useIonRouter();
@@ -106,7 +112,7 @@ const CadastroUsuario: React.FC = () => {
 			<IonContent className="ion-padding" fullscreen scrollY={false}>
 				<IonCard>
 					<IonList lines="none">
-						<IonItem>
+						<IonItem className="inputField m-10">
 							<IonIcon className="icon-config" icon={personOutline} />
 							<IonInput
 								className="input-config"
@@ -115,7 +121,7 @@ const CadastroUsuario: React.FC = () => {
 								onIonChange={(e) => setNome(e.detail.value!)}
 							/>
 						</IonItem>
-						<IonItem>
+						<IonItem className="inputField m-10">
 							<IonIcon className="icon-config" icon={mailOutline} />
 							<IonInput
 								className="input-config"
@@ -125,10 +131,10 @@ const CadastroUsuario: React.FC = () => {
 								onIonChange={(e) => setEmail(e.detail.value!)}
 							/>
 						</IonItem>
-						<IonItem className="item-config" lines="none">
+						<IonItem className="item-config inputField" lines="none">
 							<IonIcon className="icon-config" icon={maleFemaleOutline} />
 							<IonSelect
-								className="input-config"
+								className="input-config w-100"
 								value={sexo}
 								placeholder="Sexo"
 								onIonChange={(e) => setSexo(e.detail.value)}
@@ -137,10 +143,10 @@ const CadastroUsuario: React.FC = () => {
 								<IonSelectOption value={Sexo.MASCULINO}>Masculino</IonSelectOption>
 							</IonSelect>
 						</IonItem>
-						<IonItem className="item-config" lines="none">
+						<IonItem className="item-config inputField" lines="none">
 							<IonIcon className="icon-config" icon={peopleOutline} />
 							<IonSelect
-								className="input-config"
+								className="input-config w-100"
 								value={tipo}
 								placeholder="Tipo"
 								onIonChange={(e) => setTipo(e.detail.value)}
@@ -156,7 +162,7 @@ const CadastroUsuario: React.FC = () => {
 								</IonSelectOption>
 							</IonSelect>
 						</IonItem>
-						<IonItem className="item-config" lines="none">
+						<IonItem className="item-config inputField" lines="none">
 							<IonIcon className="icon-config" icon={calendarOutline} />
 							<IonDatetime
 								value={dataNascimento}

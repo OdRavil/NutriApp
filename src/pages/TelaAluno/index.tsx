@@ -26,14 +26,24 @@ import {
 import moment from "moment";
 import React, { useCallback, useEffect, useState } from "react";
 import { useRouteMatch } from "react-router";
+
+// Import Icons
 import { arrowBackOutline } from "ionicons/icons";
+
+// Import Services
 import TurmaService from "../../services/TurmaService";
 import AlunoService from "../../services/AlunoService";
+import UsuarioService from "../../services/UsuarioService";
+
+// Import Models
 import Aluno from "../../models/Aluno";
 import Turma from "../../models/Turma";
-import LoadingSpinner from "../../components/LoadingSpinner";
 import Usuario, { Sexo, TipoUsuario } from "../../models/Usuario";
-import UsuarioService from "../../services/UsuarioService";
+
+// Import Components
+import LoadingSpinner from "../../components/LoadingSpinner";
+
+// Import Context
 import { useAuth } from "../../context/auth";
 
 interface TelaAlunoProps {
@@ -207,10 +217,10 @@ const TelaAluno: React.FC = () => {
 					{!aluno && <LoadingSpinner />}
 					{aluno && (
 						<IonList lines="none">
-							<IonItem>
-								<IonLabel position="floating" className="icon-config">
-									Nome
-								</IonLabel>
+							<IonLabel position="floating" className="icon-config m-l-10">
+								Nome
+							</IonLabel>
+							<IonItem className="inputField m-10">
 								<IonInput
 									className="input-config"
 									value={nome}
@@ -218,10 +228,10 @@ const TelaAluno: React.FC = () => {
 									onIonChange={(e) => setNome(e.detail.value!)}
 								/>
 							</IonItem>
-							<IonItem>
-								<IonLabel position="floating" className="icon-config">
-									E-mail
-								</IonLabel>
+							<IonLabel position="floating" className="icon-config m-l-10">
+								E-mail
+							</IonLabel>
+							<IonItem className="inputField m-10">
 								<IonInput
 									className="input-config"
 									value={email}
@@ -230,12 +240,12 @@ const TelaAluno: React.FC = () => {
 									onIonChange={(e) => setEmail(e.detail.value!)}
 								/>
 							</IonItem>
-							<IonItem className="item-config" lines="none">
-								<IonLabel position="floating" className="icon-config">
-									Sexo
-								</IonLabel>
+							<IonLabel position="floating" className="icon-config m-l-10">
+								Sexo
+							</IonLabel>
+							<IonItem className="item-config inputField" lines="none">
 								<IonSelect
-									className="input-config"
+									className="input-config w-100"
 									value={sexo}
 									placeholder="Sexo"
 									onIonChange={(e) => setSexo(e.detail.value)}
@@ -244,10 +254,10 @@ const TelaAluno: React.FC = () => {
 									<IonSelectOption value={Sexo.MASCULINO}>Masculino</IonSelectOption>
 								</IonSelect>
 							</IonItem>
-							<IonItem className="item-config" lines="none">
-								<IonLabel position="floating" className="icon-config">
-									Data de nascimento
-								</IonLabel>
+							<IonLabel position="floating" className="icon-config m-l-10">
+								Data de nascimento
+							</IonLabel>
+							<IonItem className="item-config inputField" lines="none">
 								<IonDatetime
 									value={dataNascimento}
 									onIonChange={(e) => setDataNascimento(e.detail.value!)}
@@ -257,23 +267,25 @@ const TelaAluno: React.FC = () => {
 								/>
 							</IonItem>
 							{turmaLista && (
-								<IonItem className="item-config" lines="none">
-									<IonLabel position="floating" className="icon-config">
+								<>
+									<IonLabel position="floating" className="icon-config m-l-10">
 										Turma
 									</IonLabel>
-									<IonSelect
-										className="input-config"
-										value={idTurma}
-										placeholder="Turma"
-										onIonChange={(e) => setIdTurma(e.detail.value)}
-									>
-										{turmaLista.map((item) => (
-											<IonSelectOption key={item.id!} value={item.id!}>
-												{item.codigo}
-											</IonSelectOption>
-										))}
-									</IonSelect>
-								</IonItem>
+									<IonItem className="item-config inputField" lines="none">
+										<IonSelect
+											className="input-config w-10"
+											value={idTurma}
+											placeholder="Turma"
+											onIonChange={(e) => setIdTurma(e.detail.value)}
+										>
+											{turmaLista.map((item) => (
+												<IonSelectOption key={item.id!} value={item.id!}>
+													{item.codigo}
+												</IonSelectOption>
+											))}
+										</IonSelect>
+									</IonItem>
+								</>
 							)}
 						</IonList>
 					)}
@@ -283,6 +295,23 @@ const TelaAluno: React.FC = () => {
 						auth?.user?.tipo
 					) && (
 						<IonRow>
+							{[TipoUsuario.ADMINISTRADOR, TipoUsuario.PROFESSOR].includes(
+								auth?.user?.tipo
+							) && (
+								<IonCol>
+									<IonButton
+										color="danger"
+										expand="block"
+										onClick={() =>
+											aluno?.status ? setShowAlertDesativar(true) : ativar()
+										}
+										className="register-button"
+										disabled={!aluno}
+									>
+										{aluno?.status ? "Desativar" : "Ativar"}
+									</IonButton>
+								</IonCol>
+							)}
 							<IonCol>
 								<IonButton
 									color="primary"
@@ -292,25 +321,6 @@ const TelaAluno: React.FC = () => {
 									disabled={!aluno}
 								>
 									Salvar
-								</IonButton>
-							</IonCol>
-						</IonRow>
-					)}
-					{[TipoUsuario.ADMINISTRADOR, TipoUsuario.PROFESSOR].includes(
-						auth?.user?.tipo
-					) && (
-						<IonRow>
-							<IonCol>
-								<IonButton
-									color="danger"
-									expand="block"
-									onClick={() =>
-										aluno?.status ? setShowAlertDesativar(true) : ativar()
-									}
-									className="register-button"
-									disabled={!aluno}
-								>
-									{aluno?.status ? "Desativar" : "Ativar"}
 								</IonButton>
 							</IonCol>
 						</IonRow>

@@ -20,10 +20,16 @@ import {
 	IonToolbar,
 	useIonRouter,
 } from "@ionic/react";
-import { chevronBack, mailOutline } from "ionicons/icons";
-import React, { useState } from "react";
 import firebase from "firebase/app";
+import React, { useState } from "react";
+
+// Import Icons
+import { chevronBack, mailOutline } from "ionicons/icons";
+
+// Import Styles
 import "./index.css";
+
+// Import Services
 import UsuarioService from "../../services/UsuarioService";
 
 const usuarioService = new UsuarioService();
@@ -101,7 +107,7 @@ const EsqueciMinhaSenha: React.FC = () => {
 						</IonLabel>
 					</IonCardHeader>
 					<IonList lines="none">
-						<IonItem className="item-config">
+						<IonItem className="item-config inputField">
 							<IonIcon className="icon-config" icon={mailOutline} />
 							<IonInput
 								className="input-config"

@@ -19,17 +19,35 @@ import {
 } from "@ionic/react";
 import React, { useCallback, useEffect, useState } from "react";
 import "firebase/auth";
-import { arrowBackOutline, closeOutline, optionsOutline } from "ionicons/icons";
+
+// Import Icons
+import {
+	arrowBackOutline,
+	arrowForward,
+	closeOutline,
+	optionsOutline,
+	person,
+} from "ionicons/icons";
+
+// Import Context
 import { useAuth } from "../../context/auth";
+
+// Import Services
 import UsuarioService from "../../services/UsuarioService";
 import TurmaService from "../../services/TurmaService";
 import AlunoService from "../../services/AlunoService";
+
+// Import Models
 import Aluno from "../../models/Aluno";
 import { TipoUsuario } from "../../models/Usuario";
-import LoadingSpinner from "../../components/LoadingSpinner";
 import Escola from "../../models/Escola";
-import EscolaService from "../../services/EscolaService";
 import Turma from "../../models/Turma";
+
+// Import Components
+import LoadingSpinner from "../../components/LoadingSpinner";
+
+// Import Services
+import EscolaService from "../../services/EscolaService";
 
 const ListagemAlunos: React.FC = () => {
 	const router = useIonRouter();
@@ -188,7 +206,9 @@ const ListagemAlunos: React.FC = () => {
 					<IonList>
 						{listaAlunos.map((aluno) => (
 							<IonItem key={aluno.id!} routerLink={`/aluno/visualizar/${aluno.id!}`}>
-								<IonLabel>{aluno.nome}</IonLabel>
+								<IonIcon src={person} />
+								<IonLabel className="m-l-10">{aluno.nome}</IonLabel>
+								<IonIcon src={arrowForward} />
 							</IonItem>
 						))}
 					</IonList>

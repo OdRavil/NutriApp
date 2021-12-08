@@ -21,24 +21,34 @@ import {
 	IonCol,
 	useIonRouter,
 } from "@ionic/react";
-import { chevronBack } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router";
+
+// Import Icons
+import { chevronBack } from "ionicons/icons";
+
+// Import Components
 import LoadingSpinner from "../../components/LoadingSpinner";
+
+// Import Context
 import { useAuth } from "../../context/auth";
+
+// Import Models
 import Aluno from "../../models/Aluno";
 import AnamneseModel, {
 	getTipoAnamneseText,
 	TipoAnamnese,
 } from "../../models/Anamnese";
+
+// Import Services
 import AlunoService from "../../services/AlunoService";
 import AnamneseService from "../../services/AnamneseService";
+
+// Import Utils
 import { maskImc } from "../../utils/string";
 
 const Anamnese: React.FC<RouteComponentProps> = () => {
 	const router = useIonRouter();
-
-	const navigateBack = () => router.canGoBack() && router.goBack();
 
 	const { auth } = useAuth();
 
@@ -150,7 +160,7 @@ const Anamnese: React.FC<RouteComponentProps> = () => {
 					Tem alguma pessoa com diabetes na sua família?
 				</IonLabel>
 			</IonItem>
-			<IonItem className="item-config">
+			<IonItem className="item-config inputField">
 				<IonTextarea
 					className="input-config"
 					value={questaoPossuiPessoaComDiabetesNaFamilia}
@@ -164,7 +174,7 @@ const Anamnese: React.FC<RouteComponentProps> = () => {
 					Quantas vezes por semana você come doces?
 				</IonLabel>
 			</IonItem>
-			<IonItem className="item-config">
+			<IonItem className="item-config inputField">
 				<IonTextarea
 					className="input-config"
 					value={questaoQuantasVezesPorSemanaComeDoce}
@@ -353,7 +363,14 @@ const Anamnese: React.FC<RouteComponentProps> = () => {
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot="start">
-						<IonIcon icon={chevronBack} size="large" onClick={() => navigateBack()} />
+						<IonIcon
+							icon={chevronBack}
+							size="large"
+							onClick={() => {
+								router.canGoBack();
+								router.goBack();
+							}}
+						/>
 					</IonButtons>
 					<IonTitle>Anamnese</IonTitle>
 				</IonToolbar>
@@ -361,11 +378,11 @@ const Anamnese: React.FC<RouteComponentProps> = () => {
 			<IonContent fullscreen>
 				<IonCard>
 					<IonList lines="none">
-						<IonItem className="item-config">
-							<IonLabel className="icon-config">Aluno</IonLabel>
+						<IonLabel className="icon-config m-l-10">Aluno</IonLabel>
+						<IonItem className="item-config inputField">
 							<IonSelect
-								disabled={showAnamnese}
-								className="input-config"
+								// disabled={showAnamnese}
+								className="input-config w-100"
 								value={aluno}
 								placeholder="Aluno"
 								onIonChange={(e) => setAluno(e.detail.value)}
@@ -376,10 +393,10 @@ const Anamnese: React.FC<RouteComponentProps> = () => {
 									))}
 							</IonSelect>
 						</IonItem>
-						<IonItem className="item-config">
-							<IonLabel className="icon-config">Anamnese</IonLabel>
+						<IonLabel className="icon-config m-l-10">Anamnese</IonLabel>
+						<IonItem className="item-config inputField">
 							<IonSelect
-								className="input-config"
+								className="input-config w-100"
 								value={tipoAnamnese}
 								placeholder="Anamnese"
 								onIonChange={(e) => setTipoAnamnese(e.detail.value)}
@@ -430,7 +447,7 @@ const Anamnese: React.FC<RouteComponentProps> = () => {
 							<IonItem className="item-config" lines="none">
 								<IonLabel>Possui um hábito saudável? Se sim, qual?</IonLabel>
 							</IonItem>
-							<IonItem className="item-config">
+							<IonItem className="item-config inputField">
 								<IonTextarea
 									className="input-config"
 									value={questaoPossuiHabitoSaudavel}
@@ -440,7 +457,7 @@ const Anamnese: React.FC<RouteComponentProps> = () => {
 							<IonItem className="item-config" lines="none">
 								<IonLabel>Possui alguma doença? Se sim, qual?</IonLabel>
 							</IonItem>
-							<IonItem className="item-config">
+							<IonItem className="item-config inputField">
 								<IonTextarea
 									className="input-config"
 									value={questaoPossuiDoenca}
