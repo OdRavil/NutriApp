@@ -10,13 +10,29 @@ import {
 	IonText,
 	useIonAlert,
 	IonToast,
+	IonCard,
+	IonCardHeader,
+	IonCardTitle,
+	IonCardContent,
+	IonIcon,
 } from "@ionic/react";
 import React, { useCallback, useState } from "react";
 import moment from "moment";
 import { Filesystem, Directory } from "@capacitor/filesystem";
+
+// Import Icons
+import { arrowForward } from "ionicons/icons";
+
+// Import Context
 import { useAuth } from "../../context/auth";
+
+// Import Models
 import { TipoUsuario } from "../../models/Usuario";
+
+// Import Styles
 import "./index.css";
+
+// Import Hooks
 import useExcelAlunos from "../../hooks/ExcelAlunos";
 
 const Home: React.FC = () => {
@@ -78,51 +94,93 @@ const Home: React.FC = () => {
 
 	const getHomeAdministrador = () => (
 		<IonList>
-			<IonItemDivider>
-				<IonLabel>Anamnese</IonLabel>
-			</IonItemDivider>
-			<IonItem routerLink="/anamnese">
-				<IonLabel>Fazer a Anamnese</IonLabel>
-			</IonItem>
-			<IonItem lines="none" onClick={() => handleExportarAnamnese()}>
-				<IonLabel>Exportar</IonLabel>
-			</IonItem>
-			<IonItemDivider>
-				<IonLabel>Usuário</IonLabel>
-			</IonItemDivider>
-			<IonItem routerLink="/usuario/cadastrar">
-				<IonLabel>Cadastro de Usuário</IonLabel>
-			</IonItem>
-			<IonItem lines="none" routerLink="/usuario/listar">
-				<IonLabel>Listagem</IonLabel>
-			</IonItem>
-			<IonItemDivider>
-				<IonLabel>Escola</IonLabel>
-			</IonItemDivider>
-			<IonItem routerLink="/escola/cadastrar">
-				<IonLabel>Cadastro de Escola</IonLabel>
-			</IonItem>
-			<IonItem lines="none" routerLink="/escola/listar">
-				<IonLabel>Listagem</IonLabel>
-			</IonItem>
-			<IonItemDivider>
-				<IonLabel>Turma</IonLabel>
-			</IonItemDivider>
-			<IonItem routerLink="/turma/cadastrar">
-				<IonLabel>Cadastro de Turma</IonLabel>
-			</IonItem>
-			<IonItem lines="none" routerLink="/turma/listar">
-				<IonLabel>Listagem</IonLabel>
-			</IonItem>
-			<IonItemDivider>
-				<IonLabel>Aluno</IonLabel>
-			</IonItemDivider>
-			<IonItem routerLink="/aluno/cadastrar">
-				<IonLabel>Cadastro Aluno</IonLabel>
-			</IonItem>
-			<IonItem lines="none" routerLink="/aluno/listar">
-				<IonLabel>Listagem</IonLabel>
-			</IonItem>
+			<IonCard>
+				<IonCardHeader>
+					<IonCardTitle>Anamnese</IonCardTitle>
+				</IonCardHeader>
+				<IonCardContent>
+					<IonItem routerLink="/anamnese">
+						<IonLabel>Fazer a Anamnese</IonLabel>
+						<IonIcon src={arrowForward} />
+					</IonItem>
+					<IonItem lines="none" onClick={() => handleExportarAnamnese()}>
+						<IonLabel>Exportar</IonLabel>
+						<IonIcon src={arrowForward} />
+					</IonItem>
+				</IonCardContent>
+			</IonCard>
+
+			<IonCard>
+				<IonCardHeader>
+					<IonCardTitle>
+						<IonLabel>Usuário</IonLabel>
+					</IonCardTitle>
+				</IonCardHeader>
+				<IonCardContent>
+					<IonItem routerLink="/usuario/cadastrar">
+						<IonLabel>Cadastro de Usuário</IonLabel>
+						<IonIcon src={arrowForward} />
+					</IonItem>
+					<IonItem lines="none" routerLink="/usuario/listar">
+						<IonLabel>Listagem</IonLabel>
+						<IonIcon src={arrowForward} />
+					</IonItem>
+				</IonCardContent>
+			</IonCard>
+
+			<IonCard>
+				<IonCardHeader>
+					<IonCardTitle>
+						<IonLabel>Escola</IonLabel>
+					</IonCardTitle>
+				</IonCardHeader>
+				<IonCardContent>
+					<IonItem routerLink="/escola/cadastrar">
+						<IonLabel>Cadastro de Escola</IonLabel>
+						<IonIcon src={arrowForward} />
+					</IonItem>
+					<IonItem lines="none" routerLink="/escola/listar">
+						<IonLabel>Listagem</IonLabel>
+						<IonIcon src={arrowForward} />
+					</IonItem>
+				</IonCardContent>
+			</IonCard>
+
+			<IonCard>
+				<IonCardHeader>
+					<IonCardTitle>
+						<IonLabel>Turma</IonLabel>
+					</IonCardTitle>
+				</IonCardHeader>
+				<IonCardContent>
+					<IonItem routerLink="/turma/cadastrar">
+						<IonLabel>Cadastro de Turma</IonLabel>
+						<IonIcon src={arrowForward} />
+					</IonItem>
+					<IonItem lines="none" routerLink="/turma/listar">
+						<IonLabel>Listagem</IonLabel>
+						<IonIcon src={arrowForward} />
+					</IonItem>
+				</IonCardContent>
+			</IonCard>
+
+			<IonCard>
+				<IonCardHeader>
+					<IonCardTitle>
+						<IonLabel>Aluno</IonLabel>
+					</IonCardTitle>
+				</IonCardHeader>
+				<IonCardContent>
+					<IonItem routerLink="/aluno/cadastrar">
+						<IonLabel>Cadastro Aluno</IonLabel>
+						<IonIcon src={arrowForward} />
+					</IonItem>
+					<IonItem lines="none" routerLink="/aluno/listar">
+						<IonLabel>Listagem</IonLabel>
+						<IonIcon src={arrowForward} />
+					</IonItem>
+				</IonCardContent>
+			</IonCard>
 		</IonList>
 	);
 

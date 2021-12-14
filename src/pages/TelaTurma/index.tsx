@@ -24,16 +24,26 @@ import {
 } from "@ionic/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useRouteMatch } from "react-router";
+
+// Import Icons
 import { arrowBackOutline } from "ionicons/icons";
+
+// Import Services
 import TurmaService from "../../services/TurmaService";
-import Turma from "../../models/Turma";
-import LoadingSpinner from "../../components/LoadingSpinner";
-import Escola from "../../models/Escola";
-import { useAuth } from "../../context/auth";
 import UsuarioService from "../../services/UsuarioService";
 import EscolaService from "../../services/EscolaService";
-import Usuario, { TipoUsuario } from "../../models/Usuario";
 import AlunoService from "../../services/AlunoService";
+
+// Import Models
+import Turma from "../../models/Turma";
+import Escola from "../../models/Escola";
+import Usuario, { TipoUsuario } from "../../models/Usuario";
+
+// Import Componentes
+import LoadingSpinner from "../../components/LoadingSpinner";
+
+// Import Context
+import { useAuth } from "../../context/auth";
 
 interface TelaTurmaProps {
 	idTurma: string;
@@ -206,10 +216,10 @@ const TelaTurma: React.FC = () => {
 					{!turma && <LoadingSpinner />}
 					{turma && (
 						<IonList lines="none">
-							<IonItem>
-								<IonLabel position="floating" className="icon-config">
-									Código
-								</IonLabel>
+							<IonLabel position="floating" className="icon-config m-l-10">
+								Código
+							</IonLabel>
+							<IonItem className="inputField m-10">
 								<IonInput
 									className="input-config"
 									value={codigo}
@@ -217,10 +227,10 @@ const TelaTurma: React.FC = () => {
 									onIonChange={(e) => setCodigo(e.detail.value!)}
 								/>
 							</IonItem>
-							<IonItem>
-								<IonLabel position="floating" className="icon-config">
-									Descrição
-								</IonLabel>
+							<IonLabel position="floating" className="icon-config m-l-10">
+								Descrição
+							</IonLabel>
+							<IonItem className="inputField m-10">
 								<IonTextarea
 									className="input-config"
 									value={descricao}
@@ -229,23 +239,25 @@ const TelaTurma: React.FC = () => {
 								/>
 							</IonItem>
 							{escolaLista && (
-								<IonItem className="item-config" lines="none">
-									<IonLabel position="floating" className="icon-config">
+								<>
+									<IonLabel position="floating" className="icon-config m-l-10">
 										Escola
 									</IonLabel>
-									<IonSelect
-										className="input-config"
-										value={idEscola}
-										placeholder="Escola"
-										onIonChange={(e) => setIdEscola(e.detail.value)}
-									>
-										{escolaLista.map((item) => (
-											<IonSelectOption key={item.id!} value={item.id!}>
-												{item.nome}
-											</IonSelectOption>
-										))}
-									</IonSelect>
-								</IonItem>
+									<IonItem className="item-config inputField m-10" lines="none">
+										<IonSelect
+											className="input-config w-100"
+											value={idEscola}
+											placeholder="Escola"
+											onIonChange={(e) => setIdEscola(e.detail.value)}
+										>
+											{escolaLista.map((item) => (
+												<IonSelectOption key={item.id!} value={item.id!}>
+													{item.nome}
+												</IonSelectOption>
+											))}
+										</IonSelect>
+									</IonItem>
+								</>
 							)}
 						</IonList>
 					)}
@@ -255,6 +267,23 @@ const TelaTurma: React.FC = () => {
 						auth?.user?.tipo
 					) && (
 						<IonRow>
+							{[TipoUsuario.ADMINISTRADOR, TipoUsuario.NUTRICIONISTA].includes(
+								auth?.user?.tipo
+							) && (
+								<IonCol>
+									<IonButton
+										color="danger"
+										expand="block"
+										onClick={() =>
+											turma?.status ? setShowAlertDesativar(true) : ativar()
+										}
+										className="register-button"
+										disabled={!turma}
+									>
+										{turma?.status ? "Desativar" : "Ativar"}
+									</IonButton>
+								</IonCol>
+							)}
 							<IonCol>
 								<IonButton
 									color="primary"
@@ -264,25 +293,6 @@ const TelaTurma: React.FC = () => {
 									disabled={!turma}
 								>
 									Salvar
-								</IonButton>
-							</IonCol>
-						</IonRow>
-					)}
-					{[TipoUsuario.ADMINISTRADOR, TipoUsuario.NUTRICIONISTA].includes(
-						auth?.user?.tipo
-					) && (
-						<IonRow>
-							<IonCol>
-								<IonButton
-									color="danger"
-									expand="block"
-									onClick={() =>
-										turma?.status ? setShowAlertDesativar(true) : ativar()
-									}
-									className="register-button"
-									disabled={!turma}
-								>
-									{turma?.status ? "Desativar" : "Ativar"}
 								</IonButton>
 							</IonCol>
 						</IonRow>

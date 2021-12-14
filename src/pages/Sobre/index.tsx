@@ -11,6 +11,8 @@ import {
 	IonRow,
 } from "@ionic/react";
 import React from "react";
+
+// Import Styles
 import "./index.css";
 
 const Sobre: React.FC = () => (

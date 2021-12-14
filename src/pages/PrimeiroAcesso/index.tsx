@@ -18,11 +18,21 @@ import {
 	IonToolbar,
 	useIonRouter,
 } from "@ionic/react";
-import { chevronBack, keyOutline, mailOutline } from "ionicons/icons";
 import React, { useState } from "react";
+
+// Import Icons
+import { chevronBack, keyOutline, mailOutline } from "ionicons/icons";
+
+// Import Styles
 import "./index.css";
+
+// Import Services
 import UsuarioService from "../../services/UsuarioService";
+
+// Import Models
 import Usuario from "../../models/Usuario";
+
+// Import Context
 import { useAuth } from "../../context/auth";
 
 const usuarioService = new UsuarioService();
@@ -124,7 +134,7 @@ const PrimeiroAcesso: React.FC = () => {
 			<IonContent className="ion-padding" fullscreen scrollY={false}>
 				<IonCard>
 					<IonList lines="none">
-						<IonItem className="item-config">
+						<IonItem className="item-config inputField">
 							<IonIcon className="icon-config" icon={mailOutline} />
 							<IonInput
 								disabled={showFinalizarCadastro}
@@ -139,7 +149,7 @@ const PrimeiroAcesso: React.FC = () => {
 							<IonItem className="item-config">
 								<IonLabel>Finalize seu cadastro</IonLabel>
 							</IonItem>
-							<IonItem className="item-config">
+							<IonItem className="item-config inputField">
 								<IonIcon className="icon-config" icon={keyOutline} />
 								<IonInput
 									className="input-config"

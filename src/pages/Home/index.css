@@ -5,3 +5,7 @@
 	align-items: center;
 	color: rgba(17, 15, 15, 0.815);
 }
+
+.w-100 {
+	width: 100%;
+}

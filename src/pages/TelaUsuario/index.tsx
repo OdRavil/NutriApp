@@ -30,12 +30,22 @@ import moment from "moment";
 import firebase from "firebase/app";
 import React, { useCallback, useEffect, useState } from "react";
 import { useRouteMatch } from "react-router";
+
+// Import Icons
 import { addOutline, arrowBackOutline, trashOutline } from "ionicons/icons";
+
+// Import Services
 import EscolaService from "../../services/EscolaService";
-import Escola from "../../models/Escola";
-import LoadingSpinner from "../../components/LoadingSpinner";
-import Usuario, { Sexo, TipoUsuario } from "../../models/Usuario";
 import UsuarioService from "../../services/UsuarioService";
+
+// Import Models
+import Escola from "../../models/Escola";
+import Usuario, { Sexo, TipoUsuario } from "../../models/Usuario";
+
+// Import Components
+import LoadingSpinner from "../../components/LoadingSpinner";
+
+// Import Context
 import { useAuth } from "../../context/auth";
 
 interface TelaUsuarioProps {
@@ -241,10 +251,10 @@ const TelaUsuario: React.FC = () => {
 					{!usuario && <LoadingSpinner />}
 					{usuario && (
 						<IonList lines="none">
-							<IonItem>
-								<IonLabel position="floating" className="icon-config">
-									Nome
-								</IonLabel>
+							<IonLabel position="floating" className="icon-config m-l-10">
+								Nome
+							</IonLabel>
+							<IonItem className="inputField m-10">
 								<IonInput
 									className="input-config"
 									value={nome}
@@ -252,10 +262,10 @@ const TelaUsuario: React.FC = () => {
 									onIonChange={(e) => setNome(e.detail.value!)}
 								/>
 							</IonItem>
-							<IonItem>
-								<IonLabel position="floating" className="icon-config">
-									E-mail
-								</IonLabel>
+							<IonLabel position="floating" className="icon-config m-l-10">
+								E-mail
+							</IonLabel>
+							<IonItem className="inputField m-10">
 								<IonInput
 									className="input-config"
 									value={email}
@@ -265,12 +275,12 @@ const TelaUsuario: React.FC = () => {
 									disabled
 								/>
 							</IonItem>
-							<IonItem className="item-config" lines="none">
-								<IonLabel position="floating" className="icon-config">
-									Sexo
-								</IonLabel>
+							<IonLabel position="floating" className="icon-config m-l-10">
+								Sexo
+							</IonLabel>
+							<IonItem className="item-config inputField" lines="none">
 								<IonSelect
-									className="input-config"
+									className="input-config w-100"
 									value={sexo}
 									placeholder="Sexo"
 									onIonChange={(e) => setSexo(e.detail.value)}
@@ -279,10 +289,10 @@ const TelaUsuario: React.FC = () => {
 									<IonSelectOption value={Sexo.MASCULINO}>Masculino</IonSelectOption>
 								</IonSelect>
 							</IonItem>
-							<IonItem className="item-config" lines="none">
-								<IonLabel position="floating" className="icon-config">
-									Data de nascimento
-								</IonLabel>
+							<IonLabel position="floating" className="icon-config m-l-10">
+								Data de nascimento
+							</IonLabel>
+							<IonItem className="item-config inputField" lines="none">
 								<IonDatetime
 									value={dataNascimento}
 									onIonChange={(e) => setDataNascimento(e.detail.value!)}
@@ -291,12 +301,12 @@ const TelaUsuario: React.FC = () => {
 									placeholder="Data de nascimento"
 								/>
 							</IonItem>
-							<IonItem className="item-config" lines="none">
-								<IonLabel position="floating" className="icon-config">
-									Permissão
-								</IonLabel>
+							<IonLabel position="floating" className="icon-config m-l-10">
+								Permissão
+							</IonLabel>
+							<IonItem className="item-config inputField" lines="none">
 								<IonSelect
-									className="input-config"
+									className="input-config w-100"
 									value={tipoUsuario}
 									placeholder="Permissão"
 									onIonChange={(e) => setTipoUsuario(e.detail.value)}

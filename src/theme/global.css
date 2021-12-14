@@ -1,19 +1,36 @@
 ion-tab-bar {
-  border: 0 !important;
-  margin-top: -1px;
+	border: 0 !important;
+	margin-top: -1px;
 }
 
 ion-card-title,
 ion-list-header,
 ion-title {
-  font-family: "Nunito" !important;
+	font-family: "Nunito" !important;
 }
 
 .ion-color-cultured {
-  --ion-color-base: var(--ion-color-cultured);
-  --ion-color-base-rgb: var(--ion-color-cultured-rgb);
-  --ion-color-contrast: var(--ion-color-cultured-contrast);
-  --ion-color-contrast-rgb: var(--ion-color-cultured-contrast-rgb);
-  --ion-color-shade: var(--ion-color-cultured-shade);
-  --ion-color-tint: var(--ion-color-cultured-tint);
+	--ion-color-base: var(--ion-color-cultured);
+	--ion-color-base-rgb: var(--ion-color-cultured-rgb);
+	--ion-color-contrast: var(--ion-color-cultured-contrast);
+	--ion-color-contrast-rgb: var(--ion-color-cultured-contrast-rgb);
+	--ion-color-shade: var(--ion-color-cultured-shade);
+	--ion-color-tint: var(--ion-color-cultured-tint);
+}
+
+.inputField {
+	border: 1px solid #cdcdcd;
+	border-radius: 8px;
+}
+
+.w-100 {
+	width: 100% !important;
+}
+
+.m-l-10 {
+	margin-left: 10px !important;
+}
+
+.m-10 {
+	margin: 10px !important;
 }

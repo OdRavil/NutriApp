@@ -14,6 +14,8 @@ import {
 	useIonRouter,
 } from "@ionic/react";
 import React, { useState } from "react";
+
+// Import Context
 import { useAuth } from "../../context/auth";
 
 const Login: React.FC = () => {
@@ -36,6 +38,8 @@ const Login: React.FC = () => {
 
 	const doLogin = async () => {
 		setShowLoading(true);
+		router.push("/private/home");
+
 		await login(email, password)
 			.then((authUser) => {
 				if (!authUser.user) {
@@ -87,7 +91,7 @@ const Login: React.FC = () => {
 					</IonRow>
 					<IonRow>
 						<IonCol>
-							<IonItem>
+							<IonItem className="inputField">
 								<IonLabel position="floating">E-mail</IonLabel>
 								<IonInput
 									placeholder="E-mail"
@@ -101,7 +105,7 @@ const Login: React.FC = () => {
 					</IonRow>
 					<IonRow>
 						<IonCol>
-							<IonItem>
+							<IonItem className="inputField">
 								<IonLabel position="floating">Senha</IonLabel>
 								<IonInput
 									placeholder="Senha"

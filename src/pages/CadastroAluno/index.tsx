@@ -21,6 +21,11 @@ import {
 	IonCol,
 	useIonRouter,
 } from "@ionic/react";
+import React, { useCallback, useEffect, useState } from "react";
+import firebase from "firebase/app";
+import "firebase/firestore";
+
+// Import Icons
 import {
 	calendarOutline,
 	chevronBack,
@@ -28,15 +33,18 @@ import {
 	maleFemaleOutline,
 	personOutline,
 } from "ionicons/icons";
-import React, { useCallback, useEffect, useState } from "react";
-import firebase from "firebase/app";
+
+// Import Models
 import Aluno from "../../models/Aluno";
 import Usuario, { Sexo, TipoUsuario } from "../../models/Usuario";
-import AlunoService from "../../services/AlunoService";
-import "firebase/firestore";
-import TurmaService from "../../services/TurmaService";
 import Turma from "../../models/Turma";
+
+// Import Services
+import AlunoService from "../../services/AlunoService";
+import TurmaService from "../../services/TurmaService";
 import UsuarioService from "../../services/UsuarioService";
+
+// Import Context
 import { useAuth } from "../../context/auth";
 import Escola from "../../models/Escola";
 import EscolaService from "../../services/EscolaService";
@@ -172,7 +180,7 @@ const CadastroAluno: React.FC = () => {
 				<IonLoading isOpen={!turmaLista} />
 				<IonCard>
 					<IonList lines="none">
-						<IonItem>
+						<IonItem className="inputField m-10">
 							<IonIcon className="icon-config" icon={personOutline} />
 							<IonInput
 								className="input-config"
@@ -181,7 +189,7 @@ const CadastroAluno: React.FC = () => {
 								onIonChange={(e) => setNome(e.detail.value!)}
 							/>
 						</IonItem>
-						<IonItem>
+						<IonItem className="inputField m-10">
 							<IonIcon className="icon-config" icon={mailOutline} />
 							<IonInput
 								className="input-config"
@@ -191,10 +199,10 @@ const CadastroAluno: React.FC = () => {
 								onIonChange={(e) => setEmail(e.detail.value!)}
 							/>
 						</IonItem>
-						<IonItem className="item-config" lines="none">
+						<IonItem className="item-config inputField" lines="none">
 							<IonIcon className="icon-config" icon={maleFemaleOutline} />
 							<IonSelect
-								className="input-config"
+								className="input-config w-100"
 								value={sexo}
 								placeholder="Sexo"
 								onIonChange={(e) => setSexo(e.detail.value)}
@@ -203,7 +211,7 @@ const CadastroAluno: React.FC = () => {
 								<IonSelectOption value={Sexo.MASCULINO}>Masculino</IonSelectOption>
 							</IonSelect>
 						</IonItem>
-						<IonItem className="item-config" lines="none">
+						<IonItem className="item-config inputField " lines="none">
 							<IonIcon className="icon-config" icon={calendarOutline} />
 							<IonDatetime
 								value={dataNascimento}
@@ -214,9 +222,9 @@ const CadastroAluno: React.FC = () => {
 							/>
 						</IonItem>
 						{turmaLista && (
-							<IonItem className="item-config" lines="none">
+							<IonItem className="item-config inputField " lines="none">
 								<IonSelect
-									className="input-config"
+									className="input-config w-100"
 									value={idTurma}
 									placeholder="Turma"
 									onIonChange={(e) => setIdTurma(e.detail.value)}

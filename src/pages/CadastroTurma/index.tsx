@@ -21,12 +21,20 @@ import {
 	IonCol,
 	useIonRouter,
 } from "@ionic/react";
-import { chevronBack } from "ionicons/icons";
 import React, { useCallback, useEffect, useState } from "react";
+
+// Import Icons
+import { chevronBack } from "ionicons/icons";
+
+// Import Context
 import { useAuth } from "../../context/auth";
+
+// Import Models
 import Escola from "../../models/Escola";
 import Turma from "../../models/Turma";
 import Usuario, { TipoUsuario } from "../../models/Usuario";
+
+// Import Services
 import EscolaService from "../../services/EscolaService";
 import TurmaService from "../../services/TurmaService";
 import UsuarioService from "../../services/UsuarioService";
@@ -131,7 +139,7 @@ const CadastroTurma: React.FC = () => {
 				<IonLoading isOpen={!escolaLista} />
 				<IonCard>
 					<IonList lines="none">
-						<IonItem>
+						<IonItem className="inputField m-10">
 							<IonInput
 								className="input-config"
 								value={codigo}
@@ -139,7 +147,7 @@ const CadastroTurma: React.FC = () => {
 								onIonChange={(e) => setCodigo(e.detail.value!)}
 							/>
 						</IonItem>
-						<IonItem>
+						<IonItem className="inputField m-10">
 							<IonTextarea
 								className="input-config"
 								value={descricao}
@@ -148,9 +156,9 @@ const CadastroTurma: React.FC = () => {
 							/>
 						</IonItem>
 						{escolaLista && (
-							<IonItem className="item-config" lines="none">
+							<IonItem className="item-config inputField" lines="none">
 								<IonSelect
-									className="input-config"
+									className="input-config w-100"
 									value={idEscola}
 									placeholder="Escola"
 									onIonChange={(e) => setIdEscola(e.detail.value)}
