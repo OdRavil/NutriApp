@@ -45,6 +45,8 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 
 // Import Context
 import { useAuth } from "../../context/auth";
+import Escola from "../../models/Escola";
+import EscolaService from "../../services/EscolaService";
 
 interface TelaAlunoProps {
 	idAluno: string;
@@ -73,6 +75,7 @@ const TelaAluno: React.FC = () => {
 
 	const [idTurma, setIdTurma] = useState<string>();
 	const [turmaLista, setTurmaLista] = useState<Turma[]>();
+	const [listaEscolas, setListaEscolas] = useState<Escola[]>([]);
 
 	const mostrarMensagemErro = (mensagem: string) => {
 		setMensagemErrorBox(mensagem);
@@ -136,7 +139,9 @@ const TelaAluno: React.FC = () => {
 	};
 
 	const carregarTurma = useCallback(async (usuario: Usuario) => {
+		const escolaService = new EscolaService();
 		if (usuario.tipo === TipoUsuario.ADMINISTRADOR) {
+			await escolaService.listar().then((escolas) => setListaEscolas(escolas));
 			new TurmaService().listar().then((turmas) => {
 				setTurmaLista(turmas);
 				if (!turmas || turmas.length === 0) {
@@ -150,6 +155,20 @@ const TelaAluno: React.FC = () => {
 				mostrarMensagemErro("Não existem turmas para este usuário.");
 				return;
 			}
+			const promises: Promise<Escola | undefined>[] = [];
+			escolasUsuario.forEach((item) => {
+				promises.push(escolaService.getById(item));
+			});
+			await Promise.all(promises)
+				.then((escolas) => {
+					setListaEscolas(
+						escolas.filter((item) => typeof item !== "undefined") as Escola[]
+					);
+				})
+				.catch((error) => {
+					console.error(error);
+					setListaEscolas([]);
+				});
 			// Apenas as turmas que o usuário possui acesso
 			new TurmaService().listarPorEscola(escolasUsuario).then((turmas) => {
 				setTurmaLista(turmas);
@@ -159,6 +178,12 @@ const TelaAluno: React.FC = () => {
 			});
 		}
 	}, []);
+
+	const getTurmaSelectItemText = (turma: Turma) => {
+		const escola = listaEscolas.find((item) => item.id! === turma.idEscola)?.nome;
+		if (escola) return `${turma.codigo} - ${escola}`;
+		return turma.codigo;
+	};
 
 	useEffect(() => {
 		if (!auth?.user?.id) return;

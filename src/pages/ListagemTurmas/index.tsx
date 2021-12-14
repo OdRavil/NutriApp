@@ -10,6 +10,7 @@ import {
 	IonLabel,
 	IonList,
 	IonModal,
+	IonNote,
 	IonPage,
 	IonSelect,
 	IonSelectOption,
@@ -162,9 +163,15 @@ const ListagemTurmas: React.FC = () => {
 					<IonList>
 						{listaTurmas.map((turma) => (
 							<IonItem key={turma.id!} routerLink={`/turma/visualizar/${turma.id!}`}>
-								<IonIcon src={people} />
-								<IonLabel className="m-l-10">{turma.codigo}</IonLabel>
-								<IonIcon src={arrowForward} />
+								<IonLabel slot="start">{turma.codigo}</IonLabel>
+								<IonNote
+									slot="end"
+									style={{
+										fontSize: "0.8rem",
+									}}
+								>
+									{listaEscolas.find((item) => item.id! === turma.idEscola)?.nome || ""}
+								</IonNote>
 							</IonItem>
 						))}
 					</IonList>
