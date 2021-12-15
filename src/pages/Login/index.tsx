@@ -38,7 +38,6 @@ const Login: React.FC = () => {
 
 	const doLogin = async () => {
 		setShowLoading(true);
-		router.push("/private/home");
 
 		await login(email, password)
 			.then((authUser) => {

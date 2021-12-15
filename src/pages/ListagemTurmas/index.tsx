@@ -22,13 +22,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import "firebase/auth";
 
 // Import Icons
-import {
-	arrowBackOutline,
-	arrowForward,
-	closeOutline,
-	optionsOutline,
-	people,
-} from "ionicons/icons";
+import { arrowBackOutline, closeOutline, optionsOutline } from "ionicons/icons";
 
 // Import Context
 import { useAuth } from "../../context/auth";
@@ -160,7 +154,7 @@ const ListagemTurmas: React.FC = () => {
 					</IonList>
 				)}
 				{listaTurmas && listaTurmas.length !== 0 && (
-					<IonList>
+					<IonList lines="full">
 						{listaTurmas.map((turma) => (
 							<IonItem key={turma.id!} routerLink={`/turma/visualizar/${turma.id!}`}>
 								<IonLabel slot="start">{turma.codigo}</IonLabel>

@@ -23,7 +23,6 @@ import "firebase/auth";
 // Import Icons
 import {
 	arrowBackOutline,
-	arrowForward,
 	closeOutline,
 	optionsOutline,
 	person,
@@ -123,7 +122,6 @@ const ListagemUsuarios: React.FC = () => {
 							>
 								<IonIcon src={person} />
 								<IonLabel className="m-l-10">{usuario.nome}</IonLabel>
-								<IonIcon src={arrowForward} />
 							</IonItem>
 						))}
 					</IonList>

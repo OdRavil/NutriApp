@@ -14,14 +14,10 @@ import {
 	IonCardHeader,
 	IonCardTitle,
 	IonCardContent,
-	IonIcon,
 } from "@ionic/react";
 import React, { useCallback, useState } from "react";
 import moment from "moment";
 import { Filesystem, Directory } from "@capacitor/filesystem";
-
-// Import Icons
-import { arrowForward } from "ionicons/icons";
 
 // Import Context
 import { useAuth } from "../../context/auth";
@@ -101,11 +97,9 @@ const Home: React.FC = () => {
 				<IonCardContent>
 					<IonItem routerLink="/anamnese">
 						<IonLabel>Fazer a Anamnese</IonLabel>
-						<IonIcon src={arrowForward} />
 					</IonItem>
-					<IonItem lines="none" onClick={() => handleExportarAnamnese()}>
+					<IonItem button lines="none" onClick={() => handleExportarAnamnese()}>
 						<IonLabel>Exportar</IonLabel>
-						<IonIcon src={arrowForward} />
 					</IonItem>
 				</IonCardContent>
 			</IonCard>
@@ -119,11 +113,9 @@ const Home: React.FC = () => {
 				<IonCardContent>
 					<IonItem routerLink="/usuario/cadastrar">
 						<IonLabel>Cadastro de Usuário</IonLabel>
-						<IonIcon src={arrowForward} />
 					</IonItem>
 					<IonItem lines="none" routerLink="/usuario/listar">
 						<IonLabel>Listagem</IonLabel>
-						<IonIcon src={arrowForward} />
 					</IonItem>
 				</IonCardContent>
 			</IonCard>
@@ -137,11 +129,9 @@ const Home: React.FC = () => {
 				<IonCardContent>
 					<IonItem routerLink="/escola/cadastrar">
 						<IonLabel>Cadastro de Escola</IonLabel>
-						<IonIcon src={arrowForward} />
 					</IonItem>
 					<IonItem lines="none" routerLink="/escola/listar">
 						<IonLabel>Listagem</IonLabel>
-						<IonIcon src={arrowForward} />
 					</IonItem>
 				</IonCardContent>
 			</IonCard>
@@ -155,11 +145,9 @@ const Home: React.FC = () => {
 				<IonCardContent>
 					<IonItem routerLink="/turma/cadastrar">
 						<IonLabel>Cadastro de Turma</IonLabel>
-						<IonIcon src={arrowForward} />
 					</IonItem>
 					<IonItem lines="none" routerLink="/turma/listar">
 						<IonLabel>Listagem</IonLabel>
-						<IonIcon src={arrowForward} />
 					</IonItem>
 				</IonCardContent>
 			</IonCard>
@@ -173,11 +161,9 @@ const Home: React.FC = () => {
 				<IonCardContent>
 					<IonItem routerLink="/aluno/cadastrar">
 						<IonLabel>Cadastro Aluno</IonLabel>
-						<IonIcon src={arrowForward} />
 					</IonItem>
 					<IonItem lines="none" routerLink="/aluno/listar">
 						<IonLabel>Listagem</IonLabel>
-						<IonIcon src={arrowForward} />
 					</IonItem>
 				</IonCardContent>
 			</IonCard>

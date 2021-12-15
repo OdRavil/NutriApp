@@ -292,25 +292,23 @@ const TelaAluno: React.FC = () => {
 								/>
 							</IonItem>
 							{turmaLista && (
-								<>
-									<IonLabel position="floating" className="icon-config m-l-10">
+								<IonItem className="item-config" lines="none">
+									<IonLabel position="floating" className="icon-config">
 										Turma
 									</IonLabel>
-									<IonItem className="item-config inputField" lines="none">
-										<IonSelect
-											className="input-config w-10"
-											value={idTurma}
-											placeholder="Turma"
-											onIonChange={(e) => setIdTurma(e.detail.value)}
-										>
-											{turmaLista.map((item) => (
-												<IonSelectOption key={item.id!} value={item.id!}>
-													{item.codigo}
-												</IonSelectOption>
-											))}
-										</IonSelect>
-									</IonItem>
-								</>
+									<IonSelect
+										className="input-config"
+										value={idTurma}
+										placeholder="Turma"
+										onIonChange={(e) => setIdTurma(e.detail.value)}
+									>
+										{turmaLista.map((item) => (
+											<IonSelectOption key={item.id!} value={item.id!}>
+												{getTurmaSelectItemText(item)}
+											</IonSelectOption>
+										))}
+									</IonSelect>
+								</IonItem>
 							)}
 						</IonList>
 					)}
