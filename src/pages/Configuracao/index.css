@@ -1,15 +1,16 @@
 .icon-config {
-  margin-right: 10px;
+	margin-right: 10px;
 }
 
 .item-config {
-  /* padding-left: 8px; */
-  padding-right: 3px;
+	/* padding-left: 8px; */
+	padding-right: 3px;
+	margin: 10px;
 }
 
 .input-config {
-  padding-left: 8px;
-  padding-right: 8px;
-  margin-top: 3px;
-  margin-bottom: 3px;
+	padding-left: 8px;
+	padding-right: 8px;
+	margin-top: 3px;
+	margin-bottom: 3px;
 }

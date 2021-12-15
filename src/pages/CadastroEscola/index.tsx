@@ -18,9 +18,15 @@ import {
 	IonGrid,
 	useIonRouter,
 } from "@ionic/react";
-import { chevronBack } from "ionicons/icons";
 import React, { useState } from "react";
+
+// Import Icons
+import { chevronBack } from "ionicons/icons";
+
+// Import Models
 import Escola from "../../models/Escola";
+
+// Import Services
 import EscolaService from "../../services/EscolaService";
 
 const CadastroEscola: React.FC = () => {
@@ -77,7 +83,7 @@ const CadastroEscola: React.FC = () => {
 			<IonContent className="ion-padding" fullscreen scrollY={false}>
 				<IonCard>
 					<IonList lines="none">
-						<IonItem>
+						<IonItem className="inputField m-10">
 							<IonInput
 								className="input-config"
 								value={nome}
@@ -85,7 +91,7 @@ const CadastroEscola: React.FC = () => {
 								onIonChange={(e) => setNome(e.detail.value!)}
 							/>
 						</IonItem>
-						<IonItem>
+						<IonItem className="inputField m-10">
 							<IonTextarea
 								className="input-config"
 								value={descricao}

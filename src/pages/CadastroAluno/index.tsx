@@ -21,6 +21,11 @@ import {
 	IonCol,
 	useIonRouter,
 } from "@ionic/react";
+import React, { useCallback, useEffect, useState } from "react";
+import firebase from "firebase/app";
+import "firebase/firestore";
+
+// Import Icons
 import {
 	calendarOutline,
 	chevronBack,
@@ -28,16 +33,21 @@ import {
 	maleFemaleOutline,
 	personOutline,
 } from "ionicons/icons";
-import React, { useCallback, useEffect, useState } from "react";
-import firebase from "firebase/app";
+
+// Import Models
 import Aluno from "../../models/Aluno";
 import Usuario, { Sexo, TipoUsuario } from "../../models/Usuario";
-import AlunoService from "../../services/AlunoService";
-import "firebase/firestore";
-import TurmaService from "../../services/TurmaService";
 import Turma from "../../models/Turma";
+
+// Import Services
+import AlunoService from "../../services/AlunoService";
+import TurmaService from "../../services/TurmaService";
 import UsuarioService from "../../services/UsuarioService";
+
+// Import Context
 import { useAuth } from "../../context/auth";
+import Escola from "../../models/Escola";
+import EscolaService from "../../services/EscolaService";
 
 const CadastroAluno: React.FC = () => {
 	const router = useIonRouter();
@@ -55,6 +65,7 @@ const CadastroAluno: React.FC = () => {
 	const [sexo, setSexo] = useState<Sexo>(Sexo.MASCULINO);
 	const [idTurma, setIdTurma] = useState<string>();
 	const [turmaLista, setTurmaLista] = useState<Turma[]>();
+	const [listaEscolas, setListaEscolas] = useState<Escola[]>([]);
 
 	const mostrarMensagemErro = (mensagem: string) => {
 		setMensagemErrorBox(mensagem);
@@ -62,7 +73,9 @@ const CadastroAluno: React.FC = () => {
 	};
 
 	const carregarTurma = useCallback(async (usuario: Usuario) => {
+		const escolaService = new EscolaService();
 		if (usuario.tipo === TipoUsuario.ADMINISTRADOR) {
+			await escolaService.listar().then((escolas) => setListaEscolas(escolas));
 			new TurmaService().listar().then((turmas) => {
 				setTurmaLista(turmas);
 				if (!turmas || turmas.length === 0) {
@@ -76,6 +89,20 @@ const CadastroAluno: React.FC = () => {
 				mostrarMensagemErro("Não existem turmas para este usuário.");
 				return;
 			}
+			const promises: Promise<Escola | undefined>[] = [];
+			escolasUsuario.forEach((item) => {
+				promises.push(escolaService.getById(item));
+			});
+			await Promise.all(promises)
+				.then((escolas) => {
+					setListaEscolas(
+						escolas.filter((item) => typeof item !== "undefined") as Escola[]
+					);
+				})
+				.catch((error) => {
+					console.error(error);
+					setListaEscolas([]);
+				});
 			// Apenas as turmas que o usuário possui acesso
 			new TurmaService().listarPorEscola(escolasUsuario).then((turmas) => {
 				setTurmaLista(turmas);
@@ -126,6 +153,12 @@ const CadastroAluno: React.FC = () => {
 		}
 	};
 
+	const getTurmaSelectItemText = (turma: Turma) => {
+		const escola = listaEscolas.find((item) => item.id! === turma.idEscola)?.nome;
+		if (escola) return `${turma.codigo} - ${escola}`;
+		return turma.codigo;
+	};
+
 	useEffect(() => {
 		if (!auth?.user?.id) return;
 		new UsuarioService()
@@ -147,7 +180,7 @@ const CadastroAluno: React.FC = () => {
 				<IonLoading isOpen={!turmaLista} />
 				<IonCard>
 					<IonList lines="none">
-						<IonItem>
+						<IonItem className="inputField m-10">
 							<IonIcon className="icon-config" icon={personOutline} />
 							<IonInput
 								className="input-config"
@@ -156,7 +189,7 @@ const CadastroAluno: React.FC = () => {
 								onIonChange={(e) => setNome(e.detail.value!)}
 							/>
 						</IonItem>
-						<IonItem>
+						<IonItem className="inputField m-10">
 							<IonIcon className="icon-config" icon={mailOutline} />
 							<IonInput
 								className="input-config"
@@ -166,10 +199,10 @@ const CadastroAluno: React.FC = () => {
 								onIonChange={(e) => setEmail(e.detail.value!)}
 							/>
 						</IonItem>
-						<IonItem className="item-config" lines="none">
+						<IonItem className="item-config inputField" lines="none">
 							<IonIcon className="icon-config" icon={maleFemaleOutline} />
 							<IonSelect
-								className="input-config"
+								className="input-config w-100"
 								value={sexo}
 								placeholder="Sexo"
 								onIonChange={(e) => setSexo(e.detail.value)}
@@ -178,7 +211,7 @@ const CadastroAluno: React.FC = () => {
 								<IonSelectOption value={Sexo.MASCULINO}>Masculino</IonSelectOption>
 							</IonSelect>
 						</IonItem>
-						<IonItem className="item-config" lines="none">
+						<IonItem className="item-config inputField " lines="none">
 							<IonIcon className="icon-config" icon={calendarOutline} />
 							<IonDatetime
 								value={dataNascimento}
@@ -189,16 +222,16 @@ const CadastroAluno: React.FC = () => {
 							/>
 						</IonItem>
 						{turmaLista && (
-							<IonItem className="item-config" lines="none">
+							<IonItem className="item-config inputField " lines="none">
 								<IonSelect
-									className="input-config"
+									className="input-config w-100"
 									value={idTurma}
 									placeholder="Turma"
 									onIonChange={(e) => setIdTurma(e.detail.value)}
 								>
 									{turmaLista.map((item) => (
 										<IonSelectOption key={item.id!} value={item.id!}>
-											{item.codigo}
+											{getTurmaSelectItemText(item)}
 										</IonSelectOption>
 									))}
 								</IonSelect>

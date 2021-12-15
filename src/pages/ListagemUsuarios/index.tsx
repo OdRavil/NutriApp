@@ -19,10 +19,25 @@ import {
 } from "@ionic/react";
 import React, { useCallback, useEffect, useState } from "react";
 import "firebase/auth";
-import { arrowBackOutline, closeOutline, optionsOutline } from "ionicons/icons";
+
+// Import Icons
+import {
+	arrowBackOutline,
+	closeOutline,
+	optionsOutline,
+	person,
+} from "ionicons/icons";
+
+// Import Context
 import { useAuth } from "../../context/auth";
+
+// Import Services
 import UsuarioService from "../../services/UsuarioService";
+
+// Import Models
 import Usuario from "../../models/Usuario";
+
+// Import Components
 import LoadingSpinner from "../../components/LoadingSpinner";
 
 const ListagemUsuarios: React.FC = () => {
@@ -105,7 +120,8 @@ const ListagemUsuarios: React.FC = () => {
 								key={usuario.id!}
 								routerLink={`/usuario/visualizar/${usuario.id!}`}
 							>
-								<IonLabel>{usuario.nome}</IonLabel>
+								<IonIcon src={person} />
+								<IonLabel className="m-l-10">{usuario.nome}</IonLabel>
 							</IonItem>
 						))}
 					</IonList>

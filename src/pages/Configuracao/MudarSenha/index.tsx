@@ -18,6 +18,8 @@ import {
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
+
+// Import Icons
 import { arrowBackOutline } from "ionicons/icons";
 
 const MudarSenha: React.FC = () => {
@@ -125,48 +127,48 @@ const MudarSenha: React.FC = () => {
 					message={mensagemToastErro}
 					duration={600}
 				/>
-				<IonList>
-					<IonItem className="item-config" lines="none">
-						<IonInput
-							className="input-config"
-							value={senhaAtual}
-							onIonChange={(e) => setSenhaAtual(e.detail.value!)}
-							placeholder="Senha atual"
-							type="password"
-						/>
-					</IonItem>
-					<IonItem className="item-config" lines="none">
-						<IonInput
-							className="input-config"
-							color={corNovaSenha}
-							value={novaSenha}
-							onIonChange={(e) => setNovaSenha(e.detail.value!)}
-							placeholder="Nova senha"
-							type="password"
-						/>
-					</IonItem>
-					<IonItem className="item-config" lines="none">
-						<IonInput
-							color={corNovaSenhaConfirma}
-							className="input-config"
-							value={novaSenhaConfirma}
-							onIonChange={(e) => setNovaSenhaConfirma(e.detail.value!)}
-							placeholder="Confirmar nova senha"
-							type="password"
-						/>
-					</IonItem>
-				</IonList>
 				<IonCard>
-					<IonButton
-						ref={botaoAlterar}
-						color="primary"
-						expand="block"
-						onClick={() => redefinir()}
-						disabled={desabilitarBotao}
-					>
-						Alterar
-					</IonButton>
+					<IonList>
+						<IonItem className="item-config inputField" lines="none">
+							<IonInput
+								className="input-config"
+								value={senhaAtual}
+								onIonChange={(e) => setSenhaAtual(e.detail.value!)}
+								placeholder="Senha atual"
+								type="password"
+							/>
+						</IonItem>
+						<IonItem className="item-config inputField" lines="none">
+							<IonInput
+								className="input-config"
+								color={corNovaSenha}
+								value={novaSenha}
+								onIonChange={(e) => setNovaSenha(e.detail.value!)}
+								placeholder="Nova senha"
+								type="password"
+							/>
+						</IonItem>
+						<IonItem className="item-config inputField" lines="none">
+							<IonInput
+								color={corNovaSenhaConfirma}
+								className="input-config"
+								value={novaSenhaConfirma}
+								onIonChange={(e) => setNovaSenhaConfirma(e.detail.value!)}
+								placeholder="Confirmar nova senha"
+								type="password"
+							/>
+						</IonItem>
+					</IonList>
 				</IonCard>
+				<IonButton
+					ref={botaoAlterar}
+					color="primary"
+					expand="block"
+					onClick={() => redefinir()}
+					disabled={desabilitarBotao}
+				>
+					Alterar
+				</IonButton>
 			</IonContent>
 		</IonPage>
 	);

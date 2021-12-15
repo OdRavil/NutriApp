@@ -22,11 +22,19 @@ import {
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { useRouteMatch } from "react-router";
+
+// Import Icons
 import { arrowBackOutline } from "ionicons/icons";
+
+// Import Services
 import EscolaService from "../../services/EscolaService";
-import Escola from "../../models/Escola";
-import LoadingSpinner from "../../components/LoadingSpinner";
 import TurmaService from "../../services/TurmaService";
+
+// Import Models
+import Escola from "../../models/Escola";
+
+// Import Components
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 interface TelaEscolaProps {
 	idEscola: string;
@@ -155,10 +163,10 @@ const TelaEscola: React.FC = () => {
 					{!escola && <LoadingSpinner />}
 					{escola && (
 						<IonList lines="none">
-							<IonItem>
-								<IonLabel position="floating" className="icon-config">
-									Nome
-								</IonLabel>
+							<IonLabel position="floating" className="icon-config m-l-10">
+								Nome
+							</IonLabel>
+							<IonItem className="inputField m-10">
 								<IonInput
 									className="input-config"
 									value={nome}
@@ -166,10 +174,10 @@ const TelaEscola: React.FC = () => {
 									onIonChange={(e) => setNome(e.detail.value!)}
 								/>
 							</IonItem>
-							<IonItem>
-								<IonLabel position="floating" className="icon-config">
-									Descrição
-								</IonLabel>
+							<IonLabel position="floating" className="icon-config m-l-10">
+								Descrição
+							</IonLabel>
+							<IonItem className="inputField m-10">
 								<IonTextarea
 									className="input-config"
 									value={descricao}
@@ -184,19 +192,6 @@ const TelaEscola: React.FC = () => {
 					<IonRow>
 						<IonCol>
 							<IonButton
-								color="primary"
-								expand="block"
-								onClick={salvar}
-								className="register-button"
-								disabled={!escola}
-							>
-								Salvar
-							</IonButton>
-						</IonCol>
-					</IonRow>
-					<IonRow>
-						<IonCol>
-							<IonButton
 								color="danger"
 								expand="block"
 								onClick={() =>
@@ -206,6 +201,17 @@ const TelaEscola: React.FC = () => {
 								disabled={!escola}
 							>
 								{escola?.status ? "Desativar" : "Ativar"}
+							</IonButton>
+						</IonCol>
+						<IonCol>
+							<IonButton
+								color="primary"
+								expand="block"
+								onClick={salvar}
+								className="register-button"
+								disabled={!escola}
+							>
+								Salvar
 							</IonButton>
 						</IonCol>
 					</IonRow>

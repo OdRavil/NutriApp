@@ -26,15 +26,27 @@ import {
 import moment from "moment";
 import React, { useCallback, useEffect, useState } from "react";
 import { useRouteMatch } from "react-router";
+
+// Import Icons
 import { arrowBackOutline } from "ionicons/icons";
+
+// Import Services
 import TurmaService from "../../services/TurmaService";
 import AlunoService from "../../services/AlunoService";
+import UsuarioService from "../../services/UsuarioService";
+
+// Import Models
 import Aluno from "../../models/Aluno";
 import Turma from "../../models/Turma";
-import LoadingSpinner from "../../components/LoadingSpinner";
 import Usuario, { Sexo, TipoUsuario } from "../../models/Usuario";
-import UsuarioService from "../../services/UsuarioService";
+
+// Import Components
+import LoadingSpinner from "../../components/LoadingSpinner";
+
+// Import Context
 import { useAuth } from "../../context/auth";
+import Escola from "../../models/Escola";
+import EscolaService from "../../services/EscolaService";
 
 interface TelaAlunoProps {
 	idAluno: string;
@@ -63,6 +75,7 @@ const TelaAluno: React.FC = () => {
 
 	const [idTurma, setIdTurma] = useState<string>();
 	const [turmaLista, setTurmaLista] = useState<Turma[]>();
+	const [listaEscolas, setListaEscolas] = useState<Escola[]>([]);
 
 	const mostrarMensagemErro = (mensagem: string) => {
 		setMensagemErrorBox(mensagem);
@@ -126,7 +139,9 @@ const TelaAluno: React.FC = () => {
 	};
 
 	const carregarTurma = useCallback(async (usuario: Usuario) => {
+		const escolaService = new EscolaService();
 		if (usuario.tipo === TipoUsuario.ADMINISTRADOR) {
+			await escolaService.listar().then((escolas) => setListaEscolas(escolas));
 			new TurmaService().listar().then((turmas) => {
 				setTurmaLista(turmas);
 				if (!turmas || turmas.length === 0) {
@@ -140,6 +155,20 @@ const TelaAluno: React.FC = () => {
 				mostrarMensagemErro("Não existem turmas para este usuário.");
 				return;
 			}
+			const promises: Promise<Escola | undefined>[] = [];
+			escolasUsuario.forEach((item) => {
+				promises.push(escolaService.getById(item));
+			});
+			await Promise.all(promises)
+				.then((escolas) => {
+					setListaEscolas(
+						escolas.filter((item) => typeof item !== "undefined") as Escola[]
+					);
+				})
+				.catch((error) => {
+					console.error(error);
+					setListaEscolas([]);
+				});
 			// Apenas as turmas que o usuário possui acesso
 			new TurmaService().listarPorEscola(escolasUsuario).then((turmas) => {
 				setTurmaLista(turmas);
@@ -149,6 +178,12 @@ const TelaAluno: React.FC = () => {
 			});
 		}
 	}, []);
+
+	const getTurmaSelectItemText = (turma: Turma) => {
+		const escola = listaEscolas.find((item) => item.id! === turma.idEscola)?.nome;
+		if (escola) return `${turma.codigo} - ${escola}`;
+		return turma.codigo;
+	};
 
 	useEffect(() => {
 		if (!auth?.user?.id) return;
@@ -207,10 +242,10 @@ const TelaAluno: React.FC = () => {
 					{!aluno && <LoadingSpinner />}
 					{aluno && (
 						<IonList lines="none">
-							<IonItem>
-								<IonLabel position="floating" className="icon-config">
-									Nome
-								</IonLabel>
+							<IonLabel position="floating" className="icon-config m-l-10">
+								Nome
+							</IonLabel>
+							<IonItem className="inputField m-10">
 								<IonInput
 									className="input-config"
 									value={nome}
@@ -218,10 +253,10 @@ const TelaAluno: React.FC = () => {
 									onIonChange={(e) => setNome(e.detail.value!)}
 								/>
 							</IonItem>
-							<IonItem>
-								<IonLabel position="floating" className="icon-config">
-									E-mail
-								</IonLabel>
+							<IonLabel position="floating" className="icon-config m-l-10">
+								E-mail
+							</IonLabel>
+							<IonItem className="inputField m-10">
 								<IonInput
 									className="input-config"
 									value={email}
@@ -230,12 +265,12 @@ const TelaAluno: React.FC = () => {
 									onIonChange={(e) => setEmail(e.detail.value!)}
 								/>
 							</IonItem>
-							<IonItem className="item-config" lines="none">
-								<IonLabel position="floating" className="icon-config">
-									Sexo
-								</IonLabel>
+							<IonLabel position="floating" className="icon-config m-l-10">
+								Sexo
+							</IonLabel>
+							<IonItem className="item-config inputField" lines="none">
 								<IonSelect
-									className="input-config"
+									className="input-config w-100"
 									value={sexo}
 									placeholder="Sexo"
 									onIonChange={(e) => setSexo(e.detail.value)}
@@ -244,10 +279,10 @@ const TelaAluno: React.FC = () => {
 									<IonSelectOption value={Sexo.MASCULINO}>Masculino</IonSelectOption>
 								</IonSelect>
 							</IonItem>
-							<IonItem className="item-config" lines="none">
-								<IonLabel position="floating" className="icon-config">
-									Data de nascimento
-								</IonLabel>
+							<IonLabel position="floating" className="icon-config m-l-10">
+								Data de nascimento
+							</IonLabel>
+							<IonItem className="item-config inputField" lines="none">
 								<IonDatetime
 									value={dataNascimento}
 									onIonChange={(e) => setDataNascimento(e.detail.value!)}
@@ -269,7 +304,7 @@ const TelaAluno: React.FC = () => {
 									>
 										{turmaLista.map((item) => (
 											<IonSelectOption key={item.id!} value={item.id!}>
-												{item.codigo}
+												{getTurmaSelectItemText(item)}
 											</IonSelectOption>
 										))}
 									</IonSelect>
@@ -283,6 +318,23 @@ const TelaAluno: React.FC = () => {
 						auth?.user?.tipo
 					) && (
 						<IonRow>
+							{[TipoUsuario.ADMINISTRADOR, TipoUsuario.PROFESSOR].includes(
+								auth?.user?.tipo
+							) && (
+								<IonCol>
+									<IonButton
+										color="danger"
+										expand="block"
+										onClick={() =>
+											aluno?.status ? setShowAlertDesativar(true) : ativar()
+										}
+										className="register-button"
+										disabled={!aluno}
+									>
+										{aluno?.status ? "Desativar" : "Ativar"}
+									</IonButton>
+								</IonCol>
+							)}
 							<IonCol>
 								<IonButton
 									color="primary"
@@ -292,25 +344,6 @@ const TelaAluno: React.FC = () => {
 									disabled={!aluno}
 								>
 									Salvar
-								</IonButton>
-							</IonCol>
-						</IonRow>
-					)}
-					{[TipoUsuario.ADMINISTRADOR, TipoUsuario.PROFESSOR].includes(
-						auth?.user?.tipo
-					) && (
-						<IonRow>
-							<IonCol>
-								<IonButton
-									color="danger"
-									expand="block"
-									onClick={() =>
-										aluno?.status ? setShowAlertDesativar(true) : ativar()
-									}
-									className="register-button"
-									disabled={!aluno}
-								>
-									{aluno?.status ? "Desativar" : "Ativar"}
 								</IonButton>
 							</IonCol>
 						</IonRow>

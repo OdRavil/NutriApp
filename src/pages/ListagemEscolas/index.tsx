@@ -19,11 +19,26 @@ import {
 } from "@ionic/react";
 import React, { useCallback, useEffect, useState } from "react";
 import "firebase/auth";
-import { arrowBackOutline, closeOutline, optionsOutline } from "ionicons/icons";
+
+// Import Icons
+import {
+	arrowBackOutline,
+	closeOutline,
+	home,
+	optionsOutline,
+} from "ionicons/icons";
+
+// Import Conxt
 import { useAuth } from "../../context/auth";
+
+// Import Services
 import EscolaService from "../../services/EscolaService";
+
+// Import Models
 import Escola from "../../models/Escola";
 import { TipoUsuario } from "../../models/Usuario";
+
+// Import Components
 import LoadingSpinner from "../../components/LoadingSpinner";
 
 const ListagemEscolas: React.FC = () => {
@@ -123,7 +138,8 @@ const ListagemEscolas: React.FC = () => {
 								key={escola.id!}
 								routerLink={`/escola/visualizar/${escola.id!}`}
 							>
-								<IonLabel>{escola.nome}</IonLabel>
+								<IonIcon src={home} />
+								<IonLabel className="m-l-10">{escola.nome}</IonLabel>
 							</IonItem>
 						))}
 					</IonList>

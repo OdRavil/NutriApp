@@ -10,6 +10,7 @@ import {
 	IonLabel,
 	IonList,
 	IonModal,
+	IonNote,
 	IonPage,
 	IonSelect,
 	IonSelectOption,
@@ -19,14 +20,24 @@ import {
 } from "@ionic/react";
 import React, { useCallback, useEffect, useState } from "react";
 import "firebase/auth";
+
+// Import Icons
 import { arrowBackOutline, closeOutline, optionsOutline } from "ionicons/icons";
+
+// Import Context
 import { useAuth } from "../../context/auth";
+
+// Import Services
 import TurmaService from "../../services/TurmaService";
+import EscolaService from "../../services/EscolaService";
+
+// Import Models
 import Turma from "../../models/Turma";
 import { TipoUsuario } from "../../models/Usuario";
-import LoadingSpinner from "../../components/LoadingSpinner";
-import EscolaService from "../../services/EscolaService";
 import Escola from "../../models/Escola";
+
+// Import Components
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 const ListagemTurmas: React.FC = () => {
 	const router = useIonRouter();
@@ -143,10 +154,18 @@ const ListagemTurmas: React.FC = () => {
 					</IonList>
 				)}
 				{listaTurmas && listaTurmas.length !== 0 && (
-					<IonList>
+					<IonList lines="full">
 						{listaTurmas.map((turma) => (
 							<IonItem key={turma.id!} routerLink={`/turma/visualizar/${turma.id!}`}>
-								<IonLabel>{turma.codigo}</IonLabel>
+								<IonLabel slot="start">{turma.codigo}</IonLabel>
+								<IonNote
+									slot="end"
+									style={{
+										fontSize: "0.8rem",
+									}}
+								>
+									{listaEscolas.find((item) => item.id! === turma.idEscola)?.nome || ""}
+								</IonNote>
 							</IonItem>
 						))}
 					</IonList>
